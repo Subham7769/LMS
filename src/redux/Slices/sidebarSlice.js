@@ -126,9 +126,10 @@ export const fetchDrlRulesetData = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     const url = `${import.meta.env.VITE_DRULES_READ_ALL_RULESET}`;
     const transformData = (data) => {
-      return data.map(({ name, dRulesTempId }) => ({
+      return data.map(({ name, droolsRuleSetId, description }) => ({
         name: name.replace(/-/g, " "),
-        href: "/loan/drl-ruleset/" + dRulesTempId,
+        href: "/loan/drl-ruleset/" + droolsRuleSetId + "/basic-info",
+        description: description || "No description available",
       }));
     };
     try {

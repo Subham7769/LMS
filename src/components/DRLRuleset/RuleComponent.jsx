@@ -4,17 +4,17 @@ import {
   removeRule,
   updateStatus,
   fetchDynamicRacDetails,
-  fetchOptionList,
   setCurrentRule,
   restoreRule,
 } from "../../redux/Slices/dynamicRacSlice";
+import { fetchOptionList } from "../../redux/Slices/drlRulesetSlice";
 import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import {
   PlusIcon,
   EyeIcon,
   XMarkIcon,
   CheckIcon,
-  ExclamationCircleIcon
+  ExclamationCircleIcon,
 } from "@heroicons/react/20/solid";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import convertToReadableString from "../../utils/convertToReadableString";
@@ -28,14 +28,16 @@ import { useEffect, useState } from "react";
 import getConditionForOperators from "./getConditionForOperators";
 import { convertDate } from "../../utils/convertDate";
 import HoverButtonNew from "../Common/HoverButtonNew/HoverButtonNew";
-import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from '../../data/RoleBasedAccessAndView'
+import {
+  ViewerRolesDynamicRac,
+  EditorRolesDynamicRac,
+} from "../../data/RoleBasedAccessAndView";
 import { DeleteIcon, EditIcon } from "../../assets/icons";
 import Toolbox from "./ToolBox";
 
-
 const RuleComponent = ({
   rule,
-  racId,
+  droolsRuleSetId,
   dynamicRacRuleId,
   sectionId,
   sectionName,
@@ -43,7 +45,7 @@ const RuleComponent = ({
   showRuleModal,
   setShowRuleModal,
   isEditMode,
-  setIsEditMode
+  setIsEditMode,
 }) => {
   const dispatch = useDispatch();
   const { roleName } = useSelector((state) => state.auth);
@@ -60,17 +62,16 @@ const RuleComponent = ({
       // console.log("deleteRuleById");
 
       // Fourth dispatch: fetchOptionList
-      await dispatch(fetchOptionList(racId)).unwrap();
+      await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
       // console.log("fetchOptionList");
 
       // Third dispatch: fetchDynamicRacDetails
-      await dispatch(fetchDynamicRacDetails(racId)).unwrap();
+      await dispatch(fetchDynamicRacDetails(droolsRuleSetId)).unwrap();
       // console.log("fetchDynamicRacDetails");
     } catch (error) {
       console.error("Error while performing operations: ", error);
     }
   };
-
 
   const handleStatusChange = async ({
     dynamicRacRuleId,
@@ -81,10 +82,10 @@ const RuleComponent = ({
       updateStatus({ dynamicRacRuleId, status, reviewComment })
     ).unwrap();
 
-    await dispatch(fetchOptionList(racId)).unwrap();
+    await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
     // console.log("fetchOptionList");
 
-    await dispatch(fetchDynamicRacDetails(racId)).unwrap();
+    await dispatch(fetchDynamicRacDetails(droolsRuleSetId)).unwrap();
     // console.log("fetchDynamicRacDetails");
     setReviewComment("");
   };
@@ -102,7 +103,8 @@ const RuleComponent = ({
   };
 
   // Edit Number Config
-  const { racConfig, optionsList } = useSelector((state) => state.dynamicRac);
+  const { racConfig } = useSelector((state) => state.dynamicRac);
+  const { optionsList } = useSelector((state) => state.drlRuleset);
   const { sections } = racConfig;
   const [ruleConfig, setRuleConfig] = useState(rule);
   const { firstOperator, secondOperator, numberCriteriaRangeList } = rule;
@@ -209,7 +211,7 @@ const RuleComponent = ({
         </div>
       </div>
     );
-  }
+  };
 
   const ViewRuleAccordion = ({ rule }) => {
     const [ReviewComment, setReviewComment] = useState("");
@@ -218,19 +220,19 @@ const RuleComponent = ({
       setReviewComment(e.target.value); // Only update local state
     };
 
-    return (<Accordion
-      isOpen={true}
-      headerComponent={
-        <div className="flex gap-2">
-          <StatusPill rule={rule} />
-          {/* <p>{convertToReadableString(rule?.name)}</p> */}
-        </div>
-      }
-    >
-      <div className="p-3 flex flex-col gap-3">
-        {/* New Addition */}
-        {rule?.history?.updateBy === null &&
-          !rule?.needDeleteApprove && (
+    return (
+      <Accordion
+        isOpen={true}
+        headerComponent={
+          <div className="flex gap-2">
+            <StatusPill rule={rule} />
+            {/* <p>{convertToReadableString(rule?.name)}</p> */}
+          </div>
+        }
+      >
+        <div className="p-3 flex flex-col gap-3">
+          {/* New Addition */}
+          {rule?.history?.updateBy === null && !rule?.needDeleteApprove && (
             <div className="p-3 flex flex-col gap-3 text-sm text-green-500 font-semibold bg-green-50 dark:bg-gray-700 rounded-lg">
               <span className="flex justify-start align-middle">
                 <EyeIcon className="h-5 w-5 mr-2 " />
@@ -241,15 +243,14 @@ const RuleComponent = ({
                 {rule?.fieldType === "NUMBER" && (
                   <span>
                     {generateNumberSentence({
-                      usageList:rule?.usageList,
+                      usageList: rule?.usageList,
                       name: rule?.name,
                       firstOperator: rule?.firstOperator,
                       secondOperator: rule?.secondOperator,
                       numberCriteriaRangeList:
                         rule?.history?.updateBy === null
                           ? rule?.numberCriteriaRangeList
-                          : rule?.history
-                            ?.numberCriteriaRangeListOldValue,
+                          : rule?.history?.numberCriteriaRangeListOldValue,
                     })}
                   </span>
                 )}
@@ -257,7 +258,7 @@ const RuleComponent = ({
                 {rule?.fieldType === "STRING" && (
                   <span>
                     {generateStringSentence({
-                      usageList:rule?.usageList,
+                      usageList: rule?.usageList,
                       name: rule?.name,
                       blocked: rule?.blocked,
                       criteriaValues:
@@ -271,45 +272,43 @@ const RuleComponent = ({
             </div>
           )}
 
-        {/* Approved Deleted Value */}
-        {rule?.needDeleteApprove && (
-          <div className="p-3 flex flex-col gap-3 text-sm text-blue-500 font-semibold bg-blue-50 dark:bg-gray-700 rounded-lg">
-            <span className="flex justify-start align-middle">
-              <EyeIcon className="h-5 w-5 mr-2 " />
-              Current Value
-            </span>
-            <p className="text-gray-700 dark:text-gray-200">
-              {/* Rule Main Literature Text for Number */}
-              {rule?.fieldType === "NUMBER" && (
-                <span>
-                  {generateNumberSentence({
-                    usageList:rule?.usageList,
-                    name: rule?.name,
-                    firstOperator: rule?.firstOperator,
-                    secondOperator: rule?.secondOperator,
-                    numberCriteriaRangeList:
-                      rule?.numberCriteriaRangeList,
-                  })}
-                </span>
-              )}
-              {/* Rule Main Literature Text for String */}
-              {rule?.fieldType === "STRING" && (
-                <span>
-                  {generateStringSentence({
-                    usageList:rule?.usageList,
-                    name: rule?.name,
-                    blocked: rule?.blocked,
-                    criteriaValues: rule?.criteriaValues,
-                  })}
-                </span>
-              )}
-            </p>
-          </div>
-        )}
+          {/* Approved Deleted Value */}
+          {rule?.needDeleteApprove && (
+            <div className="p-3 flex flex-col gap-3 text-sm text-blue-500 font-semibold bg-blue-50 dark:bg-gray-700 rounded-lg">
+              <span className="flex justify-start align-middle">
+                <EyeIcon className="h-5 w-5 mr-2 " />
+                Current Value
+              </span>
+              <p className="text-gray-700 dark:text-gray-200">
+                {/* Rule Main Literature Text for Number */}
+                {rule?.fieldType === "NUMBER" && (
+                  <span>
+                    {generateNumberSentence({
+                      usageList: rule?.usageList,
+                      name: rule?.name,
+                      firstOperator: rule?.firstOperator,
+                      secondOperator: rule?.secondOperator,
+                      numberCriteriaRangeList: rule?.numberCriteriaRangeList,
+                    })}
+                  </span>
+                )}
+                {/* Rule Main Literature Text for String */}
+                {rule?.fieldType === "STRING" && (
+                  <span>
+                    {generateStringSentence({
+                      usageList: rule?.usageList,
+                      name: rule?.name,
+                      blocked: rule?.blocked,
+                      criteriaValues: rule?.criteriaValues,
+                    })}
+                  </span>
+                )}
+              </p>
+            </div>
+          )}
 
-        {/* Version Section */}
-        {rule?.history?.updateBy !== null &&
-          !rule?.needDeleteApprove && (
+          {/* Version Section */}
+          {rule?.history?.updateBy !== null && !rule?.needDeleteApprove && (
             <div className="grid grid-cols-2 gap-5">
               <div className="p-3 flex flex-col gap-3 text-sm text-gray-500 dark:text-gray-100 font-semibold bg-gray-100 dark:bg-gray-700 rounded-lg">
                 <span className="flex justify-start align-middle">
@@ -321,17 +320,14 @@ const RuleComponent = ({
                   {rule?.fieldType === "NUMBER" && (
                     <span>
                       {generateNumberSentence({
-                        usageList:rule?.usageList,
+                        usageList: rule?.usageList,
                         name: rule?.name,
-                        firstOperator:
-                          rule?.history.firstOperatorOldValue,
-                        secondOperator:
-                          rule?.history.secondOperatorOldValue,
+                        firstOperator: rule?.history.firstOperatorOldValue,
+                        secondOperator: rule?.history.secondOperatorOldValue,
                         numberCriteriaRangeList:
                           rule?.history.updateBy === null
                             ? rule?.numberCriteriaRangeList
-                            : rule?.history
-                              .numberCriteriaRangeListOldValue,
+                            : rule?.history.numberCriteriaRangeListOldValue,
                       })}
                     </span>
                   )}
@@ -339,7 +335,7 @@ const RuleComponent = ({
                   {rule?.fieldType === "STRING" && (
                     <span>
                       {generateStringSentence({
-                        usageList:rule?.usageList,
+                        usageList: rule?.usageList,
                         name: rule?.name,
                         blocked: rule?.blocked,
                         criteriaValues:
@@ -370,8 +366,8 @@ const RuleComponent = ({
             </div>
           )}
 
-        {/* Risk Assessment */}
-        {/* <div className="p-3 flex flex-col gap-3 text-sm text-red-500 font-semibold bg-red-50 dark:bg-gray-700 rounded-lg">
+          {/* Risk Assessment */}
+          {/* <div className="p-3 flex flex-col gap-3 text-sm text-red-500 font-semibold bg-red-50 dark:bg-gray-700 rounded-lg">
           <span className="flex justify-start align-middle">
             <ExclamationCircleIcon className="h-5 w-5 mr-2 " />
             Risk Assessment
@@ -381,50 +377,50 @@ const RuleComponent = ({
           </p>
         </div> */}
 
-        {/* Review Comment */}
-        {!rule?.needDeleteApprove && (
-          <div>
-            <InputTextArea
-              labelName={"Review Comments"}
-              inputName={"reviewComments"}
-              inputValue={ReviewComment}
-              onChange={handleInputChange}
-              placeHolder={`Enter your review comments...`}
+          {/* Review Comment */}
+          {!rule?.needDeleteApprove && (
+            <div>
+              <InputTextArea
+                labelName={"Review Comments"}
+                inputName={"reviewComments"}
+                inputValue={ReviewComment}
+                onChange={handleInputChange}
+                placeHolder={`Enter your review comments...`}
+              />
+            </div>
+          )}
+
+          {/* Approve/Reject  */}
+          <div className="grid grid-cols-2 gap-5 px-5 w-[100%]">
+            <HoverButtonNew
+              buttonIcon={XMarkIcon}
+              buttonName="Reject"
+              onClick={() =>
+                handleStatusChange({
+                  dynamicRacRuleId,
+                  status: "REJECTED",
+                  reviewComment: ReviewComment,
+                })
+              }
+              color="red"
+            />
+            <HoverButtonNew
+              buttonIcon={CheckIcon}
+              buttonName="Approve"
+              onClick={() =>
+                handleStatusChange({
+                  dynamicRacRuleId,
+                  status: "APPROVED",
+                  reviewComment: ReviewComment,
+                })
+              }
+              color="green"
             />
           </div>
-        )}
-
-        {/* Approve/Reject  */}
-        <div className="grid grid-cols-2 gap-5 px-5 w-[100%]">
-          <HoverButtonNew
-            buttonIcon={XMarkIcon}
-            buttonName="Reject"
-            onClick={() =>
-              handleStatusChange({
-                dynamicRacRuleId,
-                status: "REJECTED",
-                reviewComment:ReviewComment,
-              })
-            }
-            color="red"
-          />
-          <HoverButtonNew
-            buttonIcon={CheckIcon}
-            buttonName="Approve"
-            onClick={() =>
-              handleStatusChange({
-                dynamicRacRuleId,
-                status: "APPROVED",
-                reviewComment:ReviewComment,
-              })
-            }
-            color="green"
-          />
         </div>
-      </div>
-    </Accordion>)
-  }
-  
+      </Accordion>
+    );
+  };
 
   return (
     <>
@@ -436,36 +432,35 @@ const RuleComponent = ({
         sectionName={sectionName}
       />
       {/* Maker UI View Rule with Actions*/}
-      {(roleName == "ROLE_MAKER_ADMIN") && (
+      {roleName == "ROLE_MAKER_ADMIN" && (
         <ViewRuleAction rule={rule} actions={true} />
       )}
 
       {/* Checker UI View Rule without Actions*/}
-      {(roleName == "ROLE_CHECKER_ADMIN" &&
-        (rule?.status !== "CREATED" && !rule?.needDeleteApprove)) && (
+      {roleName == "ROLE_CHECKER_ADMIN" &&
+        rule?.status !== "CREATED" &&
+        !rule?.needDeleteApprove && (
           <ViewRuleAction rule={rule} actions={false} />
         )}
 
       {/* Checker UI View Rule with Approval*/}
-      {(roleName == "ROLE_CHECKER_ADMIN") &&
+      {roleName == "ROLE_CHECKER_ADMIN" &&
         (rule?.status === "CREATED" || rule?.needDeleteApprove) && (
           <ViewRuleAccordion rule={rule} />
         )}
 
       {/* EditorRoles's UI View Rule with Actions & Approval */}
-      {(EditorRolesDynamicRac.includes(roleName)) && (
-        (rule?.status === "CREATED" || rule?.needDeleteApprove) ? (
+      {EditorRolesDynamicRac.includes(roleName) &&
+        (rule?.status === "CREATED" || rule?.needDeleteApprove ? (
           <ViewRuleAccordion rule={rule} />
         ) : (
           <ViewRuleAction rule={rule} actions={true} />
-        )
-      )}
+        ))}
 
       {/* ViewerRoles's UI View Rule without Actions & Approval */}
-      {(ViewerRolesDynamicRac.includes(roleName)) && (
+      {ViewerRolesDynamicRac.includes(roleName) && (
         <ViewRuleAction rule={rule} actions={false} />
       )}
-
     </>
   );
 };

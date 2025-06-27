@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import {
   fetchDynamicRacDetails,
   updateRacName,
-  fetchOptionList,
   saveDynamicRac,
   downloadConfig,
   uploadConfig,
@@ -28,6 +27,7 @@ import {
   deleteSection,
   restoreRule,
 } from "../../redux/Slices/dynamicRacSlice";
+import { fetchOptionList } from "../../redux/Slices/drlRulesetSlice";
 import { useDispatch } from "react-redux";
 import RuleComponent from "./RuleComponent";
 import ViewTemplateModal from "./ViewTemplateModal";
@@ -65,13 +65,14 @@ import SalienceModal from "./SalienceModal";
 import NaturalLanguageModal from "./NaturalLanguageModal";
 
 const RuleManager = () => {
-  const { racId } = useParams();
+  const { droolsRuleSetId } = useParams();
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
   const [activeRule, setActiveRule] = useState(null);
   const [showRuleModal, setShowRuleModal] = useState(false);
   const [showEquationModal, setShowEquationModal] = useState(false);
-  const [showSelectParameterModal, setShowSelectParameterModal] = useState(false);
+  const [showSelectParameterModal, setShowSelectParameterModal] =
+    useState(false);
   const [showParameterDataModal, setShowParameterDataModal] = useState(false);
   const [selectedTag, setSelectedTag] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
@@ -100,10 +101,10 @@ const RuleManager = () => {
     const fetchData = async () => {
       try {
         // First, fetch the option list
-        await dispatch(fetchOptionList(racId));
+        await dispatch(fetchOptionList(droolsRuleSetId));
 
         // After fetching the option list, fetch the Decision Engine details
-        await dispatch(fetchDynamicRacDetails(racId));
+        await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -114,7 +115,7 @@ const RuleManager = () => {
     return () => {
       dispatch(clearValidationError());
     };
-  }, [racId, dispatch]);
+  }, [droolsRuleSetId, dispatch]);
 
   const handleSaveDynamicRAC = async () => {
     // Extract the section names
@@ -151,9 +152,9 @@ const RuleManager = () => {
         const saveAction = await dispatch(saveDynamicRac(racConfig));
 
         if (saveAction.type.endsWith("fulfilled")) {
-          await dispatch(fetchOptionList(racId));
+          await dispatch(fetchOptionList(droolsRuleSetId));
 
-          await dispatch(fetchDynamicRacDetails(racId));
+          await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
         }
       } catch (error) {
         console.error("Error during handleSave:", error);
@@ -283,11 +284,11 @@ const RuleManager = () => {
     }
   };
 
-  const handleDeleteSection = ({ racId, sectionId }) => {
+  const handleDeleteSection = ({ droolsRuleSetId, sectionId }) => {
     dispatch(removeSection({ sectionId }));
-    dispatch(deleteSection({ racId, sectionId })).then((action) => {
+    dispatch(deleteSection({ droolsRuleSetId, sectionId })).then((action) => {
       if (action.type.endsWith("fulfilled")) {
-        dispatch(fetchDynamicRacDetails(racId));
+        dispatch(fetchDynamicRacDetails(droolsRuleSetId));
       }
     });
   };
@@ -317,7 +318,7 @@ const RuleManager = () => {
 
   const closeSalienceModal = () => {
     setSalienceModal(false);
-  }
+  };
 
   const handleNaturalLanguageModal = (sectionId, sectionName) => {
     setSelectedSectionId(sectionId); // Update sectionId first
@@ -394,7 +395,7 @@ const RuleManager = () => {
     rule,
     sectionId,
     sectionName,
-    racId,
+    droolsRuleSetId,
     roleName,
     handleSaveDynamicRAC,
   }) => {
@@ -431,7 +432,7 @@ const RuleManager = () => {
       >
         <RuleComponent
           rule={rule}
-          racId={racId}
+          droolsRuleSetId={droolsRuleSetId}
           dynamicRacRuleId={rule.dynamicRacRuleId}
           sectionId={sectionId}
           sectionName={sectionName}
@@ -605,7 +606,10 @@ const RuleManager = () => {
               <Button
                 buttonType="destructive"
                 onClick={() =>
-                  handleDeleteSection({ racId, sectionId: section.sectionId })
+                  handleDeleteSection({
+                    droolsRuleSetId,
+                    sectionId: section.sectionId,
+                  })
                 }
                 buttonIcon={DeleteIcon}
               />
@@ -623,7 +627,7 @@ const RuleManager = () => {
         onClose={() => setTemplateModal(false)}
         sectionId={selectedSectionId}
         sectionName={selectedSectionName}
-        racId={racId}
+        droolsRuleSetId={droolsRuleSetId}
       />
       <Toolbox
         isOpen={showRuleModal}
@@ -740,7 +744,7 @@ const RuleManager = () => {
                           rule={rule}
                           sectionId={section.sectionId}
                           sectionName={section.sectionName}
-                          racId={racId}
+                          droolsRuleSetId={droolsRuleSetId}
                           roleName={roleName}
                           handleSaveDynamicRAC={handleSaveDynamicRAC}
                         />
@@ -758,7 +762,7 @@ const RuleManager = () => {
               <div className="px-3 bg-white dark:bg-gray-800 border rounded-md shadow-md p-2">
                 <RuleComponent
                   rule={activeRule}
-                  racId={racId}
+                  droolsRuleSetId={droolsRuleSetId}
                   dynamicRacRuleId={activeRule.dynamicRacRuleId}
                   sectionId={activeRule.sectionId}
                   sectionName={activeRule.sectionName}
@@ -774,7 +778,7 @@ const RuleManager = () => {
         </DndContext>
         <div className="shadow-md p-5 rounded-xl border dark:border-gray-700 mt-5">
           <div className="flex justify-between gap-5">
-            <h2>{ruleManagerData?.ruleManagerEquation}</h2>
+            <h2>{ruleManagerData?.ruleManagerEquation?.expression}</h2>
             <div>
               <Button
                 buttonIcon={EditIcon}

@@ -19,6 +19,7 @@ import {
   fetchDynamicRacData,
   fetchReportingConfigData,
   toggleSidebar,
+  fetchDrlRulesetData,
 } from "../../../redux/Slices/sidebarSlice";
 import { useDispatch } from "react-redux";
 
@@ -80,6 +81,8 @@ const CreateNew = ({
         return fetchDynamicRacData;
       case "Reporting Config":
         return fetchReportingConfigData;
+      case "DRL Ruleset":
+        return fetchDrlRulesetData;
       default:
         return null;
     }

@@ -7,12 +7,9 @@ import Modal from "../Common/Modal/Modal";
 import { AddIcon } from "../../assets/icons";
 import { addParameterTag } from "../../redux/Slices/drlRulesetSlice";
 
-const SelectParametersModal = ({
-  isOpen,
-  onClose,
-}) => {
+const SelectParametersModal = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
-  const { optionsList } = useSelector((state) => state.dynamicRac);
+  const { optionsList } = useSelector((state) => state.drlRuleset);
 
   const initialState = {
     fieldType: "",
@@ -54,7 +51,6 @@ const SelectParametersModal = ({
       onClose();
     }
   };
-  
 
   if (!isOpen) return null;
 

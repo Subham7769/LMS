@@ -6,9 +6,9 @@ import Button from "../Common/Button/Button";
 
 import {
   addNewRule,
-  fetchOptionList,
   fetchDynamicRacDetails,
 } from "../../redux/Slices/dynamicRacSlice";
+import { fetchOptionList } from "../../redux/Slices/drlRulesetSlice";
 import { useDispatch } from "react-redux";
 import convertToReadableString from "../../utils/convertToReadableString";
 import Modal from "../Common/Modal/Modal";
@@ -18,7 +18,7 @@ const ViewTemplateModal = ({
   onClose,
   sectionId,
   sectionName,
-  racId,
+  droolsRuleSetId,
 }) => {
   if (!isOpen) return null;
 
@@ -41,7 +41,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "age",
         fieldType: "NUMBER",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: ">=",
         secondOperator: "<=",
         numberCriteriaRangeList: [
@@ -88,7 +88,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "incomeOnPaySlip",
         fieldType: "NUMBER",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: ">=",
         secondOperator: "<",
         numberCriteriaRangeList: [
@@ -135,7 +135,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "employerFormVerified",
         fieldType: "STRING",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: "",
         secondOperator: "",
         numberCriteriaRangeList: [],
@@ -178,7 +178,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "sixMonthsBankStatementUploaded",
         fieldType: "STRING",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: "",
         secondOperator: "",
         numberCriteriaRangeList: [],
@@ -219,7 +219,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "creditScore",
         fieldType: "NUMBER",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: ">=",
         secondOperator: "<",
         numberCriteriaRangeList: [
@@ -266,7 +266,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "natureOfCompany",
         fieldType: "STRING",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: "",
         secondOperator: "",
         numberCriteriaRangeList: [],
@@ -309,7 +309,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "age",
         fieldType: "NUMBER",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: ">=",
         secondOperator: "<=",
         numberCriteriaRangeList: [
@@ -356,7 +356,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "incomeOnPaySlip",
         fieldType: "NUMBER",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: ">=",
         secondOperator: "<",
         numberCriteriaRangeList: [
@@ -403,7 +403,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "employerFormVerified",
         fieldType: "STRING",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: "",
         secondOperator: "",
         numberCriteriaRangeList: [],
@@ -448,7 +448,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "sixMonthsBankStatementUploaded",
         fieldType: "STRING",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: "",
         secondOperator: "",
         numberCriteriaRangeList: [],
@@ -489,7 +489,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "creditScore",
         fieldType: "NUMBER",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: ">=",
         secondOperator: "<",
         numberCriteriaRangeList: [
@@ -538,7 +538,7 @@ const ViewTemplateModal = ({
         sectionId: sectionId,
         displayName: "natureOfCompany",
         fieldType: "STRING",
-        racId: racId,
+        droolsRuleSetId: droolsRuleSetId,
         firstOperator: "",
         secondOperator: "",
         numberCriteriaRangeList: [],
@@ -599,10 +599,10 @@ const ViewTemplateModal = ({
     ).unwrap();
 
     // First, fetch the option list
-    await dispatch(fetchOptionList(racId)).unwrap();
+    await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
 
     // After fetching the option list, fetch the Decision Engine details
-    await dispatch(fetchDynamicRacDetails(racId));
+    await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
 
     handleClose();
   };

@@ -4,7 +4,6 @@ import { HeaderList, ProductList } from "../../data/ProductData";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import { fetchNotifications } from "./notificationSlice";
-import formatStringNumber from "../../utils/formatStringNumber";
 
 // Define async thunks for fetching data and performing actions
 export const fetchData = createAsyncThunk(

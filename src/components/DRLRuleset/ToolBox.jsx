@@ -29,17 +29,18 @@ import getOperatorsForCondition from "./getOperatorsForCondition";
 import {
   addNewRule,
   updateRuleById,
-  fetchOptionList,
   fetchDynamicRacDetails,
 } from "../../redux/Slices/dynamicRacSlice";
+import { fetchOptionList } from "../../redux/Slices/drlRulesetSlice";
 import getConditionForOperators from "./getConditionForOperators";
 import Modal from "../Common/Modal/Modal";
 import convertToReadableString from "../../utils/convertToReadableString";
 
 const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
-  const { racId } = useParams();
+  const { droolsRuleSetId } = useParams();
   const dispatch = useDispatch();
-  const { currentRule, optionsList } = useSelector((state) => state.dynamicRac);
+  const { currentRule } = useSelector((state) => state.dynamicRac);
+  const { optionsList } = useSelector((state) => state.drlRuleset);
   const userName = localStorage.getItem("username");
   const { firstOperator, secondOperator, numberCriteriaRangeList } =
     currentRule || {};
@@ -59,7 +60,7 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
       { ruleUsage: "REGISTRATION", used: true },
       { ruleUsage: "ELIGIBILITY", used: true },
     ],
-    racId: racId,
+    droolsRuleSetId: droolsRuleSetId,
     dynamicRacRuleId: `Rule-${Date.now()}`,
     criteriaValues: [],
     firstOperator: "",
@@ -239,10 +240,10 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
         })
       ).unwrap();
       // First, fetch the option list
-      await dispatch(fetchOptionList(racId)).unwrap();
+      await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
 
       // After fetching the option list, fetch the Decision Engine details
-      await dispatch(fetchDynamicRacDetails(racId));
+      await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
       // Reset state and Close
       setRuleConfig(initialState);
       onClose();
@@ -285,10 +286,10 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
         ).unwrap();
       }
       // First, fetch the option list
-      await dispatch(fetchOptionList(racId)).unwrap();
+      await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
 
       // After fetching the option list, fetch the Decision Engine details
-      await dispatch(fetchDynamicRacDetails(racId));
+      await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
       // Reset state and Close
       setRuleConfig(initialState);
       onClose();
@@ -349,10 +350,10 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
     }
 
     // First, fetch the option list
-    await dispatch(fetchOptionList(racId)).unwrap();
+    await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
 
     // After fetching the option list, fetch the Decision Engine details
-    await dispatch(fetchDynamicRacDetails(racId));
+    await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
     onClose();
   };
 

@@ -913,7 +913,7 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "drl-ruleset/:racId",
+        path: "drl-ruleset/:droolsRuleSetId",
         element: <DRLRuleset />,
         errorElement: <RouteErrorBoundary />,
         children: [
@@ -1682,19 +1682,19 @@ const routes = [
         element: <PostOfferOnboarding />,
         errorElement: <RouteErrorBoundary />,
       },
-       {
+      {
         path: "final-offers",
-        element: <B2CLoanOffers/>,
+        element: <B2CLoanOffers />,
         errorElement: <RouteErrorBoundary />,
       },
-       {
+      {
         path: "final-loan",
-        element: <LoanDetails/>,
+        element: <LoanDetails />,
         errorElement: <RouteErrorBoundary />,
       },
-       {
+      {
         path: "thank-you",
-        element: <ThankYouPage/>,
+        element: <ThankYouPage />,
         errorElement: <RouteErrorBoundary />,
       },
     ],

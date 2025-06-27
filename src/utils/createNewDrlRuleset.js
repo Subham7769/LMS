@@ -5,18 +5,19 @@ export async function createNewDrlRuleset(
   navigateSuccess,
   navigateFail
 ) {
+  const payload = {
+    name: Name,
+  };
   try {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(
-      `${import.meta.env.VITE_DRULES_CREATE}${Name}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await fetch(`${import.meta.env.VITE_DRULES_CREATE}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
     if (response.status === 401 || response.status === 403) {
       localStorage.removeItem("authToken");
       navigate(navigateFail);
@@ -24,9 +25,7 @@ export async function createNewDrlRuleset(
     }
     const DrulesDetails = await response.json();
     console.log(DrulesDetails);
-    navigate(
-      navigateSuccess + DrulesDetails.dRulesTempId
-    );
+    navigate(navigateSuccess + DrulesDetails.droolsRuleSetId + "/basic-info");
     toast.success("DRL Ruleset created !");
   } catch (error) {
     console.error(error);

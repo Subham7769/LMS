@@ -9,7 +9,7 @@ import { handleChangeRuleManagerData } from "../../redux/Slices/drlRulesetSlice"
 
 const EquationModal = ({ isOpen, onClose, ruleManagerData }) => {
   const dispatch = useDispatch();
-  const { optionsList } = useSelector((state) => state.dynamicRac);
+  const { optionsList } = useSelector((state) => state.drlRuleset);
   const initialState = {
     fieldType: "",
     criteriaType: "",
@@ -48,7 +48,8 @@ const EquationModal = ({ isOpen, onClose, ruleManagerData }) => {
 
   const addParamter = () => {
     if (ruleConfig.name) {
-      const existingEquation = ruleManagerData.ruleManagerEquation || "";
+      const existingEquation =
+        ruleManagerData.ruleManagerEquation.expression || "";
       const appendedEquation =
         existingEquation.trim() === ""
           ? ruleConfig.name
@@ -56,7 +57,7 @@ const EquationModal = ({ isOpen, onClose, ruleManagerData }) => {
 
       dispatch(
         handleChangeRuleManagerData({
-          name: "ruleManagerEquation",
+          name: "expression",
           value: appendedEquation,
         })
       );
@@ -138,9 +139,9 @@ const EquationModal = ({ isOpen, onClose, ruleManagerData }) => {
           </div>
         </div>
         <InputTextArea
-          labelName="Equation"
-          inputName="ruleManagerEquation"
-          inputValue={ruleManagerData.ruleManagerEquation}
+          labelName="Expression"
+          inputName="expression"
+          inputValue={ruleManagerData?.ruleManagerEquation?.expression}
           onChange={handleChangeEquation}
           rowCount={3}
         />

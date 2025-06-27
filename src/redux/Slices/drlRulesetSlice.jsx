@@ -4,11 +4,11 @@ import { HeaderList, DRLRulesetList } from "../../data/DRLRulesetData";
 
 export const fetchDrulesName = createAsyncThunk(
   "drlRuleset/fetchDrulesName",
-  async (dRulesTempId, { rejectWithValue }) => {
+  async (droolsRuleSetId, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_DRULES_NAME_READ}${dRulesTempId}`,
+        `${import.meta.env.VITE_DRULES_NAME_READ}${droolsRuleSetId}`,
         {
           method: "GET",
           headers: {
@@ -31,11 +31,15 @@ export const fetchDrulesName = createAsyncThunk(
 
 export const updateDrulesName = createAsyncThunk(
   "drlRuleset/updateDrulesName",
-  async ({ dRulesTempId, newName }, { rejectWithValue }) => {
+  async ({ droolsRuleSetId, newName, description }, { rejectWithValue }) => {
+    const payload = {
+      name: newName,
+      description: description, // Default description if not provided
+    };
     const token = localStorage.getItem("authToken");
     const url = `${
       import.meta.env.VITE_DRULES_NAME_UPDATE
-    }${dRulesTempId}/name/${newName}`;
+    }${droolsRuleSetId}/name`;
 
     try {
       const response = await fetch(url, {
@@ -44,6 +48,7 @@ export const updateDrulesName = createAsyncThunk(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
@@ -59,10 +64,10 @@ export const updateDrulesName = createAsyncThunk(
 
 export const deleteDrlRuleset = createAsyncThunk(
   "drlRuleset/deleteDrlRuleset",
-  async (dRulesTempId, { rejectWithValue }) => {
+  async (droolsRuleSetId, { rejectWithValue }) => {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      `${import.meta.env.VITE_DRULES_DELETE}${dRulesTempId}`,
+      `${import.meta.env.VITE_DRULES_DELETE}${droolsRuleSetId}`,
       {
         method: "DELETE",
         headers: {
@@ -76,7 +81,33 @@ export const deleteDrlRuleset = createAsyncThunk(
       return rejectWithValue("Failed to delete");
     }
 
-    return dRulesTempId; // Return the ID for any further processing
+    return droolsRuleSetId; // Return the ID for any further processing
+  }
+);
+
+export const fetchOptionList = createAsyncThunk(
+  "drlRuleset/fetchOptionList",
+  async (droolsRuleSetId, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_DYNAMIC_RAC_ALL_NAME_READ
+        }63b1acad-b490-4939-94c0-b782540c2ec4/available-names`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          "Content-Type": "application/json",
+        }
+      );
+      const data = await response.json();
+      return data; // Return the data from the API response
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
@@ -94,7 +125,7 @@ export const fetchList = createAsyncThunk(
 
 // Initial state
 const drlRulesetInitialState = {
-  itemName: "DRL Ruleset",
+  itemName: "",
   dRulesData: {
     basicInfoData: {
       category: "",
@@ -114,7 +145,7 @@ const drlRulesetInitialState = {
         secondOperator: null,
         numberCriteriaRangeList: null,
       },
-      ruleManagerEquation:
+      ruleManagerEquationOld:
         "((creditTpScore-300)*A/550) + (nationality*B) + (netIncome*C) + (dependents*D) + (maritalStatus*E) + (residentialStatus*F)",
       parameterTags: [
         { name: "nationality", fieldType: "STRING" },
@@ -164,6 +195,104 @@ const drlRulesetInitialState = {
         categoryValue: "",
         numericalScore: "",
       },
+      ruleManagerEquation: {
+        expression:
+          "((creditTpScore-300)*0.34/550) + (nationality*0.98) + (netIncome*1.24) + (dependents*2.32) + (maritalStatus*0.88) + (residentialStatus*1.12)",
+        name: "string",
+        parameters: [
+          {
+            name: "string",
+            parameterSelectionTypeEnum: "DIRECT_SUBSTITUTION",
+            type: "STRING",
+          },
+        ],
+      },
+    },
+  },
+  dRulesDataSample: {
+    basicInfoData: {
+      category: "string",
+      description: "string",
+      fromDate: "string",
+      toDate: "string",
+    },
+    droolsRuleSetId: "string",
+    name: "string",
+    ruleManagerData: {
+      dynamicParameterDTOList: [
+        {
+          displayName: "string",
+          firstOperator: "string",
+          isModified: true,
+          name: "string",
+          parameterNameValueList: [
+            {
+              name: "string",
+              value: 0,
+            },
+          ],
+          parameterNumberRangeValueList: [
+            {
+              maximum: "string",
+              minimum: "string",
+              resident: true,
+              value: "string",
+            },
+          ],
+          parameterSourceEnum: "BORROWER_PROFILE",
+          parameterType: "STRING",
+          secondOperator: "string",
+          status: "CREATED",
+          weightNameValueList: [
+            {
+              name: "string",
+              value: 0,
+            },
+          ],
+        },
+      ],
+      ruleManagerConfig: [
+        {
+          blocked: true,
+          criteriaType: "BORROWER_PROFILE",
+          criteriaValues: ["string"],
+          displayName: "string",
+          error: "string",
+          fieldType: "STRING",
+          firstOperator: "string",
+          isModified: true,
+          name: "string",
+          numberCriteriaRangeList: [
+            {
+              maximum: "string",
+              minimum: "string",
+              resident: true,
+            },
+          ],
+          racId: "string",
+          secondOperator: "string",
+          sectionId: "string",
+          sectionName: "string",
+          status: "CREATED",
+          usageList: [
+            {
+              ruleUsage: "ELIGIBILITY",
+              used: true,
+            },
+          ],
+        },
+      ],
+      ruleManagerEquation: {
+        expression: "string",
+        name: "string",
+        parameters: [
+          {
+            name: "string",
+            parameterSelectionTypeEnum: "DIRECT_SUBSTITUTION",
+            type: "STRING",
+          },
+        ],
+      },
     },
   },
   dRulesStatsData: {
@@ -184,7 +313,7 @@ const drlRulesetSlice = createSlice({
     },
     handleChangeRuleManagerData: (state, action) => {
       const { name, value } = action.payload;
-      state.dRulesData.ruleManagerData[name] = value;
+      state.dRulesData.ruleManagerData.ruleManagerEquation[name] = value;
     },
     addParameterTag: (state, action) => {
       const newTag = action.payload; // { name, fieldType }
@@ -235,6 +364,7 @@ const drlRulesetSlice = createSlice({
         const updatedList = action.payload.map((newListItem, index) => ({
           name: newListItem.name,
           href: newListItem.href,
+          description: newListItem.description,
         }));
         state.dRulesStatsData.DRLRulesetList = updatedList;
       })
@@ -277,6 +407,37 @@ const drlRulesetSlice = createSlice({
       .addCase(deleteDrlRuleset.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(fetchOptionList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOptionList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.optionsList = {
+          borrowerProfileAvailableNames:
+            action.payload.borrowerProfileAvailableNames?.map((item) => ({
+              label: item,
+              value: item,
+            })) || [],
+
+          calculatedAvailableNames:
+            action.payload.calculatedAvailableNames?.map((item) => ({
+              label: item,
+              value: item,
+            })) || [],
+
+          documentsAvailableNames:
+            action.payload.documentsAvailableNames?.map((item) => ({
+              label: item,
+              value: item,
+            })) || [],
+        };
+      })
+      .addCase(fetchOptionList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       });
   },

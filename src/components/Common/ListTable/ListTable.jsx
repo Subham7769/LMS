@@ -252,10 +252,8 @@ const ListTable = ({
                         key !== "href" ? (
                           <td key={idx} className={`px-4 py-4 break-words `}>
                             {product.href ? (
-                              <Link
-                                className="w-full block whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]"
-                                to={product.href}
-                              >
+                              <Link className="w-full block" to={product.href}>
+                                {/* whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] */}
                                 {product[key]}
                               </Link>
                             ) : Editable ||

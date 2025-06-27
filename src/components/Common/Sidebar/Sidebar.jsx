@@ -169,7 +169,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
-        // dispatch(fetchDrlRulesetData());
+        dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
@@ -189,7 +189,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
-        // dispatch(fetchDrlRulesetData());
+        dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
@@ -212,7 +212,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
-        // dispatch(fetchDrlRulesetData());
+        dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
@@ -243,7 +243,7 @@ const SideBar = () => {
         dispatch(fetchTCLData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
-        // dispatch(fetchDrlRulesetData());
+        dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
@@ -261,7 +261,7 @@ const SideBar = () => {
         dispatch(fetchTCLData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
-        // dispatch(fetchDrlRulesetData());
+        dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());
@@ -284,7 +284,7 @@ const SideBar = () => {
         dispatch(fetchProdGroupData());
         dispatch(fetchRecoveryData());
         dispatch(fetchAffordibilityData());
-        // dispatch(fetchDrlRulesetData());
+        dispatch(fetchDrlRulesetData());
         dispatch(fetchLoanApprovalData());
         dispatch(fetchDocumentConfigData());
         dispatch(fetchCreditScoreEligibleTenureData());

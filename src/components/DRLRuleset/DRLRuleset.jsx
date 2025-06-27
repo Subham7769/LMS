@@ -1,22 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import Button from "../Common/Button/Button";
 import SectionSidebar from "../Common/Sidebar/SectionSidebar";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
-import { deleteDrlRuleset, fetchDrulesName, handleChangeBasicInfoData, updateDrulesName } from "../../redux/Slices/drlRulesetSlice";
+import {
+  deleteDrlRuleset,
+  fetchDrulesName,
+  handleChangeBasicInfoData,
+  updateDrulesName,
+} from "../../redux/Slices/drlRulesetSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDrlRulesetData } from "../../redux/Slices/sidebarSlice";
 
 const DRLRuleset = () => {
-  const { racId } = useParams();
+  const { droolsRuleSetId } = useParams();
   const { itemName, dRulesData, loading, error } = useSelector(
     (state) => state.drlRuleset
   );
   const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
+
+  useEffect(() => {
+    if (droolsRuleSetId) {
+      dispatch(fetchDrulesName(droolsRuleSetId));
+    }
+  }, [droolsRuleSetId, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,20 +37,24 @@ const DRLRuleset = () => {
   };
 
   const handleNameUpdate = async (newName) => {
-      await dispatch(
-        updateDrulesName({ dRulesTempId, newName })
-      );
-      dispatch(fetchDrulesName(dRulesTempId));
-      dispatch(fetchDrlRulesetData());
-    };
-  
-    const handleDelete = async () => {
-      await dispatch(deleteDrlRuleset(dRulesTempId)).unwrap();
-      await dispatch(fetchDrlRulesetData());
-      navigate("/loan/drl-eruleset");
-    };
+    await dispatch(
+      updateDrulesName({
+        droolsRuleSetId,
+        newName,
+        description: dRulesData.basicInfoData.description,
+      })
+    );
+    dispatch(fetchDrulesName(droolsRuleSetId));
+    dispatch(fetchDrlRulesetData());
+  };
 
-  const basePath = `/loan/drl-ruleset/${racId}`;
+  const handleDelete = async () => {
+    await dispatch(deleteDrlRuleset(droolsRuleSetId)).unwrap();
+    await dispatch(fetchDrlRulesetData());
+    navigate("/loan/drl-ruleset");
+  };
+
+  const basePath = `/loan/drl-ruleset/${droolsRuleSetId}`;
 
   const navItems = [
     {
