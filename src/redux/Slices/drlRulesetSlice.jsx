@@ -145,69 +145,156 @@ const drlRulesetInitialState = {
         secondOperator: null,
         numberCriteriaRangeList: null,
       },
-      ruleManagerEquationOld:
-        "((creditTpScore-300)*A/550) + (nationality*B) + (netIncome*C) + (dependents*D) + (maritalStatus*E) + (residentialStatus*F)",
-      parameterTags: [
-        { name: "nationality", fieldType: "STRING" },
-        { name: "creditScore", fieldType: "NUMBER" },
+      dynamicParameterDTOList: [
+        {
+          displayName: "string",
+          firstOperator: "string",
+          isModified: true,
+          name: "nationality",
+          parameterNameValueList: [
+            {
+              name: "US",
+              value: 0.98,
+              baseline: true,
+              impact: "Refernce",
+            },
+            {
+              name: "UK",
+              value: 0.95,
+              baseline: false,
+              impact: "High",
+            },
+            {
+              name: "Germany",
+              value: 0.75,
+              baseline: false,
+              impact: "Medium",
+            },
+            {
+              name: "Other EU",
+              value: 0.4,
+              baseline: false,
+              impact: "Low",
+            },
+          ],
+          parameterNumberRangeValueList: [
+            {
+              maximum: "string",
+              minimum: "string",
+              resident: true,
+              value: "string",
+            },
+          ],
+          parameterSourceEnum: "BORROWER_PROFILE",
+          parameterType: "STRING",
+          secondOperator: "string",
+          status: "CREATED",
+          weightNameValueList: [
+            {
+              name: "string",
+              value: 0,
+            },
+          ],
+        },
+        {
+          displayName: "string",
+          firstOperator: "string",
+          isModified: true,
+          name: "creditScore",
+          parameterNameValueList: [
+            {
+              name: "string",
+              value: 0,
+            },
+          ],
+          parameterNumberRangeValueList: [
+            {
+              minimum: "0",
+              maximum: "1",
+              value: 0.98,
+              baseline: true,
+              impact: "Refernce",
+            },
+            {
+              minimum: "0",
+              maximum: "1",
+              value: 0.95,
+              baseline: false,
+              impact: "High",
+            },
+            {
+              minimum: "0",
+              maximum: "1",
+              value: 0.75,
+              baseline: false,
+              impact: "Medium",
+            },
+            {
+              minimum: "0",
+              maximum: "1",
+              value: 0.4,
+              baseline: false,
+              impact: "Low",
+            },
+          ],
+          parameterSourceEnum: "BORROWER_PROFILE",
+          parameterType: "NUMBER",
+          secondOperator: "string",
+          status: "CREATED",
+          weightNameValueList: [
+            {
+              name: "string",
+              value: 0,
+            },
+          ],
+        },
       ],
-      paramertersData: [
-        {
-          id: 1,
-          min: 0,
-          max: 1,
-          categoryValue: "US",
-          numericalScore: 0.98,
-          baseline: true,
-          impact: "Refernce",
-        },
-        {
-          id: 2,
-          min: 0,
-          max: 1,
-          categoryValue: "UK",
-          numericalScore: 0.95,
-          baseline: false,
-          impact: "High",
-        },
-        {
-          id: 3,
-          min: 0,
-          max: 1,
-          categoryValue: "Germany",
-          numericalScore: 0.75,
-          baseline: false,
-          impact: "Medium",
-        },
-        {
-          id: 4,
-          min: 0,
-          max: 1,
-          categoryValue: "Other EU",
-          numericalScore: 0.4,
-          baseline: false,
-          impact: "Low",
-        },
-      ],
-      addCategoryData: {
-        min: "",
-        max: "",
-        categoryValue: "",
-        numericalScore: "",
-      },
       ruleManagerEquation: {
         expression:
           "((creditTpScore-300)*0.34/550) + (nationality*0.98) + (netIncome*1.24) + (dependents*2.32) + (maritalStatus*0.88) + (residentialStatus*1.12)",
         name: "string",
         parameters: [
           {
-            name: "string",
+            name: "nationality",
             parameterSelectionTypeEnum: "DIRECT_SUBSTITUTION",
             type: "STRING",
+          },
+          {
+            name: "creditScore",
+            parameterSelectionTypeEnum: "DIRECT_SUBSTITUTION",
+            type: "NUMBER",
           },
         ],
       },
     },
+  },
+  addCategoryData: {
+    minimum: "",
+    maximum: "",
+    name: "",
+    value: "",
+    baseline: false,
+    impact: "To be calculated",
+  },
+  dynamicParameterDTOListObject: {
+    displayName: "string",
+    firstOperator: "string",
+    isModified: true,
+    name: "nationality",
+    parameterNameValueList: [
+    ],
+    parameterNumberRangeValueList: [
+    ],
+    parameterSourceEnum: "BORROWER_PROFILE",
+    parameterType: "STRING",
+    secondOperator: "string",
+    status: "CREATED",
+    weightNameValueList: [
+      {
+        name: "string",
+        value: 0,
+      },
+    ],
   },
   dRulesDataSample: {
     basicInfoData: {
@@ -316,41 +403,125 @@ const drlRulesetSlice = createSlice({
       state.dRulesData.ruleManagerData.ruleManagerEquation[name] = value;
     },
     addParameterTag: (state, action) => {
-      const newTag = action.payload; // { name, fieldType }
-      const existingTags = state.dRulesData.ruleManagerData.parameterTags;
+      const newTag = action.payload; // { name, type }
+      const existingTags =
+        state.dRulesData.ruleManagerData.ruleManagerEquation.parameters;
 
       const isDuplicate = existingTags.some(
-        (tag) => tag.name === newTag.name && tag.fieldType === newTag.fieldType
+        (tag) => tag.name === newTag.name && tag.type === newTag.type
       );
 
-      if (newTag.name && newTag.fieldType && !isDuplicate) {
-        state.dRulesData.ruleManagerData.parameterTags.push(newTag);
+      if (newTag.name && newTag.type && !isDuplicate) {
+        // 1. Add tag to equation list
+        existingTags.push(newTag);
+
+        // 2. Create parameter config from template
+        const newParamConfig = {
+          ...state.dynamicParameterDTOListObject,
+          name: newTag.name,
+          parameterType: newTag.type,
+        };
+
+        // 3. Push into dynamicParameterDTOList
+        state.dRulesData.ruleManagerData.dynamicParameterDTOList.push(
+          newParamConfig
+        );
       }
     },
     handleChangeParametersData: (state, action) => {
-      const { id, name, value } = action.payload;
+      const { tagName, index, name, value } = action.payload;
 
-      const updatedData = state.dRulesData.ruleManagerData.paramertersData.map(
-        (item) => {
-          if (name === "baseline") {
-            return {
-              ...item,
-              baseline: item.id === id ? value : false,
-            };
-          }
+      const paramList =
+        state.dRulesData.ruleManagerData.dynamicParameterDTOList;
 
-          if (item.id === id) {
-            return { ...item, [name]: value };
-          }
-          return item;
-        }
-      );
+      const paramGroup = paramList.find((param) => param.name === tagName);
+      if (!paramGroup) return;
 
-      state.dRulesData.ruleManagerData.paramertersData = updatedData;
+      const listKey =
+        paramGroup.parameterType === "STRING"
+          ? "parameterNameValueList"
+          : "parameterNumberRangeValueList";
+
+      const updatedList = [...paramGroup[listKey]];
+
+      // Handle baseline toggle: ensure only one is true
+      if (name === "baseline") {
+        updatedList.forEach((entry, idx) => {
+          entry.baseline = idx === index ? value : false;
+        });
+      } else {
+        updatedList[index] = {
+          ...updatedList[index],
+          [name]: value,
+        };
+      }
+
+      // Update the list inside the right paramGroup
+      paramGroup[listKey] = updatedList;
     },
     handleChangeAddCategoryData: (state, action) => {
       const { name, value } = action.payload;
-      state.dRulesData.ruleManagerData.addCategoryData[name] = value;
+      state.addCategoryData[name] = value;
+    },
+    addCategoryToParametersData: (state, action) => {
+      const { tagType, tagName } = action.payload; // From component
+      const newCategory = {
+        ...state.addCategoryData,
+      };
+
+      // Omit irrelevant fields based on tag type
+      if (tagType === "STRING") {
+        delete newCategory.minimum;
+        delete newCategory.maximum;
+      } else if (tagType === "NUMBER") {
+        delete newCategory.name;
+      }
+
+      const paramList =
+        state.dRulesData.ruleManagerData.dynamicParameterDTOList;
+
+      const targetParam = paramList.find((item) => item.name === tagName);
+      if (!targetParam) return;
+
+      const listKey =
+        tagType === "STRING"
+          ? "parameterNameValueList"
+          : "parameterNumberRangeValueList";
+
+      if (!Array.isArray(targetParam[listKey])) {
+        targetParam[listKey] = [];
+      }
+
+      targetParam[listKey].push(newCategory);
+
+      // Optional: Reset addCategoryData to blank after adding
+      state.addCategoryData = {
+        minimum: "",
+        maximum: "",
+        name: "",
+        value: "",
+        baseline: false,
+        impact: "To be calculated",
+      };
+    },
+    deleteCategoryFromParametersData: (state, action) => {
+      const { tagName, tagType, index } = action.payload;
+
+      const paramList =
+        state.dRulesData.ruleManagerData.dynamicParameterDTOList;
+
+      const targetParam = paramList.find((item) => item.name === tagName);
+      if (!targetParam) return;
+
+      const listKey =
+        tagType === "STRING"
+          ? "parameterNameValueList"
+          : "parameterNumberRangeValueList";
+
+      if (!Array.isArray(targetParam[listKey])) return;
+
+      // Remove entry at the given index
+      targetParam[listKey].splice(index, 1);
     },
   },
   extraReducers: (builder) => {
@@ -449,5 +620,7 @@ export const {
   addParameterTag,
   handleChangeParametersData,
   handleChangeAddCategoryData,
+  addCategoryToParametersData,
+  deleteCategoryFromParametersData,
 } = drlRulesetSlice.actions;
 export default drlRulesetSlice.reducer;

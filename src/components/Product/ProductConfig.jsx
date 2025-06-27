@@ -40,14 +40,21 @@ const ProductConfig = () => {
   const { userData } = useSelector((state) => state?.auth);
   const roleName = userData?.roles[0]?.name;
 
-  // console.log(ProjectDataInfo);
+  console.log(ProjectDataInfo);
 
   // Reusable function for formatting dropdown data
   function formateDataDropDown(replacerString, data) {
-    const formattedData = data?.map(({ name, href }) => ({
-      value: href.replace(replacerString, ""),
-      label: name,
-    }));
+    const formattedData = data?.map(({ name, href }) => {
+      let value = href.replace(replacerString, "");
+
+      // If there's an additional segment (e.g., "/basic-details"), remove it
+      value = value.split("/")[0];
+
+      return {
+        value,
+        label: name,
+      };
+    });
 
     // Append the "None" option to the formatted data
     if (
@@ -61,7 +68,6 @@ const ProductConfig = () => {
 
     return formattedData;
   }
-  useEffect(() => {}, [ProjectDataInfo, RPDataInfo, RecoveryDataInfo]);
 
   return (
     <>

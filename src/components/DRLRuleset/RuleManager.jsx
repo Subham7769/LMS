@@ -353,12 +353,12 @@ const RuleManager = () => {
   };
 
   const removeTag = (indexToRemove) => {
-    const updatedTags = ruleManagerData.parameterTags.filter(
+    const updatedTags = ruleManagerData.ruleManagerEquation.parameters.filter(
       (_, i) => i !== indexToRemove
     );
     dispatch(
       handleChangeRuleManagerData({
-        name: "parameterTags",
+        name: "parameters",
         value: updatedTags,
       })
     );
@@ -798,25 +798,27 @@ const RuleManager = () => {
               />
             </div>
             <div className="grid grid-cols-3 gap-2 flex-1">
-              {ruleManagerData.parameterTags.map((tag, index) => (
-                <div
-                  key={index}
-                  className="bg-sky-500/20 text-sky-700 text-sm font-medium px-3 py-1 rounded-full flex justify-between items-center gap-1"
-                >
-                  <span
-                    className="truncate text-center w-full cursor-pointer"
-                    onClick={() => handleParameterDataModal(tag)}
+              {ruleManagerData.ruleManagerEquation.parameters.map(
+                (tag, index) => (
+                  <div
+                    key={index}
+                    className="bg-sky-500/20 text-sky-700 text-sm font-medium px-3 py-1 rounded-full flex justify-between items-center gap-1"
                   >
-                    {tag.name}
-                  </span>
-                  <button
-                    onClick={() => removeTag(index)}
-                    className="text-sky-700 hover:text-sky-900 transition cursor-pointer"
-                  >
-                    <XMarkIcon className="w-3 h-3" />
-                  </button>
-                </div>
-              ))}
+                    <span
+                      className="truncate text-center w-full cursor-pointer"
+                      onClick={() => handleParameterDataModal(tag)}
+                    >
+                      {tag.name}
+                    </span>
+                    <button
+                      onClick={() => removeTag(index)}
+                      className="text-sky-700 hover:text-sky-900 transition cursor-pointer"
+                    >
+                      <XMarkIcon className="w-3 h-3" />
+                    </button>
+                  </div>
+                )
+              )}
             </div>
           </div>
         </div>

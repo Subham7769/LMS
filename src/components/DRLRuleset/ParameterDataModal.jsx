@@ -9,7 +9,10 @@ import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import { useDispatch, useSelector } from "react-redux";
 import ToggleSwitch from "../Common/ToggleSwitch/ToggleSwitch";
 import ShimmerTable from "../Common/ShimmerTable/ShimmerTable";
-import { handleChangeParametersData } from "../../redux/Slices/drlRulesetSlice";
+import {
+  deleteCategoryFromParametersData,
+  handleChangeParametersData,
+} from "../../redux/Slices/drlRulesetSlice";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import AddCategoryModal from "./AddCategoryModal";
 
@@ -22,22 +25,36 @@ const ParameterDataModal = ({
 }) => {
   const [showAddCategory, setShowAddCategory] = useState(false);
   const dispatch = useDispatch();
-  const { paramertersData, addCategoryData } = ruleManagerData;
+  const { dynamicParameterDTOList } = ruleManagerData;
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
 
-  const handleChange = (e, id) => {
+  const handleChange = (e, tagName, index) => {
     const { name, value, checked, type } = e.target;
     const fieldValue = type === "checkbox" ? checked : value;
     const fieldName = type === "checkbox" ? name.split("_")[0] : name;
+
     if (!hasViewOnlyAccess(roleName)) {
       dispatch(
-        handleChangeParametersData({ id, name: fieldName, value: fieldValue })
+        handleChangeParametersData({
+          tagName, // e.g., "nationality"
+          index, // which entry inside parameterNameValueList or parameterNumberRangeValueList
+          name: fieldName,
+          value: fieldValue,
+        })
       );
     }
   };
-  const handleSave = () => {};
-  const handleDelete = () => {};
+
+  const handleDelete = (index) => {
+    dispatch(
+      deleteCategoryFromParametersData({
+        tagName: tag.name,
+        tagType: tag.type,
+        index,
+      })
+    );
+  };
 
   const getStatusClass = (status) => {
     const normalizedStatus = status?.toLowerCase();
@@ -63,19 +80,28 @@ const ParameterDataModal = ({
     setShowAddCategory(false);
   };
 
+  const matchedParam = dynamicParameterDTOList?.find(
+    (param) => param.name === tag?.name
+  );
+
+  const isNumber = tag?.type === "NUMBER";
+  const isString = tag?.type === "STRING";
+
+  const rows = isNumber
+    ? matchedParam?.parameterNumberRangeValueList
+    : matchedParam?.parameterNameValueList;
+
   let ListHeader = [];
 
-  if (tag?.fieldType === "NUMBER") {
+  if (isNumber) {
     ListHeader.push(
       { name: "Min", sortKey: null },
       { name: "Max", sortKey: null }
     );
   }
 
-  if (tag?.fieldType === "STRING") {
-    ListHeader.push(
-      { name: "Category Value", sortKey: null },
-    );
+  if (isString) {
+    ListHeader.push({ name: "Category Value", sortKey: null });
   }
 
   ListHeader.push(
@@ -125,40 +151,40 @@ const ParameterDataModal = ({
         <div className="max-h-[60vh] overflow-y-scroll mb-5">
           <ListTableClassic
             ListName={`List of ${convertToReadableString(tag.name)}`}
-            ListNameLength={paramertersData?.length}
+            ListNameLength={rows?.length}
             ListHeader={ListHeader}
           >
-            {paramertersData?.map((paramData, index) => (
+            {rows?.map((paramData, index) => (
               <tr key={index}>
-                {tag?.fieldType === "NUMBER" && (
+                {isNumber && (
                   <>
                     <td className="px-4 py-4 whitespace-nowrap">
                       <InputText
-                        inputName="min"
-                        inputValue={paramData?.min}
-                        onChange={(e) => handleChange(e, paramData?.id)}
+                        inputName="minimum"
+                        inputValue={paramData?.minimum}
+                        onChange={(e) => handleChange(e, tag.name, index)}
                         isValidation={true}
                         isIndex={paramData?.dataIndex}
                       />
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap">
                       <InputText
-                        inputName="max"
-                        inputValue={paramData?.max}
-                        onChange={(e) => handleChange(e, paramData?.id)}
+                        inputName="maximum"
+                        inputValue={paramData?.maximum}
+                        onChange={(e) => handleChange(e, tag.name, index)}
                         isValidation={true}
                         isIndex={paramData?.dataIndex}
                       />
                     </td>
                   </>
                 )}
-                {tag?.fieldType === "STRING" && (
+                {isString && (
                   <>
                     <td className="px-4 py-4 whitespace-nowrap">
                       <InputText
-                        inputName="categoryValue"
-                        inputValue={paramData?.categoryValue}
-                        onChange={(e) => handleChange(e, paramData?.id)}
+                        inputName="name"
+                        inputValue={paramData?.name}
+                        onChange={(e) => handleChange(e, tag.name, index)}
                         isValidation={true}
                         isIndex={paramData?.dataIndex}
                       />
@@ -167,18 +193,18 @@ const ParameterDataModal = ({
                 )}
                 <td className="px-4 py-4 whitespace-nowrap">
                   <InputText
-                    inputName="numericalScore"
-                    inputValue={paramData?.numericalScore}
-                    onChange={(e) => handleChange(e, paramData?.id)}
+                    inputName="value"
+                    inputValue={paramData?.value}
+                    onChange={(e) => handleChange(e, tag.name, index)}
                     isValidation={true}
                     isIndex={paramData?.dataIndex}
                   />
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
                   <ToggleSwitch
-                    inputName={`baseline_${paramData?.id}`}
+                    inputName={`baseline_${index}`}
                     inputChecked={paramData?.baseline}
-                    onChange={(e) => handleChange(e, paramData?.id)}
+                    onChange={(e) => handleChange(e, tag.name, index)}
                     onLabel="Yes"
                     offLabel="No"
                   />
@@ -195,13 +221,8 @@ const ParameterDataModal = ({
                 {!hasViewOnlyAccess(roleName) && (
                   <td className="px-4 py-4 whitespace-nowrap flex gap-2">
                     <Button
-                      buttonIcon={CheckIcon}
-                      onClick={() => handleSave(paramData?.id, index)}
-                      buttonType="success"
-                    />
-                    <Button
                       buttonIcon={DeleteIcon}
-                      onClick={() => handleDelete(paramData?.id)}
+                      onClick={() => handleDelete(index)}
                       buttonType="destructive"
                     />
                   </td>
@@ -220,7 +241,6 @@ const ParameterDataModal = ({
         isOpen={showAddCategory}
         onClose={closeAddCategoryModal}
         tag={tag}
-        addCategoryData={addCategoryData}
       />
     </>
   );

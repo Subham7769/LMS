@@ -12,7 +12,7 @@ const SelectParametersModal = ({ isOpen, onClose }) => {
   const { optionsList } = useSelector((state) => state.drlRuleset);
 
   const initialState = {
-    fieldType: "",
+    type: "",
     criteriaType: "",
     name: "",
   };
@@ -44,9 +44,9 @@ const SelectParametersModal = ({ isOpen, onClose }) => {
   };
 
   const addParamter = () => {
-    const { name, fieldType } = ruleConfig;
-    if (name && fieldType) {
-      dispatch(addParameterTag({ name, fieldType }));
+    const { name, type } = ruleConfig;
+    if (name && type) {
+      dispatch(addParameterTag({ name, type }));
       setRuleConfig((prev) => ({ ...prev, name: "" })); // reset only name if needed
       onClose();
     }
@@ -85,8 +85,8 @@ const SelectParametersModal = ({ isOpen, onClose }) => {
                     { label: "NUMBER", value: "NUMBER" },
                   ]
             }
-            inputName="fieldType"
-            inputValue={ruleConfig.fieldType}
+            inputName="type"
+            inputValue={ruleConfig.type}
             onChange={handleChange}
             dropdownTextSize={"small"}
           />
