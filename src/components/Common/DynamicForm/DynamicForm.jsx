@@ -49,17 +49,21 @@ const DynamicForm = ({ details, config, sectionName, handleInputChange, handleFi
                         );
                     case "select":
                         return (
+                          <div className={`md:col-span-${field.colSpan}`}>
                             <InputSelect
-                                key={index}
-                                labelName={field.labelName}
-                                inputName={field.inputName}
-                                inputOptions={field.options}
-                                inputValue={details[field.inputName] || ""}
-                                onChange={(e) => handleInputChange(e, sectionName)}
-                                isValidation={field.validation || false}
-                                searchable={field.searchable || false}
-                                disabled={field.disabled || false}
+                              key={index}
+                              labelName={field.labelName}
+                              inputName={field.inputName}
+                              inputOptions={field.options}
+                              inputValue={details[field.inputName] || ""}
+                              onChange={(e) =>
+                                handleInputChange(e, sectionName)
+                              }
+                              isValidation={field.validation || false}
+                              searchable={field.searchable || false}
+                              disabled={field.disabled || false}
                             />
+                          </div>
                         );
                     case "date":
                         return (

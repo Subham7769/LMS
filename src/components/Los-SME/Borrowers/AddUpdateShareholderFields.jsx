@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
-import { countryOptions, districtOptions, locationOptions } from "../../../data/CountryData";
+import {
+  countryOptions,
+  districtOptions,
+  locationOptions,
+} from "../../../data/CountryData";
 import {
   maritalStatus,
   title,
@@ -15,15 +19,19 @@ import {
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 
-const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
+const AddUpdateShareholderFields = ({
+  BorrowerData,
+  handleChangeReducer,
+  sectionRefs,
+}) => {
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
-      []
-    );
-    
+    []
+  );
+
   const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1); 
+  yesterday.setDate(yesterday.getDate() - 1);
 
   useEffect(() => {
     setFilteredLocations1(
@@ -42,13 +50,14 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
       "title",
       "firstName",
       "surname",
-      "uniqueIDType",
-      "uniqueID",
       "gender",
       "maritalStatus",
+      "uniqueIDType",
+      "uniqueID",
       "nationality",
       "dateOfBirth",
       "placeOfBirth",
+
       "mobile1",
       "street",
       "residentialArea",
@@ -66,14 +75,6 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
     // Use section to update the correct part of the state
     dispatch(
       handleChangeReducer({ section, field: name, value, type, checked })
-    );
-  };
-
-  const handleFileUpload = (e, section) => {
-    const { name, value, type, checked, files } = e.target;
-    console.log(name)
-    dispatch(
-      handleChangeReducer({ section, field: name, value: files[0], type })
     );
   };
 
@@ -144,7 +145,7 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
       inputName: "dateOfBirth",
       type: "date",
       validation: true,
-      maxSelectableDate:yesterday,
+      maxSelectableDate: yesterday,
     },
     {
       labelName: "Place of Birth",
@@ -165,21 +166,21 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
       inputName: "mobile1",
       type: "text",
       validation: true,
-      maxLength:10,
+      maxLength: 10,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
       type: "text",
       validation: false,
-      maxLength:10,
+      maxLength: 10,
     },
     {
       labelName: "Landline Phone",
       inputName: "landlinePhone",
       type: "text",
       validation: false,
-      maxLength:10,
+      maxLength: 10,
     },
     {
       labelName: "House Number",
@@ -232,112 +233,6 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
     },
   ];
 
-  // Generate the Form Field
-  const personalDetailsInputNames = personalDetailsConfig.map(
-    (field) => field.inputName
-  );
-  const contactDetailsInputNames = contactDetailsConfig.map(
-    (field) => field.inputName
-  );
-
-  // Rendering Input Fields
-  const renderDetails = (details, config, sectionName) => (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-      {config.map((field, index) => {
-        switch (field.type) {
-          case "text":
-            return (
-              <InputText
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "number":
-            return (
-              <InputNumber
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "select":
-            return (
-              <InputSelect
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputOptions={field.options}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                isValidation={field.validation || false}
-                searchable={field.searchable || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "date":
-            return (
-              <div className="col-span-1" key={index}>
-                <InputDate
-                  labelName={field.labelName}
-                  inputName={field.inputName}
-                  inputValue={details[field.inputName]}
-                  onChange={(e) => handleInputChange(e, sectionName)}
-                  isValidation={field.validation || false}
-                  isDisabled={field.disabled || false}
-                  minSelectableDate={field.minSelectableDate || null}
-                  maxSelectableDate={field.maxSelectableDate || null}
-                />
-              </div>
-            );
-          case "email":
-            return (
-              <InputEmail
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-              />
-            );
-          case "file":
-            return (
-              <InputFile
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleFileUpload(e, sectionName)}
-                accept={field.accept || "*"}
-                isValidation={field.validation || false}
-              />
-            );
-          default:
-            return null;
-        }
-      })}
-    </div>
-  );
-
-  // Dedicated UI Components Creation
-  const personalDetails = (personalDetails) =>
-    renderDetails(personalDetails, personalDetailsConfig, "personalDetails");
-
-  const contactDetails = (contactDetails) =>
-    renderDetails(contactDetails, contactDetailsConfig, "contactDetails");
-
   //   Validation Error Object from Validation slice to check Error state
   const validationError = useSelector(
     (state) => state.validation.validationError
@@ -345,31 +240,47 @@ const AddUpdateShareholderFields = ({ BorrowerData, handleChangeReducer }) => {
 
   return (
     <>
-      <Accordion
-        heading={"Personal Details"}
-        renderExpandedContent={() =>
-          <DynamicForm
-            details={BorrowerData.personalDetails}
-            config={personalDetailsConfig}
-            sectionName={"personalDetails"}
-            handleInputChange={handleInputChange}
-          />
-        }
-        isOpen={true}
-        error={isValidationFailed(validationError, personalDetailsConfig)}
-      />
-      <Accordion
-        heading={"Contact Details"}
-        renderExpandedContent={() =>
-          <DynamicForm
-            details={BorrowerData.contactDetails}
-            config={contactDetailsConfig}
-            sectionName={"contactDetails"}
-            handleInputChange={handleInputChange}
-          />
-        }
-        error={isValidationFailed(validationError, contactDetailsConfig)}
-      />
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["personalDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Personal Details"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={BorrowerData.personalDetails}
+              config={personalDetailsConfig}
+              sectionName={"personalDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          isOpen={true}
+          error={isValidationFailed(validationError, personalDetailsConfig)}
+        />
+      </div>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["contactDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Contact Details"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={BorrowerData.contactDetails}
+              config={contactDetailsConfig}
+              sectionName={"contactDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          error={isValidationFailed(validationError, contactDetailsConfig)}
+        />
+      </div>
     </>
   );
 };

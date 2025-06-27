@@ -1,14 +1,24 @@
 import React from "react";
 import Button from "../Common/Button/Button";
+import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
-import InputSelectCreatable from "../Common/InputSelectCreatable/InputSelectCreatable";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
 import { ministriesOptions } from "../../data/LosData";
+import { useSelector } from "react-redux";
 
-const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, handleInputChange, handleAddFields, employerOptions, setEmployerOptions }) => {
+const EditEmployerModal = ({
+  isOpen,
+  onClose,
+  index,
+  affordabilityOptions,
+  handleChange,
+  handleSave,
+}) => {
+  const { allEmployerData } = useSelector((state) => state.employer);
+  const empData = allEmployerData[index];
 
-  if (!isOpen) return null;
+  if (!isOpen || !empData) return null;
 
   return (
     <>
@@ -34,39 +44,36 @@ const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, 
               />
             </svg>
           </div>
-          <div className="grid grid-cols-2 gap-4 mb-5 mt-3">
-            <InputSelectCreatable
+          <div className="grid md:grid-cols-2 gap-4 mb-5 mt-3">
+            <InputText
               labelName="Employer Name"
-              inputOptions={employerOptions}
               inputName="employerName"
-              inputValue={employerData?.employerName}
-              onChange={handleInputChange}
+              inputValue={empData?.employerName}
+              onChange={(e) => handleChange(e, empData?.employerId)}
               isValidation={true}
-              searchable={true}
-              setInputOptions={setEmployerOptions}
             />
             <InputSelect
               labelName="Affordability Criteria"
               inputOptions={affordabilityOptions}
               inputName="affordabilityCriteriaTempId"
-              inputValue={employerData?.affordabilityCriteriaTempId}
-              onChange={handleInputChange}
+              inputValue={empData?.affordabilityCriteriaTempId}
+              onChange={(e) => handleChange(e, empData?.employerId)}
               isValidation={true}
             />
             <InputSelect
               labelName="Day of Month"
               inputOptions={daysOfMonth}
               inputName="firstEmiDay"
-              inputValue={employerData?.firstEmiDay}
-              onChange={handleInputChange}
+              inputValue={empData?.firstEmiDay}
+              onChange={(e) => handleChange(e, empData?.employerId)}
               isValidation={true}
             />
             <InputSelect
               labelName="Which Month ?"
               inputOptions={upcomingMonths}
               inputName="moratoriumMonths"
-              inputValue={employerData?.moratoriumMonths}
-              onChange={handleInputChange}
+              inputValue={empData?.moratoriumMonths}
+              onChange={(e) => handleChange(e, empData?.employerId)}
               isValidation={true}
             />
             <div className="md:col-span-2">
@@ -74,8 +81,8 @@ const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, 
                 labelName="Ministry"
                 inputOptions={ministriesOptions}
                 inputName="ministries"
-                inputValue={employerData?.ministries}
-                onChange={handleInputChange}
+                inputValue={empData?.ministries}
+                onChange={(e) => handleChange(e, empData?.employerId)}
                 isValidation={true}
                 isMulti={true}
                 searchable={true}
@@ -86,8 +93,8 @@ const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, 
           <div className="text-right">
             <Button
               buttonIcon={CheckCircleIcon}
-              buttonName={"Add"}
-              onClick={handleAddFields}
+              buttonName={"Update"}
+              onClick={() => handleSave(empData?.employerId, index)}
               rectangle={true}
             />
           </div>
@@ -97,4 +104,4 @@ const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, 
   );
 };
 
-export default AddEmployerModal;
+export default EditEmployerModal;

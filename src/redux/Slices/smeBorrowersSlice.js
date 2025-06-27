@@ -1356,7 +1356,7 @@ const borrowersSlice = createSlice({
                     [field]: type === "checkbox" ? checked : value, // Update field value based on type
                   };
                 }
-              }else{
+              } else {
                 if (docIndex === index) {
                   // Update the specified field in the document
                   return {

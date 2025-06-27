@@ -23,7 +23,7 @@ import convertToTitleCase from "../../../utils/convertToTitleCase";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 
-const AddLoanFields = ({ addLoanData }) => {
+const AddLoanFields = ({ addLoanData, sectionRefs }) => {
   const dispatch = useDispatch();
   const { loanProductOptions, loanProductData } = useSelector(
     (state) => state.personalLoans
@@ -108,7 +108,7 @@ const AddLoanFields = ({ addLoanData }) => {
       product?.loanProductId === addLoanData?.generalLoanDetails?.loanProductId
   );
 
-  console.log(selectedLoanProduct);
+  // console.log(selectedLoanProduct);
 
   // Generate unique loan tenure options combining loanTenure & loanTenureType
   const loanTenureOptions = useMemo(() => {
@@ -137,13 +137,13 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
-      dispatch(
-        updateLoanField({
-          section: "generalLoanDetails",
-          field: "interestMethod",
-          value: selectedLoanProduct?.interestMethod,
-        })
-      );
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "interestMethod",
+        value: selectedLoanProduct?.interestMethod,
+      })
+    );
 
     const uniqueRepaymentTenure = new Set();
 
@@ -261,16 +261,16 @@ const AddLoanFields = ({ addLoanData }) => {
   // }, [selectedLoanProduct]);
 
   useEffect(() => {
-      if (!selectedLoanProduct) return;
-  
-      dispatch(
-        updateLoanField({
-          section: "generalLoanDetails",
-          field: "interestMethod",
-          value: selectedLoanProduct?.interestMethod,
-        })
-      );
-    }, [selectedLoanProduct]);
+    if (!selectedLoanProduct) return;
+
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "interestMethod",
+        value: selectedLoanProduct?.interestMethod,
+      })
+    );
+  }, [selectedLoanProduct]);
 
   const today = new Date();
   const { loanCreationDate, loanReleaseDate, loanProductId, firstEmiDate } =
@@ -401,7 +401,7 @@ const AddLoanFields = ({ addLoanData }) => {
     {
       labelName: "Principal Amount",
       inputName: "principalAmount",
-      type: "number",
+      type: "text",
       validation: true,
     },
     {
@@ -558,29 +558,53 @@ const AddLoanFields = ({ addLoanData }) => {
 
   return (
     <>
-      <Accordion
-        heading={"General Loan Details"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={addLoanData?.generalLoanDetails}
-            config={generalLoanDetailsConfig}
-            sectionName={"generalLoanDetails"}
-            handleInputChange={handleInputChange}
-          />
-        )}
-        isOpen={true}
-        error={isValidationFailed(validationError, generalLoanDetailsConfig)}
-      />
-      <Accordion
-        heading={"Refinance Details"}
-        renderExpandedContent={() =>
-          refinanceDetails(addLoanData?.refinanceDetails)
-        }
-      />
-      <Accordion
-        heading={"Requirement"}
-        renderExpandedContent={() => requirements(addLoanData?.documents)}
-      />
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["generalLoanDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"General Loan Details"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={addLoanData?.generalLoanDetails}
+              config={generalLoanDetailsConfig}
+              sectionName={"generalLoanDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          isOpen={true}
+          error={isValidationFailed(validationError, generalLoanDetailsConfig)}
+        />
+      </div>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["refinanceDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Refinance Details"}
+          renderExpandedContent={() =>
+            refinanceDetails(addLoanData?.refinanceDetails)
+          }
+        />
+      </div>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["documents"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Requirement"}
+          renderExpandedContent={() => requirements(addLoanData?.documents)}
+        />
+      </div>
       <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
         <div>{`${uploadedCount} of ${addLoanData?.documents.length} documents uploaded`}</div>
         <div>{`${verifiedCount} documents verified`}</div>

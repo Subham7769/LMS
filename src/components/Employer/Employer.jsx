@@ -3,6 +3,7 @@ import {
   PlusIcon,
   TrashIcon,
   CheckCircleIcon,
+  PencilIcon,
 } from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";
@@ -27,6 +28,7 @@ import { convertDate } from "../../utils/convertDate";
 import AddEmployerModal from "./AddEmployerModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
+import EditEmployerModal from "./EditEmployerModal";
 
 const Employer = () => {
   const dispatch = useDispatch();
@@ -40,6 +42,8 @@ const Employer = () => {
   const [employerOptions, setEmployerOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showEmployerModal, setShowEmployerModal] = useState(false);
+  const [showEditEmployerModal, setShowEditEmployerModal] = useState(false);
+  const [editEmployerIndex, setEditEmployerIndex] = useState("");
 
   useEffect(() => {
     dispatch(fetchEmployerData());
@@ -72,8 +76,12 @@ const Employer = () => {
   }, [allEmployerData]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    dispatch(setEmployerData({ name, value }));
+    if (Array.isArray(e)) {
+      dispatch(setEmployerData({ name: "ministries", value: e }));
+    } else {
+      const { name, value } = e.target;
+      dispatch(setEmployerData({ name, value }));
+    }
   };
 
   const handleAddFields = async () => {
@@ -87,13 +95,20 @@ const Employer = () => {
   };
 
   const handleChange = (e, id) => {
-    const { name, value } = e.target;
     if (!hasViewOnlyAccess(roleName)) {
-      dispatch(handleChangeEmployerData({ id, name, value }));
+      if (Array.isArray(e)) {
+        dispatch(
+          handleChangeEmployerData({ id, name: "ministries", value: e })
+        );
+      } else {
+        const { name, value } = e.target;
+        dispatch(handleChangeEmployerData({ id, name, value }));
+      }
     }
   };
 
   const handleSave = async (id, index) => {
+    console.log(allEmployerData[index]);
     await dispatch(validateForm(allEmployerData[index]));
     const state = store.getState();
     const isValid = state.validation.isValid;
@@ -101,6 +116,7 @@ const Employer = () => {
       const updatePayload = allEmployerData[index];
       dispatch(updateEmployerData({ updatePayload, id }));
     }
+    setShowEditEmployerModal(false);
   };
 
   const handleDelete = async (id) => {
@@ -113,6 +129,15 @@ const Employer = () => {
 
   const closeEmployerModal = () => {
     setShowEmployerModal(false);
+  };
+
+  const handleEditEmployer = (index) => {
+    setShowEditEmployerModal(true);
+    setEditEmployerIndex(index);
+  };
+
+  const closeEditEmployerModal = () => {
+    setShowEditEmployerModal(false);
   };
 
   // **Filter employers based on search term**
@@ -170,20 +195,21 @@ const Employer = () => {
                 Which Month ?
               </div>
               <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                 Creation Date
+                Creation Date
               </div>
               <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                 Actions
+                Actions
               </div>
             </div>
-            {filteredEmployers?.map((empData, index) => ( 
-              <div 
+            {filteredEmployers?.map((empData, index) => (
+              <div
                 key={empData.employerId}
                 className={`grid grid-cols-6 gap-4 items-center pb-3 px-5 mb-3 
-                ${index !== filteredEmployers.length - 1
+                ${
+                  index !== filteredEmployers.length - 1
                     ? "border-b border-border-gray-primary"
                     : ""
-                  }`}
+                }`}
               >
                 <InputText
                   inputName="employerName"
@@ -222,6 +248,12 @@ const Employer = () => {
                 {!hasViewOnlyAccess(roleName) ? (
                   <div className="flex items-center justify-center gap-4">
                     <Button
+                      buttonIcon={PencilIcon}
+                      onClick={() => handleEditEmployer(index)}
+                      circle={true}
+                      buttonType="secondary"
+                    />
+                    <Button
                       buttonIcon={CheckCircleIcon}
                       onClick={() => handleSave(empData?.employerId, index)}
                       circle={true}
@@ -250,6 +282,14 @@ const Employer = () => {
             affordabilityOptions={affordabilityOptions}
             employerOptions={employerOptions}
             setEmployerOptions={setEmployerOptions}
+          />
+          <EditEmployerModal
+            isOpen={showEditEmployerModal}
+            onClose={closeEditEmployerModal}
+            index={editEmployerIndex}
+            affordabilityOptions={affordabilityOptions}
+            handleChange={handleChange}
+            handleSave={handleSave}
           />
         </div>
       </ContainerTile>
