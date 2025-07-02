@@ -558,6 +558,9 @@ const ThankYouPage = React.lazy(() =>
   import("./components/B2CCustomer/ThankYouPage")
 );
 
+
+const Messages = React.lazy(() => import("./components/Messages/Messages"));
+
 const routes = [
   // Accessing All Main Components
   { path: "/login", element: <Login />, errorElement: <RouteErrorBoundary /> },
@@ -712,6 +715,11 @@ const routes = [
       {
         path: "my-tasks",
         element: <MyTasksPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "AI-agent",
+        element: <Messages />,
         errorElement: <RouteErrorBoundary />,
       },
 
@@ -1510,6 +1518,7 @@ const routes = [
         element: <BankStatementAnalyzer />,
         errorElement: <RouteErrorBoundary />,
       },
+
     ],
   },
 
@@ -1704,6 +1713,9 @@ const routes = [
     element: <B2CLandingPage />,
     errorElement: <RouteErrorBoundary />,
   },
+
+
+
 
   // Catch-All Route for 404 Page Not Found
   { path: "*", element: <PageNotFound /> },
