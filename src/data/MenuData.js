@@ -576,6 +576,17 @@ export const MenusInitial = [
     submenuItems: [],
     isOpen: false,
   },
+  {
+    title: "AI Agent",
+    sectionName: "CONNECT",
+    href: "/loan/AI-agent",
+    icon: "ChatBubbleLeftRightIcon",
+    current: false,
+    submenu: false,
+    createButton: false, //if create product from Side bar Using input box
+    submenuItems: [],
+    isOpen: false,
+  },
 ];
 export const allSectionName = [
   "LOAN MANAGEMENT",
@@ -586,4 +597,5 @@ export const allSectionName = [
   "REPORTS & ANALYSIS",
   "USER TOOLS",
   "WORKFLOW MANAGEMENT",
+  "CONNECT",
 ];
