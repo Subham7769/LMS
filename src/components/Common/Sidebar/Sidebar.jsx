@@ -58,6 +58,10 @@ import {
   ArrowLeftIcon,
   BanknotesIcon,
   ChatBubbleLeftRightIcon,
+  RectangleStackIcon,
+  BellAlertIcon,
+  ExclamationCircleIcon,
+  PlayCircleIcon,
 } from "@heroicons/react/24/outline";
 
 import { createNewRac } from "../../../utils/createNewRac";
@@ -130,6 +134,10 @@ const SideBar = () => {
     CpuChipIcon,
     BanknotesIcon,
     ChatBubbleLeftRightIcon,
+    RectangleStackIcon,
+    BellAlertIcon,
+    ExclamationCircleIcon,
+    PlayCircleIcon,
   };
 
   const functionMapping = {

@@ -559,6 +559,14 @@ const ThankYouPage = React.lazy(() =>
 );
 
 
+// -------------------------------- WORKFLOW MANAGEMENT ----------------------------------------
+const WorkflowList = lazy(() => import("./components/Workflow/WorkflowList"));
+const WorkflowIncidents = lazy(() => import("./components/Workflow/Incidents"));
+const WorkflowInstances = lazy(() => import("./components/Workflow/Instances"));
+const WorkflowMyTasks = lazy(() => import("./components/Workflow/MyTasks"));
+const WorkflowNotifications = lazy(() => import("./components/Workflow/Notifications"));
+
+
 const Messages = React.lazy(() => import("./components/Messages/Messages"));
 
 const routes = [
@@ -1659,6 +1667,46 @@ const routes = [
     errorElement: <RouteErrorBoundary />,
   },
 
+  // Camunda Workflows Routes
+    {
+    path: "/workflow",
+    element: (
+      <PageErrorBoundary>
+        <ProtectedRoute>
+          <AppLayout />
+        </ProtectedRoute>
+      </PageErrorBoundary>
+    ),
+    children: [
+      // Accessing All Page Components
+      
+  {
+    path: "workflow-list",
+    element: <WorkflowList />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "instances",
+    element: <WorkflowInstances />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "incidents",
+    element: <WorkflowIncidents />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "my-task-list",
+    element: <WorkflowMyTasks />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "notifications",
+    element: <WorkflowNotifications />,
+    errorElement: <RouteErrorBoundary />,
+  },      
+    ],
+  },
   // Catch-All Route for 404 Page Not Found
   { path: "*", element: <PageNotFound /> },
 

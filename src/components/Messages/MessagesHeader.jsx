@@ -1,7 +1,8 @@
 import React from 'react';
 
-import User01 from './images/user-32-01.jpg';
-import User02 from './images/user-32-07.jpg';
+import User01 from '../../assets/image/user-32-01.jpg';
+import Bot from '../../assets/image/Floating_Robot.jpg';
+import User02 from '../../assets/image/user-32-07.jpg';
 
 function MessagesHeader({
   msgSidebarOpen,
@@ -13,7 +14,7 @@ function MessagesHeader({
         {/* People */}
         <div className="flex items-center">
           {/* Close button */}
-          <button
+          {/* <button
             className="md:hidden text-gray-400 hover:text-gray-500 mr-4"
             onClick={() => setMsgSidebarOpen(!msgSidebarOpen)}
             aria-controls="messages-sidebar"
@@ -23,14 +24,14 @@ function MessagesHeader({
             <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M10.7 18.7l1.4-1.4L7.8 13H20v-2H7.8l4.3-4.3-1.4-1.4L4 12z" />
             </svg>
-          </button>
+          </button> */}
           {/* People list */}
           <div className="flex -space-x-3 -ml-px">
             <a className="block" href="#0">
-              <img className="rounded-full border-2 border-white dark:border-gray-800 box-content" src={User01} width="32" height="32" alt="User 01" />
+              <img className="rounded-full border-2 border-white dark:border-gray-800 box-content" src={Bot} width="32" height="32" alt="User 04" />
             </a>
             <a className="block" href="#0">
-              <img className="rounded-full border-2 border-white dark:border-gray-800 box-content" src={User02} width="32" height="32" alt="User 04" />
+              <img className="rounded-full border-2 border-white dark:border-gray-800 box-content" src={User01} width="32" height="32" alt="User 01" />
             </a>
           </div>
         </div>
