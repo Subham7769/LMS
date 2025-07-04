@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Children, useEffect, useState } from "react";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -48,6 +48,11 @@ import store from "../../../redux/store";
 import ActionOption from "../../Common/ActionOptions/ActionOption";
 import { generateRefundApplicationId } from "../../../redux/Slices/personalRefundSlice";
 
+import { initiateDebtCollectionWorkflow } from "../../../utils/camundaService";
+import useConfirm from "../../../hooks/useConfirm";
+
+import {toast} from "react-toastify";
+
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
@@ -60,6 +65,8 @@ function transformData(inputArray) {
 const LoanHistory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { confirm, ConfirmDialog } = useConfirm();
+
   const {
     loanHistory,
     paymentHistory,
@@ -81,6 +88,10 @@ const LoanHistory = () => {
 
   // Decode the BorrowerId to restore its original value
   const decodedUniqueID = decodeURIComponent(uniqueID);
+
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
+  const userName = userData?.username || "";
 
   useEffect(() => {
     return () => {
@@ -171,6 +182,50 @@ const LoanHistory = () => {
     );
   };
 
+  // const handleDebtCollection = async (loanId, uid) => {
+  //   console.log(loanId + uid);
+    
+  //   navigate(`/workflow/workflow-list?loanId=${loanId}&uid=${uid}`);
+  // };
+
+  const handleDebtCollection = async (loanId, uid) => {
+    console.log("hdfdfdfdf")
+    const ok = await confirm(
+      "Start Debt Collection",
+      "This Process will handle the pending loan installment payment. <br /> Are you sure you want to start the Debt Collection for this loan?"
+    );
+    if (!ok) return;
+
+    const today = new Date();
+    const dueDate = new Date();
+    dueDate.setDate(today.getDate() + 5);
+
+    // Format to 'YYYY-MM-DD' (Camunda-friendly ISO format)
+    const formattedDueDate = dueDate.toISOString().split('T')[0];
+
+    const payload = {
+      loanId: loanId ? loanId : "LHP20000030LUS",
+      email: 'umesh.kshirsagar@gmail.com',
+      fullName: 'Full Name',
+      customerType: "Personal",
+      paymentHistory: "Good",
+      accountNumber:"ACC293030",
+      daysPastDue:10,
+      amountDue:1000,
+      dueDate:formattedDueDate,
+      assignedUser:userName,
+      // etc.
+    };
+
+    try {
+      console.log("hdfdfdfdf")
+      await initiateDebtCollectionWorkflow(payload);
+      toast.success("Workflow started successfully!");
+    } catch (error) {
+      toast.error("Failed to start workflow:" + error);
+    }
+  };
+
   const handleCloseLoan = async (loanId, uid) => {
     const closeLoanPayload = {
       loanId: loanId,
@@ -249,6 +304,10 @@ const LoanHistory = () => {
       name: "Documents",
       action: (rowData) => handleViewDocuments(rowData.verifiedDocuments),
     },
+    {
+        name: "Debt Collection",
+        action: (rowData) => handleDebtCollection(rowData.loanId, rowData.uid),
+    },    
   ];
 
   const excludedForPendingOrCanceled = [
@@ -577,7 +636,13 @@ const LoanHistory = () => {
         downloadDocumentFile={downloadDocumentFile}
         previewDocumentFile={previewDocumentFile}
       />
+
+
+      <ConfirmDialog />
     </div>
+
+    
+      
   );
 };
 

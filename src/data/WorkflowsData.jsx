@@ -1,8 +1,8 @@
 export const HeaderList = [
-  "Name",
+  "Instance Name",
   "Description",
-  "Instances",
-  "Incidents",
+  "Instance Id",
+  "BPMN File",
   "Actions",
 ];
 
