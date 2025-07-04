@@ -1,13 +1,10 @@
 import { useDispatch } from "react-redux";
 import {
-  deleteRuleById,
   removeRule,
   updateStatus,
   fetchDynamicRacDetails,
-  setCurrentRule,
-  restoreRule,
 } from "../../redux/Slices/dynamicRacSlice";
-import { fetchOptionList } from "../../redux/Slices/drlRulesetSlice";
+import { deleteRuleById, fetchOptionList, restoreRule, setCurrentRule } from "../../redux/Slices/drlRulesetSlice";
 import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import {
   PlusIcon,
@@ -16,8 +13,6 @@ import {
   CheckIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/20/solid";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import convertToReadableString from "../../utils/convertToReadableString";
 import generateNumberSentence from "./generateNumberSentence";
 import generateStringSentence from "./generateStringSentence";
 import Accordion from "../Common/Accordion/Accordion";
@@ -41,7 +36,6 @@ const RuleComponent = ({
   dynamicRacRuleId,
   sectionId,
   sectionName,
-  handleSaveDynamicRAC,
   showRuleModal,
   setShowRuleModal,
   isEditMode,
@@ -58,15 +52,16 @@ const RuleComponent = ({
       // console.log("removeRule");
 
       // Second dispatch: deleteRuleById
-      await dispatch(deleteRuleById(dynamicRacRuleId)).unwrap();
+      dispatch(deleteRuleById({ sectionId, dynamicRacRuleId }));
+
       // console.log("deleteRuleById");
 
       // Fourth dispatch: fetchOptionList
-      await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
+      // await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
       // console.log("fetchOptionList");
 
       // Third dispatch: fetchDynamicRacDetails
-      await dispatch(fetchDynamicRacDetails(droolsRuleSetId)).unwrap();
+      // await dispatch(fetchDynamicRacDetails(droolsRuleSetId)).unwrap();
       // console.log("fetchDynamicRacDetails");
     } catch (error) {
       console.error("Error while performing operations: ", error);
@@ -92,7 +87,7 @@ const RuleComponent = ({
 
   const handleEdit = () => {
     dispatch(setCurrentRule({ sectionId, dynamicRacRuleId }));
-    setShowRuleModal(true);
+    setShowRuleModal(sectionId);
     setIsEditMode(true);
   };
 
@@ -103,24 +98,19 @@ const RuleComponent = ({
   };
 
   // Edit Number Config
-  const { racConfig } = useSelector((state) => state.dynamicRac);
-  const { optionsList } = useSelector((state) => state.drlRuleset);
-  const { sections } = racConfig;
-  const [ruleConfig, setRuleConfig] = useState(rule);
   const { firstOperator, secondOperator, numberCriteriaRangeList } = rule;
 
   const minimum = numberCriteriaRangeList
     ? numberCriteriaRangeList[0]?.minimum
     : null;
 
-  const maximum = numberCriteriaRangeList
+  const maximum = numberCriteriaRangeList 
     ? numberCriteriaRangeList[0]?.maximum
     : null;
 
   const initialMinValue = -Number(import.meta.env.VITE_MIN_MAX_LIMIT);
   const initialMaxValue = Number(import.meta.env.VITE_MIN_MAX_LIMIT);
 
-  const [equalValue, setEqualValue] = useState(0);
   const [minValue, setMinValue] = useState(minimum);
   const [maxValue, setMaxValue] = useState(maximum);
   const [condition, setCondition] = useState(

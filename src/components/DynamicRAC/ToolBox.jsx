@@ -1,22 +1,19 @@
 import { useDispatch } from "react-redux";
-import { addRule } from "../../redux/Slices/dynamicRacSlice";
-import { useState, useEffect } from "react";
+import { removeTag } from "../../redux/Slices/dynamicRacSlice";
+import {useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import Button from "../Common/Button/Button";
-import HoverButton from "../Common/HoverButton/HoverButton";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import {
-  operatorOptions,
   conditionsOptions,
   trueFalseOptions,
 } from "../../data/OptionsData";
 import {
   XMarkIcon,
   PlusIcon,
-  ArchiveBoxArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
 import store from "../../redux/store";
@@ -383,7 +380,7 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
     }));
   };
 
-  if (!isOpen) return null;
+  if (!(isOpen === sectionId)) return null;
 
   return (
     <Modal
@@ -459,6 +456,7 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
                 dynamicRacRuleId={"123"}
                 isValidation={true}
                 required={true}
+                removeTag={removeTag}
               />
             )}
             {ruleConfig.criteriaType === "DOCUMENT" && (

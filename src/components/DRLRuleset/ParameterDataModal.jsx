@@ -3,7 +3,7 @@ import Modal from "../Common/Modal/Modal";
 import Button from "../Common/Button/Button";
 import InputText from "../Common/InputText/InputText";
 import convertToReadableString from "../../utils/convertToReadableString";
-import { AddIcon, CheckIcon, DeleteIcon } from "../../assets/icons";
+import { AddIcon, DeleteIcon } from "../../assets/icons";
 import ListTableClassic from "../Common/ListTable/ListTableClassic";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import { useDispatch, useSelector } from "react-redux";
