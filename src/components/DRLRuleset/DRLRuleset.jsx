@@ -1,14 +1,17 @@
 import React, { useEffect } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
 import DynamicHeader from "../Common/DynamicHeader/DynamicHeader";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import Button from "../Common/Button/Button";
 import SectionSidebar from "../Common/Sidebar/SectionSidebar";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import {
+  createDrools,
   deleteDrlRuleset,
+  fetchDruleData,
   fetchDrulesName,
   handleChangeBasicInfoData,
+  updateDrools,
   updateDrulesName,
 } from "../../redux/Slices/drlRulesetSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +19,8 @@ import { fetchDrlRulesetData } from "../../redux/Slices/sidebarSlice";
 
 const DRLRuleset = () => {
   const { droolsRuleSetId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate(); // <== Required for "Next" button
   const { itemName, dRulesData, loading, error } = useSelector(
     (state) => state.drlRuleset
   );
@@ -26,6 +31,7 @@ const DRLRuleset = () => {
   useEffect(() => {
     if (droolsRuleSetId) {
       dispatch(fetchDrulesName(droolsRuleSetId));
+      dispatch(fetchDruleData(droolsRuleSetId));
     }
   }, [droolsRuleSetId, dispatch]);
 
@@ -36,12 +42,13 @@ const DRLRuleset = () => {
     }
   };
 
-  const handleNameUpdate = async (newName) => {
+  const handleNameUpdate = async (newName, isDescriptionUpdate) => {
     await dispatch(
       updateDrulesName({
         droolsRuleSetId,
         newName,
         description: dRulesData.basicInfoData.description,
+        isDescriptionUpdate,
       })
     );
     dispatch(fetchDrulesName(droolsRuleSetId));
@@ -54,8 +61,46 @@ const DRLRuleset = () => {
     navigate("/loan/drl-ruleset");
   };
 
-  const basePath = `/loan/drl-ruleset/${droolsRuleSetId}`;
+  const handleSave = async () => {
+    const { basicInfoData, ruleManagerData, id } = dRulesData;
 
+    // Flatten all rules into a single array
+    const flattenedRules = ruleManagerData.ruleManagerConfig.flatMap(
+      (section) =>
+        section.rules.map((rule) => ({
+          ...rule, // Keep all existing fields intact
+        }))
+    );
+
+    const transformedPayload = {
+      droolsRuleSetId: droolsRuleSetId,
+      name: itemName,
+      id,
+      basicInfoData,
+      ruleManagerData: {
+        ...ruleManagerData,
+        ruleManagerConfig: flattenedRules, // Overwrite with flat rule list
+      },
+    };
+
+    console.log("Update Payload:", transformedPayload);
+    if (transformedPayload.id) {
+      await dispatch(updateDrools(transformedPayload)).unwrap();
+      const isDescriptionUpdate = true
+      handleNameUpdate(itemName, isDescriptionUpdate);
+    } else {
+      await dispatch(createDrools(transformedPayload)).unwrap();
+    }
+    await dispatch(fetchDruleData(droolsRuleSetId)).unwrap();
+  };
+
+  console.log(dRulesData);
+
+  const handleNext = () => {
+    navigate(`${basePath}/rule-manager`);
+  };
+
+  const basePath = `/loan/drl-ruleset/${droolsRuleSetId}`;
   const navItems = [
     {
       label: "Basic Info",
@@ -66,6 +111,8 @@ const DRLRuleset = () => {
       path: "/rule-manager",
     },
   ];
+
+  const isOnBasicInfo = location.pathname.includes("basic-info");
   return (
     <>
       <DynamicHeader
@@ -88,18 +135,25 @@ const DRLRuleset = () => {
               />
             </div>
             <div className="border-t border-gray-200 dark:border-gray-700/60 px-6 py-5">
-              {/* {!hasViewOnlyAccess(roleName) && ( */}
-              <div className="text-right">
-                {/* {!loading && ( */}
-                <Button
-                  buttonName={"Update"}
-                  // onClick={handleUpdate}
-                  buttonType={"primary"}
-                  // loading={loading}
-                />
-                {/* )} */}
-              </div>
-              {/* )} */}
+              {!hasViewOnlyAccess(roleName) && (
+                <div className="text-right">
+                  {!loading &&
+                    (isOnBasicInfo && !dRulesData.id ? (
+                      <Button
+                        buttonName="Next"
+                        onClick={handleNext}
+                        buttonType="secondary"
+                      />
+                    ) : (
+                      <Button
+                        buttonName={dRulesData.id ? "Update" : "Create"}
+                        onClick={handleSave}
+                        buttonType={"primary"}
+                        loading={loading}
+                      />
+                    ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

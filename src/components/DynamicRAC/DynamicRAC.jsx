@@ -334,7 +334,7 @@ const DynamicRAC = () => {
   const handleAddRule = (sectionId, sectionName) => {
     setSelectedSectionId(sectionId); // Update sectionId first
     setSelectedSectionName(sectionName); // Update sectionId first
-    setTimeout(() => setShowRuleModal(true), 0); // Open modal after state updates
+    setTimeout(() => setShowRuleModal(sectionId), 0); // Open modal after state updates
   };
 
   const handleUseTemplate = (sectionId, sectionName) => {

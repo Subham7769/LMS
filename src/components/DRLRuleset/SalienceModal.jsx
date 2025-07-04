@@ -1,14 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../Common/Modal/Modal";
 import InputNumber from "../Common/InputNumber/InputNumber";
+import { useDispatch } from "react-redux";
+import { updateSalienceBySectionId } from "../../redux/Slices/drlRulesetSlice";
 
-const SalienceModal = ({ isOpen, onClose }) => {
-  const [salience, setSalience] = useState();
-  const handleUpdateSalience = () => {};
+const SalienceModal = ({ sectionId, isOpen, onClose, selectedSalience }) => {
+  
+  const [salience, setSalience] = useState(selectedSalience);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (isOpen) {
+      setSalience(selectedSalience);
+    }
+  }, [selectedSalience, isOpen]);
+  const handleUpdateSalience = () => {
+    if (salience !== undefined && salience !== "") {
+      dispatch(
+        updateSalienceBySectionId({ sectionId, salience: Number(salience) })
+      );
+      onClose();
+    }
+  };
   const handleChange = (e) => {
     setSalience(e.target.value);
   };
   if (!isOpen) return null;
+
+  console.log(salience);
   return (
     <>
       <Modal

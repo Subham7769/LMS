@@ -127,7 +127,7 @@ export const fetchDrlRulesetData = createAsyncThunk(
     const url = `${import.meta.env.VITE_DRULES_READ_ALL_RULESET}`;
     const transformData = (data) => {
       return data.map(({ name, droolsRuleSetId, description }) => ({
-        name: name.replace(/-/g, " "),
+        name: name?.replace(/-/g, " ") || "No Name",
         href: "/loan/drl-ruleset/" + droolsRuleSetId + "/basic-info",
         description: description || "No description available",
       }));
@@ -419,6 +419,7 @@ const ROLE_MAKER_ADMIN = [
   "Business Rule",
   "Global Config",
   "Decision Engine",
+  "DRL Ruleset",
   "Employer",
   "Banks",
   "Approval Config",
@@ -440,6 +441,7 @@ const ROLE_CHECKER_ADMIN = [
   "Business Rule",
   "Global Config",
   "Decision Engine",
+  "DRL Ruleset",
 ];
 const ROLE_TECHNICAL = ["Customer Care", "Product Testing", "General Ledger"];
 const ROLE_VIEWER = [
@@ -463,6 +465,7 @@ const ROLE_VIEWER = [
   "Customer Care",
   "General Ledger",
   "Decision Engine",
+  "DRL Ruleset",
   "Reporting Config",
   "Reports",
 ];
@@ -485,11 +488,12 @@ const ROLE_LOAN_OFFICER = [
   "Product Group",
   "Customer Care",
   "Decision Engine",
+  "DRL Ruleset",
   "Reporting Config",
   "Reports",
   "SME Loans",
   "Personal Loans",
-  "Banks"
+  "Banks",
 ];
 
 const initialState = {
