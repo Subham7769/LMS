@@ -6,10 +6,53 @@ import InputDate from "../Common/InputDate/InputDate";
 import { handleChangeCreateInstanceData } from "../../redux/Slices/workflowManagementSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const InstanceModal = ({ isOpen, onClose }) => {
+const InstanceModal = ({ isOpen, onClose, loanId }) => {
   const { createInstanceData } = useSelector((state) => state.workflowManagement);
   const dispatch = useDispatch();
-  const handleSubmit = () => {};
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
+  const userName = userData?.username || "";
+  //Submit Process
+  const handleSubmit = async() => {
+    const today = new Date();
+    const dueDate = new Date();
+    dueDate.setDate(today.getDate() + 5);
+
+    // Format to 'YYYY-MM-DD' (Camunda-friendly ISO format)
+    const formattedDueDate = dueDate.toISOString().split('T')[0];
+
+    const payload = {
+      loanId: loanId ? loanId : "LHP20000030LUS",
+      email: 'umesh.kshirsagar@gmail.com',
+      fullName: 'Full Name',
+      customerType: "Personal",
+      paymentHistory: "Good",
+      accountNumber:"ACC293030",
+      daysPastDue:"10",
+      amountDue:"1000",
+      dueDate:formattedDueDate,
+      assignedUser:userName,
+      // etc.
+    };
+    
+    try {
+      const response = await fetch(`${import.meta.env.VITE_CAMUNDA_API_BASE}/api/debtors/start-process`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error('Failed to start collection process');
+
+      toast.success(`Collection process started for ${payload.loanId}`);
+    } catch (error) {
+      toast.error('Start collection error:', error);
+      toast.error(`Failed to start Collection process for ${payload.loanId}`);
+
+    }    
+
+
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     dispatch(handleChangeCreateInstanceData({ name, value }));

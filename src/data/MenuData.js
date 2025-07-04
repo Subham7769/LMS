@@ -519,63 +519,42 @@ export const MenusInitial = [
     icon: "CheckBadgeIcon",
     current: false,
   },
-
-  // WORKFLOW MANAGEMENT
+  //WORKFLOW MANAGEMENT
+  {
+    title: "My Tasks",
+    sectionName: "WORKFLOW MANAGEMENT",
+    href: "/workflow/my-task-list",
+    icon: "RectangleStackIcon",
+    current: false,
+  },  
   {
     title: "Workflows",
     sectionName: "WORKFLOW MANAGEMENT",
-    href: "/loan/workflows",
-    icon: "RectangleGroupIcon",
+    href: "/workflow/workflow-list",
+    icon: "AdjustmentsHorizontalIcon",
     current: false,
-    submenu: true,
-    createButton: false, //if create product from Side bar Using input box
-    submenuItems: [],
-    isOpen: false,
   },
   {
     title: "Instances",
     sectionName: "WORKFLOW MANAGEMENT",
-    href: "/loan/instances",
-    icon: "RectangleGroupIcon",
+    href: "/workflow/instances",
+    icon: "PlayCircleIcon",
     current: false,
-    submenu: true,
-    createButton: false, //if create product from Side bar Using input box
-    submenuItems: [],
-    isOpen: false,
   },
   {
     title: "Incidents",
     sectionName: "WORKFLOW MANAGEMENT",
-    href: "/loan/incidents",
-    icon: "RectangleGroupIcon",
+    href: "/workflow/incidents",
+    icon: "ExclamationCircleIcon",
     current: false,
-    submenu: true,
-    createButton: false, //if create product from Side bar Using input box
-    submenuItems: [],
-    isOpen: false,
-  },
-  {
-    title: "My Tasks",
-    sectionName: "WORKFLOW MANAGEMENT",
-    href: "/loan/my-tasks",
-    icon: "RectangleGroupIcon",
-    current: false,
-    submenu: true,
-    createButton: false, //if create product from Side bar Using input box
-    submenuItems: [],
-    isOpen: false,
   },
   {
     title: "Notifications",
     sectionName: "WORKFLOW MANAGEMENT",
-    href: "/loan/notifications",
-    icon: "RectangleGroupIcon",
+    href: "/workflow/notifications",
+    icon: "BellAlertIcon",
     current: false,
-    submenu: true,
-    createButton: false, //if create product from Side bar Using input box
-    submenuItems: [],
-    isOpen: false,
-  },
+  },      
   {
     title: "AI Agent",
     sectionName: "CONNECT",
