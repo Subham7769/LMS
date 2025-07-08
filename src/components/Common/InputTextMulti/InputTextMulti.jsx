@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { removeTag } from "../../../redux/Slices/dynamicRacSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addFields,
@@ -16,6 +15,7 @@ const InputTextMulti = ({
   disabled = false,
   isValidation,
   required,
+  removeTag,
 }) => {
   const [included, setIncluded] = useState(false);
   const [inputValue, setInputValue] = useState("");

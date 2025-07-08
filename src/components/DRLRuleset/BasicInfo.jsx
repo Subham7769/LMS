@@ -4,14 +4,17 @@ import InputSelect from "../Common/InputSelect/InputSelect";
 import InputTextArea from "../Common/InputTextArea/InputTextArea";
 import InputDate from "../Common/InputDate/InputDate";
 import { useOutletContext } from "react-router-dom";
+import { useSelector } from "react-redux";
+import ContainerTile from "../Common/ContainerTile/ContainerTile";
 
 
 const BasicInfo = () => {
   const { dRulesData, handleChange } = useOutletContext();
   const basicInfoData = dRulesData.basicInfoData;
+  const { loading } = useSelector((state) => state.drlRuleset);
 
   return (
-    <>
+    <ContainerTile defaultClass={false} loading={loading}>
       <div className="grid gap-5 mb-6">
         <InputSelect
           labelName="Category"
@@ -50,7 +53,7 @@ const BasicInfo = () => {
           </div>
         </div>
       </div>
-    </>
+    </ContainerTile>
   );
 };
 

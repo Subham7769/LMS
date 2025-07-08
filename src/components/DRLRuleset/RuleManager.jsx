@@ -11,34 +11,26 @@ import {
 } from "@heroicons/react/24/outline";
 import { useSelector } from "react-redux";
 import {
-  fetchDynamicRacDetails,
-  updateRacName,
-  saveDynamicRac,
-  downloadConfig,
-  uploadConfig,
-  updateRacConfigName,
   addSection,
-  setSection,
-  cloneDynamicRac,
-  deleteDynamicRac,
-  updateSection,
+  createDrools,
+  downloadConfig,
+  fetchOptionList,
   removeSection,
-  setSectionSettings,
-  deleteSection,
   restoreRule,
-} from "../../redux/Slices/dynamicRacSlice";
-import { fetchOptionList } from "../../redux/Slices/drlRulesetSlice";
+  setSection,
+  updateDrools,
+  updateSection,
+  uploadConfig,
+} from "../../redux/Slices/drlRulesetSlice";
 import { useDispatch } from "react-redux";
 import RuleComponent from "./RuleComponent";
 import ViewTemplateModal from "./ViewTemplateModal";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { fetchDynamicRacData } from "../../redux/Slices/sidebarSlice";
+import { useOutletContext, useParams } from "react-router-dom";
 import {
   clearValidationError,
   validateRAC,
 } from "../../redux/Slices/validationSlice";
 import { toast } from "react-toastify";
-import store from "../../redux/store";
 import {
   ViewerRolesDynamicRac,
   EditorRolesDynamicRac,
@@ -81,10 +73,8 @@ const RuleManager = () => {
   const [naturalLanguageModal, setNaturalLanguageModal] = useState(false);
   const [selectedSectionId, setSelectedSectionId] = useState(null);
   const [selectedSectionName, setSelectedSectionName] = useState(null);
-  const { racConfig, loading, error } = useSelector(
-    (state) => state.dynamicRac
-  );
-  const sections = racConfig?.sections;
+  const [selectedSalience, setSelectedSalience] = useState("");
+  const { loading } = useSelector((state) => state.drlRuleset);
   const { roleName } = useSelector((state) => state.auth);
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -96,15 +86,13 @@ const RuleManager = () => {
   );
   const { dRulesData } = useOutletContext();
   const ruleManagerData = dRulesData.ruleManagerData;
+  const sections = ruleManagerData?.ruleManagerConfig || [];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // First, fetch the option list
         await dispatch(fetchOptionList(droolsRuleSetId));
-
-        // After fetching the option list, fetch the Decision Engine details
-        await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -146,18 +134,33 @@ const RuleManager = () => {
     const isValid = validateRAC(sections, dispatch);
     if (isValid) {
       console.log("API call made");
-      const state = store.getState();
-      const racConfig = state.dynamicRac.racConfig;
-      try {
-        const saveAction = await dispatch(saveDynamicRac(racConfig));
+      const { basicInfoData, ruleManagerData, id, droolsRuleSetId, name } =
+        dRulesData;
 
-        if (saveAction.type.endsWith("fulfilled")) {
-          await dispatch(fetchOptionList(droolsRuleSetId));
+      // Flatten all rules into a single array
+      const flattenedRules = ruleManagerData.ruleManagerConfig.flatMap(
+        (section) =>
+          section.rules.map((rule) => ({
+            ...rule, // Keep all existing fields intact
+          }))
+      );
 
-          await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
-        }
-      } catch (error) {
-        console.error("Error during handleSave:", error);
+      const transformedPayload = {
+        droolsRuleSetId,
+        name,
+        id,
+        basicInfoData,
+        ruleManagerData: {
+          ...ruleManagerData,
+          ruleManagerConfig: flattenedRules, // Overwrite with flat rule list
+        },
+      };
+
+      console.log("Update Payload:", transformedPayload);
+      if (transformedPayload.id) {
+        await dispatch(updateDrools(transformedPayload)).unwrap();
+      } else {
+        await dispatch(createDrools(transformedPayload)).unwrap();
       }
     }
   };
@@ -172,12 +175,9 @@ const RuleManager = () => {
           // Dispatch the updated structure with racDetails and sections
           dispatch(
             uploadConfig({
-              racDetails: config.racDetails, // Handle racDetails
-              sections: config.sections, // Handle sections
+              ruleManagerConfig: config.ruleManagerConfig, // Handle sections
             })
           );
-
-          setTimeout(() => handleSaveDynamicRAC(), 10);
         } catch (error) {
           console.error("Error parsing JSON:", error);
           toast("Failed to load configuration. Please check the file format.");
@@ -260,17 +260,24 @@ const RuleManager = () => {
 
       const [movedField] = sourceRules.splice(sourceIndex, 1);
 
-      destRules.splice(destIndex, 0, {
+      // ✅ Overwrite sectionId and sectionName while moving
+      const destSection = newSections[destSectionIndex];
+      const updatedRule = {
         ...movedField,
         isModified: false,
-      });
+        sectionId: destSection.sectionId,
+        sectionName: destSection.sectionName,
+      };
+
+      destRules.splice(destIndex, 0, updatedRule);
 
       newSections[sourceSectionIndex] = {
         ...newSections[sourceSectionIndex],
         rules: sourceRules,
       };
+
       newSections[destSectionIndex] = {
-        ...newSections[destSectionIndex],
+        ...destSection,
         rules: destRules,
       };
 
@@ -286,11 +293,6 @@ const RuleManager = () => {
 
   const handleDeleteSection = ({ droolsRuleSetId, sectionId }) => {
     dispatch(removeSection({ sectionId }));
-    dispatch(deleteSection({ droolsRuleSetId, sectionId })).then((action) => {
-      if (action.type.endsWith("fulfilled")) {
-        dispatch(fetchDynamicRacDetails(droolsRuleSetId));
-      }
-    });
   };
 
   const handleAddSection = () => {
@@ -299,9 +301,10 @@ const RuleManager = () => {
   };
 
   const handleAddRule = (sectionId, sectionName) => {
+    console.log(sectionId, sectionName, "Section ID and Name");
     setSelectedSectionId(sectionId); // Update sectionId first
     setSelectedSectionName(sectionName); // Update sectionId first
-    setTimeout(() => setShowRuleModal(true), 0); // Open modal after state updates
+    setTimeout(() => setShowRuleModal(sectionId), 0); // Open modal after state updates
   };
 
   const handleUseTemplate = (sectionId, sectionName) => {
@@ -310,9 +313,10 @@ const RuleManager = () => {
     setTimeout(() => setTemplateModal(true), 0); // Open modal after state updates
   };
 
-  const handleSalienceModal = (sectionId, sectionName) => {
+  const handleSalienceModal = (sectionId, sectionName, salience) => {
     setSelectedSectionId(sectionId); // Update sectionId first
     setSelectedSectionName(sectionName); // Update sectionId first
+    setSelectedSalience(salience); // Update sectionId first
     setTimeout(() => setSalienceModal(true), 0); // Open modal after state updates
   };
 
@@ -445,6 +449,8 @@ const RuleManager = () => {
       </div>
     );
   };
+
+  // console.log("Sections: ", sections);
 
   // Section Box
   const SectionBox = ({
@@ -582,7 +588,7 @@ const RuleManager = () => {
                 buttonName="Salience"
                 buttonType="tertiary"
                 onClick={() =>
-                  handleSalienceModal(section.sectionId, section.sectionName)
+                  handleSalienceModal(section.sectionId, section.sectionName, section.salience)
                 }
               />
             </div>
@@ -620,6 +626,8 @@ const RuleManager = () => {
     );
   };
 
+  console.log(selectedSectionId, selectedSectionName);
+
   return (
     <>
       <ViewTemplateModal
@@ -629,6 +637,7 @@ const RuleManager = () => {
         sectionName={selectedSectionName}
         droolsRuleSetId={droolsRuleSetId}
       />
+
       <Toolbox
         isOpen={showRuleModal}
         isEditMode={isEditMode}
@@ -838,7 +847,12 @@ const RuleManager = () => {
         tag={selectedTag}
         ruleManagerData={ruleManagerData}
       />
-      <SalienceModal isOpen={salienceModal} onClose={closeSalienceModal} />
+      <SalienceModal
+        sectionId={selectedSectionId}
+        selectedSalience={selectedSalience}
+        isOpen={salienceModal}
+        onClose={closeSalienceModal}
+      />
       <NaturalLanguageModal
         isOpen={naturalLanguageModal}
         onClose={closeNaturalLanguageModal}

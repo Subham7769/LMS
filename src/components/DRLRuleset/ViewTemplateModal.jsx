@@ -6,9 +6,8 @@ import Button from "../Common/Button/Button";
 
 import {
   addNewRule,
-  fetchDynamicRacDetails,
-} from "../../redux/Slices/dynamicRacSlice";
-import { fetchOptionList } from "../../redux/Slices/drlRulesetSlice";
+  fetchOptionList,
+} from "../../redux/Slices/drlRulesetSlice";
 import { useDispatch } from "react-redux";
 import convertToReadableString from "../../utils/convertToReadableString";
 import Modal from "../Common/Modal/Modal";
@@ -588,7 +587,7 @@ const ViewTemplateModal = ({
 
   const handleAddRule = async (sectionId, sectionName, ruleConfig) => {
     // Add Rule
-    await dispatch(
+    dispatch(
       addNewRule({
         ruleConfig: {
           ...ruleConfig,
@@ -596,18 +595,19 @@ const ViewTemplateModal = ({
           history: { ...history, creationDate: new Date().toISOString() },
         },
       })
-    ).unwrap();
+    );
 
     // First, fetch the option list
     await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
 
     // After fetching the option list, fetch the Decision Engine details
-    await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
+    // await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
 
     handleClose();
   };
 
   console.log(selectedTemplate);
+  console.log(sectionId, "View Template Modal Section ID");
 
   return (
     <>

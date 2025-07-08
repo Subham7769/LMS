@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { HeaderList, DRLRulesetList } from "../../data/DRLRulesetData";
+import { id } from "date-fns/locale/id";
 
 export const fetchDrulesName = createAsyncThunk(
   "drlRuleset/fetchDrulesName",
@@ -31,11 +32,15 @@ export const fetchDrulesName = createAsyncThunk(
 
 export const updateDrulesName = createAsyncThunk(
   "drlRuleset/updateDrulesName",
-  async ({ droolsRuleSetId, newName, description }, { rejectWithValue }) => {
+  async (
+    { droolsRuleSetId, newName, description, isDescriptionUpdate },
+    { rejectWithValue }
+  ) => {
     const payload = {
       name: newName,
       description: description, // Default description if not provided
     };
+    const isUpdate = isDescriptionUpdate || false;
     const token = localStorage.getItem("authToken");
     const url = `${
       import.meta.env.VITE_DRULES_NAME_UPDATE
@@ -52,10 +57,37 @@ export const updateDrulesName = createAsyncThunk(
       });
 
       if (response.ok) {
-        return newName;
+        return { newName, isUpdate }; // Return the new name and update status
       } else {
         return rejectWithValue("Failed to update name");
       }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchDruleData = createAsyncThunk(
+  "drlRuleset/fetchDruleData",
+  async (droolsRuleSetId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_DRULES_READ_RULESET}${droolsRuleSetId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to read");
+      }
+      const data = await response.json();
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -93,8 +125,8 @@ export const fetchOptionList = createAsyncThunk(
     try {
       const response = await fetch(
         `${
-          import.meta.env.VITE_DYNAMIC_RAC_ALL_NAME_READ
-        }63b1acad-b490-4939-94c0-b782540c2ec4/available-names`,
+          import.meta.env.VITE_DRULES_READ_AVAILABLE_NAMES
+        }${droolsRuleSetId}/available-names`,
         {
           method: "GET",
           headers: {
@@ -105,6 +137,64 @@ export const fetchOptionList = createAsyncThunk(
       );
       const data = await response.json();
       return data; // Return the data from the API response
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const createDrools = createAsyncThunk(
+  "drlRuleset/createDrools",
+  async (transformedPayload, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_DRULES_CREATE_RULESET}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(transformedPayload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to create");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateDrools = createAsyncThunk(
+  "drlRuleset/updateDrools",
+  async (transformedPayload, { rejectWithValue }) => {
+    const token = localStorage.getItem("authToken");
+    const url = `${import.meta.env.VITE_DRULES_CREATE_RULESET}/${
+      transformedPayload.droolsRuleSetId
+    }`;
+
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(transformedPayload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to create");
+      }
+      const data = await response.json();
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -127,6 +217,9 @@ export const fetchList = createAsyncThunk(
 const drlRulesetInitialState = {
   itemName: "",
   dRulesData: {
+    id: null,
+    droolsRuleSetId: "",
+    name: "",
     basicInfoData: {
       category: "",
       description: "",
@@ -134,253 +227,46 @@ const drlRulesetInitialState = {
       toDate: "",
     },
     ruleManagerData: {
-      ruleManagerConfig: {
-        racDetails: { id: "", name: "abc", racId: "", description: null }, // Updated racDetails structure
-        sections: [],
-      },
-      optionsList: [],
-      isEditorMode: true,
-      currentRule: {
-        firstOperator: null,
-        secondOperator: null,
-        numberCriteriaRangeList: null,
-      },
-      dynamicParameterDTOList: [
-        {
-          displayName: "string",
-          firstOperator: "string",
-          isModified: true,
-          name: "nationality",
-          parameterNameValueList: [
-            {
-              name: "US",
-              value: 0.98,
-              baseline: true,
-              impact: "Refernce",
-            },
-            {
-              name: "UK",
-              value: 0.95,
-              baseline: false,
-              impact: "High",
-            },
-            {
-              name: "Germany",
-              value: 0.75,
-              baseline: false,
-              impact: "Medium",
-            },
-            {
-              name: "Other EU",
-              value: 0.4,
-              baseline: false,
-              impact: "Low",
-            },
-          ],
-          parameterNumberRangeValueList: [
-            {
-              maximum: "string",
-              minimum: "string",
-              resident: true,
-              value: "string",
-            },
-          ],
-          parameterSourceEnum: "BORROWER_PROFILE",
-          parameterType: "STRING",
-          secondOperator: "string",
-          status: "CREATED",
-          weightNameValueList: [
-            {
-              name: "string",
-              value: 0,
-            },
-          ],
-        },
-        {
-          displayName: "string",
-          firstOperator: "string",
-          isModified: true,
-          name: "creditScore",
-          parameterNameValueList: [
-            {
-              name: "string",
-              value: 0,
-            },
-          ],
-          parameterNumberRangeValueList: [
-            {
-              minimum: "0",
-              maximum: "1",
-              value: 0.98,
-              baseline: true,
-              impact: "Refernce",
-            },
-            {
-              minimum: "0",
-              maximum: "1",
-              value: 0.95,
-              baseline: false,
-              impact: "High",
-            },
-            {
-              minimum: "0",
-              maximum: "1",
-              value: 0.75,
-              baseline: false,
-              impact: "Medium",
-            },
-            {
-              minimum: "0",
-              maximum: "1",
-              value: 0.4,
-              baseline: false,
-              impact: "Low",
-            },
-          ],
-          parameterSourceEnum: "BORROWER_PROFILE",
-          parameterType: "NUMBER",
-          secondOperator: "string",
-          status: "CREATED",
-          weightNameValueList: [
-            {
-              name: "string",
-              value: 0,
-            },
-          ],
-        },
-      ],
+      ruleManagerConfig: [],
+      dynamicParameterDTOList: [],
       ruleManagerEquation: {
-        expression:
-          "((creditTpScore-300)*0.34/550) + (nationality*0.98) + (netIncome*1.24) + (dependents*2.32) + (maritalStatus*0.88) + (residentialStatus*1.12)",
-        name: "string",
-        parameters: [
-          {
-            name: "nationality",
-            parameterSelectionTypeEnum: "DIRECT_SUBSTITUTION",
-            type: "STRING",
-          },
-          {
-            name: "creditScore",
-            parameterSelectionTypeEnum: "DIRECT_SUBSTITUTION",
-            type: "NUMBER",
-          },
-        ],
+        expression: "Enter your expression here",
+        name: "",
+        parameters: [],
       },
     },
   },
+  currentRule: {
+    firstOperator: null,
+    secondOperator: null,
+    numberCriteriaRangeList: null,
+  },
+  optionsList: [],
   addCategoryData: {
     minimum: "",
     maximum: "",
     name: "",
     value: "",
     baseline: false,
-    impact: "To be calculated",
+    impact: "Low",
   },
   dynamicParameterDTOListObject: {
-    displayName: "string",
-    firstOperator: "string",
+    displayName: "",
+    firstOperator: "",
     isModified: true,
-    name: "nationality",
-    parameterNameValueList: [
-    ],
-    parameterNumberRangeValueList: [
-    ],
+    name: "",
+    parameterNameValueList: [],
+    parameterNumberRangeValueList: [],
     parameterSourceEnum: "BORROWER_PROFILE",
-    parameterType: "STRING",
-    secondOperator: "string",
+    parameterType: "",
+    secondOperator: "",
     status: "CREATED",
     weightNameValueList: [
       {
-        name: "string",
+        name: "",
         value: 0,
       },
     ],
-  },
-  dRulesDataSample: {
-    basicInfoData: {
-      category: "string",
-      description: "string",
-      fromDate: "string",
-      toDate: "string",
-    },
-    droolsRuleSetId: "string",
-    name: "string",
-    ruleManagerData: {
-      dynamicParameterDTOList: [
-        {
-          displayName: "string",
-          firstOperator: "string",
-          isModified: true,
-          name: "string",
-          parameterNameValueList: [
-            {
-              name: "string",
-              value: 0,
-            },
-          ],
-          parameterNumberRangeValueList: [
-            {
-              maximum: "string",
-              minimum: "string",
-              resident: true,
-              value: "string",
-            },
-          ],
-          parameterSourceEnum: "BORROWER_PROFILE",
-          parameterType: "STRING",
-          secondOperator: "string",
-          status: "CREATED",
-          weightNameValueList: [
-            {
-              name: "string",
-              value: 0,
-            },
-          ],
-        },
-      ],
-      ruleManagerConfig: [
-        {
-          blocked: true,
-          criteriaType: "BORROWER_PROFILE",
-          criteriaValues: ["string"],
-          displayName: "string",
-          error: "string",
-          fieldType: "STRING",
-          firstOperator: "string",
-          isModified: true,
-          name: "string",
-          numberCriteriaRangeList: [
-            {
-              maximum: "string",
-              minimum: "string",
-              resident: true,
-            },
-          ],
-          racId: "string",
-          secondOperator: "string",
-          sectionId: "string",
-          sectionName: "string",
-          status: "CREATED",
-          usageList: [
-            {
-              ruleUsage: "ELIGIBILITY",
-              used: true,
-            },
-          ],
-        },
-      ],
-      ruleManagerEquation: {
-        expression: "string",
-        name: "string",
-        parameters: [
-          {
-            name: "string",
-            parameterSelectionTypeEnum: "DIRECT_SUBSTITUTION",
-            type: "STRING",
-          },
-        ],
-      },
-    },
   },
   dRulesStatsData: {
     HeaderList,
@@ -394,6 +280,52 @@ const drlRulesetSlice = createSlice({
   name: "drlRuleset",
   initialState: drlRulesetInitialState,
   reducers: {
+    downloadConfig: (state) => {
+      const config = {
+        ruleManagerConfig: state.dRulesData.ruleManagerData.ruleManagerConfig,
+      };
+      const blob = new Blob([JSON.stringify(config, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${
+        state.dRulesData.name !== ""
+          ? state.dRulesData.name
+          : "New Dynamic Form"
+      }.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    },
+    uploadConfig(state, action) {
+      const { ruleManagerConfig } = action.payload;
+
+      const uploadedSections = ruleManagerConfig?.map(
+        (section, sectionIndex) => {
+          return {
+            ...section,
+            rules: section?.rules?.map((rule, ruleIndex) => ({
+              ...rule,
+              status: "APPROVED",
+              dynamicRacRuleId: `Rule-${Date.now()}-${ruleIndex}-${sectionIndex}`,
+              isModified: true,
+            })),
+          };
+        }
+      );
+
+      console.log(uploadedSections);
+      // Update both racDetails and ruleManagerConfig in the state
+      state.dRulesData.ruleManagerData = {
+        ...state.dRulesData.ruleManagerData,
+        ruleManagerConfig:
+          uploadedSections ||
+          state.dRulesData.ruleManagerData.ruleManagerConfig, // Update ruleManagerConfig, fallback to current state if undefined
+      };
+    },
     handleChangeBasicInfoData: (state, action) => {
       const { name, value } = action.payload;
       state.dRulesData.basicInfoData[name] = value;
@@ -495,14 +427,7 @@ const drlRulesetSlice = createSlice({
       targetParam[listKey].push(newCategory);
 
       // Optional: Reset addCategoryData to blank after adding
-      state.addCategoryData = {
-        minimum: "",
-        maximum: "",
-        name: "",
-        value: "",
-        baseline: false,
-        impact: "To be calculated",
-      };
+      state.addCategoryData = drlRulesetInitialState.addCategoryData;
     },
     deleteCategoryFromParametersData: (state, action) => {
       const { tagName, tagType, index } = action.payload;
@@ -522,6 +447,166 @@ const drlRulesetSlice = createSlice({
 
       // Remove entry at the given index
       targetParam[listKey].splice(index, 1);
+    },
+    deleteRuleById: (state, action) => {
+      const { sectionId, dynamicRacRuleId } = action.payload;
+
+      // Find the section with the given sectionId
+      const sectionIndex =
+        state.dRulesData.ruleManagerData.ruleManagerConfig.findIndex(
+          (section) => section.sectionId === sectionId
+        );
+
+      if (sectionIndex !== -1) {
+        // Filter out the rule with the given dynamicRacRuleId
+        const updatedRules = state.dRulesData.ruleManagerData.ruleManagerConfig[
+          sectionIndex
+        ].rules.filter((rule) => rule.dynamicRacRuleId !== dynamicRacRuleId);
+
+        // Update the section's rules
+        state.dRulesData.ruleManagerData.ruleManagerConfig[sectionIndex].rules =
+          updatedRules;
+      }
+    },
+    removeTag: (state, action) => {
+      const { sectionId, dynamicRacRuleId, tagToRemove } = action.payload;
+      const section = state.dRulesData.ruleManagerData.ruleManagerConfig.find(
+        (section) => section.sectionId === sectionId
+      );
+      const rule = section.rules.find(
+        (rule) => rule.dynamicRacRuleId === dynamicRacRuleId
+      );
+
+      if (rule && rule.criteriaValues) {
+        rule.criteriaValues = rule.criteriaValues.filter(
+          (tag) => tag !== tagToRemove
+        );
+      }
+    },
+    setCurrentRule(state, action) {
+      const { sectionId, dynamicRacRuleId } = action.payload;
+      console.log("setCurrentRule");
+      state.dRulesData.ruleManagerData.ruleManagerConfig =
+        state.dRulesData.ruleManagerData.ruleManagerConfig.map((section) => {
+          if (section.sectionId === sectionId) {
+            return {
+              ...section,
+              rules: section.rules.map((rule) => {
+                if (rule.dynamicRacRuleId === dynamicRacRuleId) {
+                  state.currentRule = { ...state.currentRule, ...rule }; //setting Current Rule
+                }
+                return rule;
+              }),
+            };
+          }
+          return section;
+        });
+    },
+    restoreRule(state, action) {
+      state.currentRule = drlRulesetInitialState.currentRule; // Resetting currentRule to initial state
+    },
+    addNewRule: (state, action) => {
+      const { ruleConfig } = action.payload; // includes sectionId and rule
+      const { sectionId } = ruleConfig;
+
+      const section = state.dRulesData.ruleManagerData.ruleManagerConfig.find(
+        (section) => section.sectionId === sectionId
+      );
+
+      if (section) {
+        const ruleWithSalience = {
+          ...ruleConfig,
+          salience: section.salience ?? 0, // fallback to 0 if salience not set
+        };
+
+        section.rules.push(ruleWithSalience);
+      } else {
+        console.warn(`No section found with sectionId: ${sectionId}`);
+      }
+    },
+    setSection(state, action) {
+      const { newSections } = action.payload;
+      state.dRulesData.ruleManagerData.ruleManagerConfig = newSections;
+    },
+    addSection(state, action) {
+      const newSection = {
+        sectionId: `section-${Date.now()}`,
+        sectionName: `New Section ${
+          state.dRulesData.ruleManagerData.ruleManagerConfig.length + 1
+        }`,
+        salience: "",
+        size: "full",
+        rules: [],
+      };
+      state.dRulesData.ruleManagerData.ruleManagerConfig.push(newSection);
+    },
+    updateSection: (state, action) => {
+      const { sectionId, name } = action.payload;
+
+      state.dRulesData.ruleManagerData.ruleManagerConfig =
+        state.dRulesData.ruleManagerData.ruleManagerConfig.map((section) => {
+          if (section.sectionId === sectionId) {
+            // Update sectionName in the section
+            const updatedRules =
+              section.rules?.map((rule) => ({
+                ...rule,
+                sectionName: name, // Update sectionName in each rule
+              })) || [];
+
+            return {
+              ...section,
+              sectionName: name,
+              rules: updatedRules,
+            };
+          } else {
+            return section;
+          }
+        });
+    },
+    removeSection(state, action) {
+      const { sectionId } = action.payload;
+      state.dRulesData.ruleManagerData.ruleManagerConfig =
+        state.dRulesData.ruleManagerData.ruleManagerConfig.filter(
+          (section) => section.sectionId !== sectionId
+        );
+    },
+    updateRuleById: (state, action) => {
+      const { dynamicRacRuleId, ruleConfig } = action.payload;
+
+      // Go through each section in ruleManagerConfig
+      for (const section of state.dRulesData.ruleManagerData
+        .ruleManagerConfig) {
+        const ruleIndex = section.rules.findIndex(
+          (rule) => rule.dynamicRacRuleId === dynamicRacRuleId
+        );
+
+        if (ruleIndex !== -1) {
+          // Update the rule with the new config
+          section.rules[ruleIndex] = {
+            ...section.rules[ruleIndex],
+            ...ruleConfig,
+          };
+          break; // Exit early once rule is updated
+        }
+      }
+    },
+    updateSalienceBySectionId: (state, action) => {
+      const { sectionId, salience } = action.payload;
+
+      const section = state.dRulesData.ruleManagerData.ruleManagerConfig.find(
+        (sec) => sec.sectionId === sectionId
+      );
+
+      if (section) {
+        // Update salience at section level
+        section.salience = salience;
+
+        // Update salience in each rule inside that section
+        section.rules = section.rules.map((rule) => ({
+          ...rule,
+          salience,
+        }));
+      }
     },
   },
   extraReducers: (builder) => {
@@ -555,13 +640,33 @@ const drlRulesetSlice = createSlice({
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
       })
+      .addCase(fetchDruleData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchDruleData.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.payload?.id === null) {
+          // No data received, use initial structure
+          state.dRulesData = drlRulesetInitialState.dRulesData;
+        } else {
+          // Valid payload received
+          state.dRulesData = action.payload;
+        }
+      })
+      .addCase(fetchDruleData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
       .addCase(updateDrulesName.pending, (state) => {
         state.loading = true;
       })
       .addCase(updateDrulesName.fulfilled, (state, action) => {
         state.loading = false;
-        state.itemName = action.payload;
-        toast.success("Name updated successfully!");
+        state.itemName = action.payload.newName; // Update itemName with new name
+        if (!action.payload.isUpdate) {
+          toast.success("Name updated successfully!");
+        }
       })
       .addCase(updateDrulesName.rejected, (state, action) => {
         state.loading = false;
@@ -610,11 +715,39 @@ const drlRulesetSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(createDrools.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createDrools.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("DRL Ruleset created successfully!");
+      })
+      .addCase(createDrools.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(updateDrools.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateDrools.fulfilled, (state, action) => {
+        state.loading = false;
+        toast.success("DRL Ruleset Updated successfully!");
+      })
+      .addCase(updateDrools.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });
 
 export const {
+  downloadConfig,
+  uploadConfig,
   handleChangeBasicInfoData,
   handleChangeRuleManagerData,
   addParameterTag,
@@ -622,5 +755,16 @@ export const {
   handleChangeAddCategoryData,
   addCategoryToParametersData,
   deleteCategoryFromParametersData,
+  deleteRuleById,
+  setCurrentRule,
+  restoreRule,
+  addNewRule,
+  setSection,
+  addSection,
+  updateSection,
+  removeSection,
+  updateRuleById,
+  removeTag,
+  updateSalienceBySectionId,
 } = drlRulesetSlice.actions;
 export default drlRulesetSlice.reducer;

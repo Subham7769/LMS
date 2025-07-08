@@ -1,15 +1,12 @@
 import { useDispatch } from "react-redux";
-import { addRule } from "../../redux/Slices/dynamicRacSlice";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import Button from "../Common/Button/Button";
-import HoverButton from "../Common/HoverButton/HoverButton";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import {
-  operatorOptions,
   conditionsOptions,
   trueFalseOptions,
 } from "../../data/OptionsData";
@@ -28,10 +25,10 @@ import { toast } from "react-toastify";
 import getOperatorsForCondition from "./getOperatorsForCondition";
 import {
   addNewRule,
+  fetchOptionList,
+  removeTag,
   updateRuleById,
-  fetchDynamicRacDetails,
-} from "../../redux/Slices/dynamicRacSlice";
-import { fetchOptionList } from "../../redux/Slices/drlRulesetSlice";
+} from "../../redux/Slices/drlRulesetSlice";
 import getConditionForOperators from "./getConditionForOperators";
 import Modal from "../Common/Modal/Modal";
 import convertToReadableString from "../../utils/convertToReadableString";
@@ -39,8 +36,7 @@ import convertToReadableString from "../../utils/convertToReadableString";
 const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
   const { droolsRuleSetId } = useParams();
   const dispatch = useDispatch();
-  const { currentRule } = useSelector((state) => state.dynamicRac);
-  const { optionsList } = useSelector((state) => state.drlRuleset);
+  const { optionsList, currentRule } = useSelector((state) => state.drlRuleset);
   const userName = localStorage.getItem("username");
   const { firstOperator, secondOperator, numberCriteriaRangeList } =
     currentRule || {};
@@ -52,7 +48,7 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
     name: "",
     sectionId: sectionId,
     sectionName: sectionName,
-    status: "CREATED",
+    status: "APPROVED", // CREATED
     isModified: true,
     displayName: "",
     usageList: [
@@ -65,6 +61,7 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
     criteriaValues: [],
     firstOperator: "",
     secondOperator: "",
+    salience: "",
     numberCriteriaRangeList: [],
     history: {
       createdBy: userName,
@@ -230,7 +227,7 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
     }
     if (isValid && isValid2 && condition === "Between") {
       // Add Rule
-      await dispatch(
+      dispatch(
         addNewRule({
           ruleConfig: {
             ...ruleConfig,
@@ -238,19 +235,19 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
             sectionName,
           },
         })
-      ).unwrap();
+      );
       // First, fetch the option list
       await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
 
       // After fetching the option list, fetch the Decision Engine details
-      await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
+      // await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
       // Reset state and Close
       setRuleConfig(initialState);
       onClose();
     } else {
       if (condition === "Equal to") {
         // Add Rule
-        await dispatch(
+        dispatch(
           addNewRule({
             ruleConfig: {
               sectionId,
@@ -265,10 +262,10 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
               ],
             },
           })
-        ).unwrap();
+        );
       } else {
         // Add Rule
-        await dispatch(
+        dispatch(
           addNewRule({
             ruleConfig: {
               ...ruleConfig,
@@ -283,13 +280,13 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
               ],
             },
           })
-        ).unwrap();
+        );
       }
       // First, fetch the option list
       await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
 
       // After fetching the option list, fetch the Decision Engine details
-      await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
+      // await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
       // Reset state and Close
       setRuleConfig(initialState);
       onClose();
@@ -297,10 +294,11 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
   };
 
   const handleSave = async (currentRule, ruleConfig) => {
+    console.log("Saving Rule", currentRule, ruleConfig);
     if (ruleConfig.fieldType == "NUMBER") {
       if (condition === "Equal to") {
         // Add Rule
-        await dispatch(
+        dispatch(
           updateRuleById({
             dynamicRacRuleId: currentRule.dynamicRacRuleId,
             ruleConfig: {
@@ -316,15 +314,15 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
           })
         );
       } else if (condition === "Between") {
-        await dispatch(
+         dispatch(
           updateRuleById({
             dynamicRacRuleId: currentRule.dynamicRacRuleId,
             ruleConfig,
           })
-        ).unwrap();
+        );
       } else {
         // update Rule
-        await dispatch(
+         dispatch(
           updateRuleById({
             dynamicRacRuleId: currentRule.dynamicRacRuleId,
             ruleConfig: {
@@ -338,22 +336,22 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
               ],
             },
           })
-        ).unwrap();
+        );
       }
     } else {
-      await dispatch(
+       dispatch(
         updateRuleById({
           dynamicRacRuleId: currentRule.dynamicRacRuleId,
           ruleConfig,
         })
-      ).unwrap();
+      );
     }
 
     // First, fetch the option list
     await dispatch(fetchOptionList(droolsRuleSetId)).unwrap();
 
     // After fetching the option list, fetch the Decision Engine details
-    await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
+    // await dispatch(fetchDynamicRacDetails(droolsRuleSetId));
     onClose();
   };
 
@@ -384,7 +382,9 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
     }));
   };
 
-  if (!isOpen) return null;
+  if (!(isOpen === sectionId)) return null;
+
+  // console.log("Toolbox" + sectionId);
 
   return (
     <Modal
@@ -460,6 +460,7 @@ const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
                 dynamicRacRuleId={"123"}
                 isValidation={true}
                 required={true}
+                removeTag={removeTag}
               />
             )}
             {ruleConfig.criteriaType === "DOCUMENT" && (
