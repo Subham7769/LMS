@@ -2,17 +2,30 @@ import React from 'react';
 import UploadOptions from './UploadOptions';
 
 function MessagesFooter({ showUploader, setShowUploader }) {
+
+  const [message, setMessage] = React.useState('');
+
+  const handleSent = (e) => {
+    e.preventDefault();
+    if (!message.trim()) {
+      return;
+    }
+    console.log("Message sent:", message);
+    setMessage('');
+  }
+
   return (
-    <div className="sticky bottom-0 bg-white backdrop-blur-3xl dark:bg-[#151D2C]/90 border-t border-gray-200 dark:border-gray-700/60 px-1 sm:px-6 md:px-5 z-10">
+    <div className="sticky bottom-0 bg-white backdrop-blur-3xl dark:bg-[#151D2C]/90 border-t border-gray-200 dark:border-gray-700/60 px-1 sm:px-6 md:px-5 z-40">
       {/* Upload Options */}
       {showUploader && (
         <UploadOptions showUploader={showUploader} setShowUploader={setShowUploader} />
       )}
 
       {/* Chat Input */}
-      <form 
+      <form
         className="flex items-end justify-between gap-3 py-4 transition-all"
         onClick={(e) => e.stopPropagation()}
+        onSubmit={handleSent}
       >
         {/* Plus Button */}
         <button
@@ -42,7 +55,9 @@ function MessagesFooter({ showUploader, setShowUploader }) {
               el.style.height = 'auto';
               const maxHeight = 5 * 1.5 * 16; // 5 lines
               el.style.height = `${Math.min(el.scrollHeight, maxHeight)}px`;
+              setMessage(el.value);
             }}
+            value={message}
           />
         </div>
 
@@ -50,6 +65,7 @@ function MessagesFooter({ showUploader, setShowUploader }) {
         <button
           type="submit"
           className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white whitespace-nowrap"
+
         >
           Send -&gt;
         </button>

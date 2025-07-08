@@ -1,6 +1,6 @@
 import React from 'react';
 
-import User01 from '../../assets/image/user-40-11.jpg';
+import User from '../../assets/image/user-40-11.jpg';
 import User02 from '../../assets/image/user-40-12.jpg';
 import ChatImage from '../../assets/image/chat-image.jpg';
 import Bot from '../../assets/image/Floating_Robot.jpg';
@@ -19,10 +19,10 @@ function MessagesBody() {
 
   // 2. Avatar mapping
   const avatarMapping = {
-    User01: User01,
+    User: User,
     Bot: Bot,
   };
-  const { chatMessages } = useSelector((state) => state.agenticAi);
+  const { AllSessionChats, selectedSessionId, defaultSessionId } = useSelector((state) => state.agenticAi);
 
   // System Default
   const TypingDots = ({ color }) => (
@@ -44,11 +44,11 @@ function MessagesBody() {
     </svg>
   );
 
-  const DateSeparator = ({ content }) => {
+  const DateSeparator = ({ date }) => {
     return (
       <div className="flex justify-center">
         <div className="inline-flex items-center justify-center text-xs text-gray-600 dark:text-gray-400 font-medium px-2.5 py-1 bg-white dark:bg-gray-700 shadow-xs rounded-full my-5">
-          {content}
+          {date}
         </div>
       </div>
     );
@@ -330,7 +330,7 @@ function MessagesBody() {
 
   return (
     <div className="grow px-4 sm:px-6 md:px-5 py-6">
-      {chatMessages.map((msg) => {
+      {AllSessionChats[selectedSessionId || defaultSessionId].map((msg) => {
         switch (msg.type) {
           case 'userText':
             return <UserTextBubble key={msg.id} {...msg} />;

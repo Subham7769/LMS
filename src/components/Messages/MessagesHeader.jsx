@@ -9,12 +9,12 @@ function MessagesHeader({
   setMsgSidebarOpen
 }) {
   return (
-    <div className="sticky top-0">
+    <div className="sticky top-0 z-50">
       <div className="flex items-center justify-between before:absolute before:inset-0 before:backdrop-blur-md before:bg-gray-50/90 dark:before:bg-[#151D2C]/90 before:-z-10 border-b border-gray-200 dark:border-gray-700/60 px-4 sm:px-6 md:px-5 h-16">
         {/* People */}
         <div className="flex items-center">
           {/* Close button */}
-          {/* <button
+          <button
             className="md:hidden text-gray-400 hover:text-gray-500 mr-4"
             onClick={() => setMsgSidebarOpen(!msgSidebarOpen)}
             aria-controls="messages-sidebar"
@@ -24,13 +24,13 @@ function MessagesHeader({
             <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M10.7 18.7l1.4-1.4L7.8 13H20v-2H7.8l4.3-4.3-1.4-1.4L4 12z" />
             </svg>
-          </button> */}
+          </button>
           {/* People list */}
           <div className="flex -space-x-3 -ml-px">
-            <a className="block" href="#0">
+            <a className="block">
               <img className="rounded-full border-2 border-white dark:border-gray-800 box-content" src={Bot} width="32" height="32" alt="User 04" />
             </a>
-            <a className="block" href="#0">
+            <a className="block">
               <img className="rounded-full border-2 border-white dark:border-gray-800 box-content" src={User01} width="32" height="32" alt="User 01" />
             </a>
           </div>

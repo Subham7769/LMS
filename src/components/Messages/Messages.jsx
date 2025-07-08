@@ -20,7 +20,7 @@ function Messages() {
 
   return (
     <div 
-    className="flex h-[calc(90vh-24px)] overflow-hidden "
+    className="flex h-[calc(95dvh-24px)] md:h-[calc(90vh-24px)] overflow-hidden "
     onClick={(e) => {
     e.stopPropagation(); 
     setShowUploader(false);
@@ -31,7 +31,7 @@ function Messages() {
         <main className="grow" >
           <div className="relative flex h-full">
             {/* Messages sidebar */}
-            {/* <MessagesSidebar msgSidebarOpen={msgSidebarOpen} setMsgSidebarOpen={setMsgSidebarOpen} /> */}
+            <MessagesSidebar msgSidebarOpen={msgSidebarOpen} setMsgSidebarOpen={setMsgSidebarOpen} />
 
             {/* Messages body */}
             <div

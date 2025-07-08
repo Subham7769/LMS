@@ -2,19 +2,24 @@ import React from 'react';
 import ChannelMenu from './ChannelMenu';
 import DirectMessages from './DirectMessages';
 import Channels from './Channels';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSearchSessionTerm, setSelectedSessionId } from '../../redux/Slices/agenticAiSlice';
 
 function MessagesSidebar({
   msgSidebarOpen,
   setMsgSidebarOpen
 }) {
+
+  const { searchSessionTerm } = useSelector((state) => state.agenticAi);
+  const dispatch = useDispatch();
+
   return (
     <div
       id="messages-sidebar"
-      className={`absolute z-20 top-0 bottom-0 w-full md:w-auto md:static md:top-auto md:bottom-auto -mr-px md:translate-x-0 transition-transform duration-200 ease-in-out ${
-        msgSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}
+      className={`absolute z-20 top-0 bottom-0 w-full md:w-auto md:static md:top-auto md:bottom-auto -mr-px md:translate-x-0 transition-transform duration-200 ease-in-out ${msgSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
     >
-      <div className="sticky top-0 bg-white dark:bg-[#151D2C] overflow-x-hidden overflow-y-auto no-scrollbar shrink-0 border-r border-gray-200 dark:border-gray-700/60 md:w-[18rem] xl:w-[20rem] h-[calc(100dvh)]">
+      <div className="sticky top-0 bg-white dark:bg-[#151D2C] overflow-x-hidden overflow-y-auto no-scrollbar shrink-0 border-r border-gray-200 dark:border-gray-700/60 md:w-[18rem] xl:w-[20rem] h-[calc(95dvh-24px)] md:h-[calc(90dvh-24px)]">
         {/* #Marketing group */}
         <div>
           {/* Group header */}
@@ -39,7 +44,14 @@ function MessagesSidebar({
               <label htmlFor="msg-search" className="sr-only">
                 Search
               </label>
-              <input id="msg-search" className="form-input w-full pl-9 bg-white dark:bg-gray-800" type="search" placeholder="Search…" />
+              <input
+                id="msg-search"
+                className="form-input w-full pl-9 bg-white dark:bg-gray-800"
+                type="search"
+                placeholder="Search…"
+                value={searchSessionTerm}
+                onChange={(e) => {dispatch(setSearchSessionTerm(e.target.value))}}
+              />
               <button className="absolute inset-0 right-auto group" type="submit" aria-label="Search">
                 <svg
                   className="shrink-0 fill-current text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400 ml-3 mr-2"
@@ -56,7 +68,7 @@ function MessagesSidebar({
             {/* Direct messages */}
             <DirectMessages msgSidebarOpen={msgSidebarOpen} setMsgSidebarOpen={setMsgSidebarOpen} />
             {/* Channels */}
-            <Channels msgSidebarOpen={msgSidebarOpen} setMsgSidebarOpen={setMsgSidebarOpen} />
+            {/* <Channels msgSidebarOpen={msgSidebarOpen} setMsgSidebarOpen={setMsgSidebarOpen} /> */}
           </div>
         </div>
       </div>
