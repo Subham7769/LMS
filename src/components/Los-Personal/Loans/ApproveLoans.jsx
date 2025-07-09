@@ -8,13 +8,12 @@ import {
   getLoanAgreement,
   getLoansByField,
   getPendingLoans,
+  rejectLoan,
 } from "../../../redux/Slices/personalLoansSlice";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
-import { useNavigate } from "react-router-dom";
-import LoanRejectModal from "./LoanRejectModal";
 import Pagination from "../../Common/Pagination/Pagination";
 import { convertDate } from "../../../utils/convertDate";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
@@ -26,6 +25,9 @@ import {
   NewspaperIcon,
   CurrencyDollarIcon,
   UserIcon,
+  UserCircleIcon,
+  XMarkIcon,
+  BanknotesIcon
 } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
@@ -33,8 +35,11 @@ import ViewDocumentsModal from "./ViewDocumentsModal";
 import store from "../../../redux/store";
 import {
   clearValidationError,
+  updateValidationError,
   validateForm,
 } from "../../../redux/Slices/validationSlice";
+import ViewBorrowerDetailsModal from "../Borrowers/ViewBorrowerDetailsModal";
+import RejectModal from "../RejectModal";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -50,6 +55,8 @@ const ApproveLoans = () => {
   const { approveLoans, loading, approveLoansTotalElements, fullLoanDetails } =
     useSelector((state) => state.personalLoans);
   const { userData, roleName } = useSelector((state) => state.auth);
+  const { validationError } = useSelector((state) => state.validation);
+  const [filteredApproveLoansData, setFilteredApproveLoansData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showLoanModal, setShowLoanModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
@@ -57,8 +64,11 @@ const ApproveLoans = () => {
   const [documentsData, setDocumentsData] = useState(null);
   const [palSearchValue, setPalSearchValue] = useState("");
   const [palSearchBy, setPalSearchBy] = useState("");
-  const navigate = useNavigate();
+  const [isViewPopupOpen, setIsViewPopupOpen] = useState(false);
+  const [selectedBorrowerData, setSelectedBorrowerData] = useState(null);
+  const [rejectionReason, setRejectionReason] = useState("");
 
+  console.log(userData.username);
   // Pagination state
 
   const [pageSize, setPageSize] = useState(10);
@@ -78,8 +88,6 @@ const ApproveLoans = () => {
       })
     );
   };
-
-  const approveLoansData = transformData(approveLoans);
 
   const handleSearch = async () => {
     //if empty palSearchBy or palSearchValue then display a message (otherwise API will return java runtime error)
@@ -144,9 +152,9 @@ const ApproveLoans = () => {
         getPayload: { roleNames: [roleName] },
       })
     ).unwrap();
-    if (rowData?.rolePermissions?.finalApprove) {
-      navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
-    }
+    // if (rowData?.rolePermissions?.finalApprove) {
+    //   navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
+    // }
   };
 
   const handleReject = async (rowData) => {
@@ -156,6 +164,38 @@ const ApproveLoans = () => {
 
   const closeRejectModal = () => {
     setShowModal(false);
+  };
+
+  const handleRejection = async (rowData) => {
+    const rejectLoanPayload = {
+      amount: rowData.principalAmount,
+      applicationStatus: "REJECTED",
+      loanId: rowData.loanId,
+      uid: rowData.uid,
+      rejectionReason: rejectionReason,
+      username: userData.username,
+      roleName: [roleName],
+    };
+    console.log(rejectLoanPayload);
+    let isValid = true;
+    if (rejectionReason === "") {
+      dispatch(
+        updateValidationError({ ...validationError, rejectionReason: true })
+      );
+      isValid = false;
+    }
+    if (isValid) {
+      await dispatch(rejectLoan(rejectLoanPayload)).unwrap();
+      await dispatch(
+        getPendingLoans({
+          page: 0,
+          size: 20,
+          getPayload: { roleNames: [roleName] },
+        })
+      ).unwrap();
+      closeRejectModal();
+      setRejectionReason("");
+    }
   };
 
   const handleViewDocuments = (verifiedDocuments) => {
@@ -168,10 +208,17 @@ const ApproveLoans = () => {
   };
 
   const handleLoanAgreement = async (loanId, uid) => {
-    navigate(
-      `/loan/loan-origination-system/personal/loans/loan-agreement/${loanId}/${uid}`
-    );
+    const printUrl = `/loan-agreement/${loanId}/${uid}`;
+    window.open(printUrl, "_blank");
     await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
+  };
+
+  // Function to handle opening the modal
+  const handleViewProfile = (e, uid) => {
+    e.preventDefault();
+    // If you already have the uid, simply pass it on.
+    setSelectedBorrowerData(uid);
+    setIsViewPopupOpen(true);
   };
 
   const searchOptions = [
@@ -183,20 +230,29 @@ const ApproveLoans = () => {
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
     { label: "Unique ID", field: "uniqueID" },
+    { label: "Loan ID", field: "loanId" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
     { label: "Aging", field: "aging" },
   ];
 
-  const renderExpandedRow = (rowData) => (
-    <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
+  const renderExpandedRow = (rowData) => {
+    console.log(rowData)
+    return (<div className="text-sm text-gray-600 border-y-2 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
-        <CardInfo
-          cardIcon={UserIcon}
-          cardTitle="Borrower Information"
-          className={"bg-white border-border-gray-primary border"}
-          colorText={"text-blue-primary"}
-        >
+        <div className="shadow-md p-3 rounded-md undefined  bg-white border-border-gray-primary border">
+          <div className="flex  justify-between items-baseline mb-3 text-blue-primary">
+            <div className="text-xl font-semibold flex gap-2 items-center">
+              <UserCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+              Borrower Information{" "}
+              <p
+                className="text-[10px] text-gray-600 -mb-2 cursor-pointer underline"
+                onClick={(e) => handleViewProfile(e, rowData.uid)}
+              >
+                View Borrower Profile
+              </p>
+            </div>
+          </div>
           <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
             <div>
               <div className="text-gray-500">Employment</div>
@@ -234,7 +290,7 @@ const ApproveLoans = () => {
               </div>
             </div>
           </div>
-        </CardInfo>
+        </div>
         <CardInfo
           cardIcon={CurrencyDollarIcon}
           cardTitle="Loan Information"
@@ -279,6 +335,39 @@ const ApproveLoans = () => {
             <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
           </div>
         </CardInfo>
+        <div className="col-span-2">
+
+          {rowData?.refinanceDetails && <CardInfo
+            cardIcon={BanknotesIcon}
+            cardTitle="Refinancing Details"
+            className={"bg-white border-border-gray-primary border"}
+            colorText={"text-blue-primary"}
+          >
+
+            {rowData?.refinanceDetails.map((refinance) => (
+              <div className="grid grid-cols-4 pb-3">
+                <div>
+                  <div className="text-gray-500">Loan Id</div>
+                  <div className="font-semibold">{refinance.loanId}</div>
+                </div>
+                <div>
+                  <div className="text-gray-500">Refinancing Entity</div>
+                  <div className="font-semibold"> {refinance.name}</div>
+                </div>
+                <div>
+                  <div className="text-gray-500">Refinance Amount</div>
+                  <div className="font-semibold"> {refinance.refinanceAmount}</div>
+                </div>
+                <div>
+                  <div className="text-gray-500">Installment On PaySlip</div>
+                  <div className="font-semibold"> {refinance.installmentOnPaySlip}</div>
+                </div>
+              </div>
+            ))
+            }
+
+          </CardInfo>}
+        </div>
       </div>
       <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
         <div className="font-semibold text-xl mb-3">
@@ -369,8 +458,28 @@ const ApproveLoans = () => {
           </>
         )}
       </div>
-    </div>
-  );
+    </div>)
+  };
+
+  useEffect(() => {
+    const filteredApproveLoansDataFunction = () => {
+      if (!approveLoans) return [];
+
+      const filteredData = approveLoans.filter(
+        (item) =>
+          // Exclude object if any loanItem has recommendedBy or rejectedBy matching userData.username
+          !item?.loanActionDetailsList?.some(
+            (loanItem) =>
+              loanItem?.recommendedBy === userData.username ||
+              loanItem?.rejectedBy === userData.username
+          )
+      );
+
+      return transformData(filteredData);
+    };
+
+    setFilteredApproveLoansData(filteredApproveLoansDataFunction());
+  }, [approveLoans, roleName, userData]);
 
   return (
     <div className={`flex flex-col gap-3`}>
@@ -416,7 +525,7 @@ const ApproveLoans = () => {
       </ContainerTile>
       <ExpandableTable
         columns={columns}
-        data={approveLoansData}
+        data={filteredApproveLoansData}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
       />
@@ -425,10 +534,13 @@ const ApproveLoans = () => {
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
       />
-      <LoanRejectModal
+      <RejectModal
         isOpen={showModal}
         onClose={closeRejectModal}
         userDetails={currentRowData}
+        handleRejection={handleRejection}
+        rejectionReason={rejectionReason}
+        setRejectionReason={setRejectionReason}
       />
       <FullLoanDetailModal
         isOpen={showLoanModal}
@@ -441,6 +553,13 @@ const ApproveLoans = () => {
         onClose={closeViewDocumentModal}
         documents={documentsData}
       />
+
+      {isViewPopupOpen && selectedBorrowerData && (
+        <ViewBorrowerDetailsModal
+          uid={selectedBorrowerData} // pass only the uid
+          onClose={() => setIsViewPopupOpen(false)}
+        />
+      )}
     </div>
   );
 };

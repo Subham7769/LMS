@@ -8,13 +8,15 @@ import {
   uploadBorrowerPhotoFile,
   getDraftBorrowerByID,
 } from "../../../redux/Slices/personalBorrowersSlice";
-import { draftCompanyBorrowerInfo } from "../../../redux/Slices/smeBorrowersSlice";
+import { draftBorrowerInfo } from "../../../redux/Slices/personalBorrowersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateBorrowerFields from "./AddUpdateBorrowerFields";
 import store from "../../../redux/store";
 import { useNavigate, useParams } from "react-router-dom";
 import { nanoid } from "nanoid";
+import { toast } from "react-toastify";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject"; 
 
 const AddNewBorrowers = () => {
   // const isValid = useSelector((state) => state.validation.isValid);
@@ -40,23 +42,6 @@ const AddNewBorrowers = () => {
     );
   }
 
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    console.log(result);
-    return result;
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,14 +65,19 @@ const AddNewBorrowers = () => {
   };
 
   const handleDraft = () => {
-    const addDrafTPersonalData = {
+    const addDraftBorrowerData = {
       borrowerType: "PERSONAL_BORROWER",
       borrowerProfileDraftId: (borrowerProfileDraftId ? borrowerProfileDraftId : nanoid()),
       personalBorrowerProfileDraft: { ...addBorrowerData },
     };
-    dispatch(draftCompanyBorrowerInfo(addDrafTPersonalData));
-    navigate(`/loan/loan-origination-system/personal/borrowers/add-borrower`);
-    dispatch(resetBorrowerData());
+    if (addDraftBorrowerData.personalBorrowerProfileDraft.personalDetails.firstName !== "") {
+
+      dispatch(draftBorrowerInfo(addDraftBorrowerData));
+      navigate(`/loan/loan-origination-system/personal/borrowers/add-borrower`);
+      dispatch(resetBorrowerData());
+    }else{
+      toast.error("First Name is required");
+    }
   };
 
   const handleCancel = () => {
@@ -103,7 +93,7 @@ const AddNewBorrowers = () => {
         handleFileUpload={uploadBorrowerPhotoFile}
       />
       <div className="flex justify-end gap-5 col-span-4 mx-10">
-        
+
         <Button
           buttonName="Reset"
           onClick={() => dispatch(resetBorrowerData())}

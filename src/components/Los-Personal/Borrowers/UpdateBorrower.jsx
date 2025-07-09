@@ -17,7 +17,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { nanoid } from "nanoid";
-import { draftCompanyBorrowerInfo } from "../../../redux/Slices/smeBorrowersSlice";
+import { draftBorrowerInfo } from "../../../redux/Slices/personalBorrowersSlice";
+import { toast } from "react-toastify";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const UpdateBorrower = () => {
   const { updateBorrowerData, error, loading } = useSelector(
@@ -36,48 +38,36 @@ const UpdateBorrower = () => {
     }
   }, [dispatch, uid]);
 
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    return result;
-  }
 
   const handleDraftUpdate = async () => {
     try {
-      const addDrafTPersonalData = {
+      const addDraftBorrowerData = {
         borrowerType: "PERSONAL_BORROWER",
         borrowerProfileDraftId: (borrowerProfileDraftId ? borrowerProfileDraftId : nanoid()),
         personalBorrowerProfileDraft: { ...updateBorrowerData },
       };
+      if (addDraftBorrowerData.personalBorrowerProfileDraft.personalDetails.firstName !== "") {
 
-      // Wait for draftCompanyBorrowerInfo to complete successfully
-      await dispatch(draftCompanyBorrowerInfo(addDrafTPersonalData)).unwrap();
+        // Wait for draftBorrowerInfo to complete successfully
+        await dispatch(draftBorrowerInfo(addDraftBorrowerData)).unwrap();
 
-      // After success, fetch updated borrower list
-      dispatch(
-        fetchAllBorrowersByType({
-          page: 0,
-          size: 20,
-          borrowerType: "PERSONAL_BORROWER",
-        })
-      );
+        // After success, fetch updated borrower list
+        dispatch(
+          fetchAllBorrowersByType({
+            page: 0,
+            size: 20,
+            borrowerType: "PERSONAL_BORROWER",
+          })
+        );
 
-      // Navigate to the new borrower page
-      navigate(`/loan/loan-origination-system/personal/borrowers/add-borrower`);
+        // Navigate to the new borrower page
+        navigate(`/loan/loan-origination-system/personal/borrowers/add-borrower`);
 
-      // Reset borrower data
-      dispatch(resetUpdateBorrowerData());
+        // Reset borrower data
+        dispatch(resetUpdateBorrowerData());
+      } else {
+        toast.error("First Name is required");
+      }
     } catch (error) {
       console.error("Error updating draft:", error);
     }
@@ -119,7 +109,12 @@ const UpdateBorrower = () => {
     const isValid = state.validation.isValid; // Adjust based on your state structure
 
     if (isValid) {
-      const addBorrowerData = updateBorrowerData
+      let addBorrowerData = {};
+      if (borrowerProfileDraftId) {
+        addBorrowerData = { ...updateBorrowerData, borrowerProfileDraftId }
+      } else {
+        addBorrowerData = updateBorrowerData
+      }
       dispatch(registerBorrower(addBorrowerData))
         .unwrap()
         .then(() => {

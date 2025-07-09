@@ -24,6 +24,7 @@ import reportsSlice from "./Slices/reportsSlice";
 import authSlice from "./Slices/authSlice";
 import notificationSlice from "./Slices/notificationSlice";
 import serverConfigSlice from "./Slices/serverConfigSlice";
+import appConfigSlice from "./Slices/appConfigSlice";
 import depositSidebarSlice from "./Slices/depositSidebarSlice";
 import accountsSlice from "./Slices/accountsSlice";
 import personalBorrowersSlice from "./Slices/personalBorrowersSlice";
@@ -34,11 +35,13 @@ import smeLoansSlice from "./Slices/smeLoansSlice";
 import smeRepaymentsSlice from "./Slices/smeRepaymentsSlice";
 import affordabilitySlice from "./Slices/affordabilitySlice.js";
 import employerSlice from "./Slices/employerSlice.js";
+import bankSlice from "./Slices/bankSlice.js";
 import loanApprovalSlice from "./Slices/loanApprovalSlice.js";
 import documentConfigSlice from "./Slices/documentConfigSlice.js";
+import personalRefundSlice from "./Slices/personalRefundSlice.js";
 
 import checkTokenMiddleware from "./Middlewares/checkTokenMiddleware.js";
-
+import AutoLogoutMiddleware from "./Middlewares/AutoLogoutMiddleware";
 
 const store = configureStore({
   reducer: {
@@ -66,6 +69,7 @@ const store = configureStore({
     auth: authSlice,
     notification: notificationSlice,
     serverConfig: serverConfigSlice,
+    appConfig: appConfigSlice,
     depositSidebar: depositSidebarSlice,
     accounts: accountsSlice,
     personalBorrowers: personalBorrowersSlice,
@@ -76,11 +80,13 @@ const store = configureStore({
     smeRepayments: smeRepaymentsSlice,
     affordability: affordabilitySlice,
     employer: employerSlice,
+    bank: bankSlice,
     loanApproval: loanApprovalSlice,
     documentConfig: documentConfigSlice,
+    personalRefund: personalRefundSlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(checkTokenMiddleware),
+    getDefaultMiddleware().concat(AutoLogoutMiddleware, checkTokenMiddleware),
 });
 
 export default store;

@@ -155,7 +155,7 @@ export const createProject = createAsyncThunk(
     //   "loanType",
     //   "lateRepaymentPenalty",
     //   "earlyRepaymentDiscount",
-    //   "maxPaymetAttemps",
+    //   "maxPaymentAttempts",
     //   "serviceFee",
     //   "downRepaymentGracePeriod",
     //   "emiRepaymentGracePeriod",
@@ -291,7 +291,7 @@ export const fetchList = createAsyncThunk(
   }
 );
 
-const projectInitialState = {
+const InitialState = {
   projectStatsData: {
     HeaderList,
     ProjectList,
@@ -313,9 +313,12 @@ const projectInitialState = {
     rollOverPenaltyFactor: "",
     // rollOverPenaltyFee: "",
     rollOverInterestRate: "",
+    rollOverTenure: "",
+    rollOverTenureType: "",
     lateEmiPenaltyFactor: "",
-    maxPaymetAttemps: "",
-    startDate: new Date().toISOString().slice(0, 10),
+    latePenaltyPeriod: "",
+    maxPaymentAttempts: "",
+    startDate: "",
     endDate: "",
     lateRepaymentPenalty: "",
     earlyRepaymentDiscount: "",
@@ -351,7 +354,7 @@ const projectInitialState = {
 
 const projectSlice = createSlice({
   name: "project",
-  initialState: projectInitialState,
+  initialState: InitialState,
   reducers: {
     setLoading: (state, action) => {
       state.loading = action.payload;
@@ -361,7 +364,7 @@ const projectSlice = createSlice({
       state.projectData[name] = value;
     },
     resetProjectData: (state) => {
-      state.projectData = projectInitialState.projectData;
+      state.projectData = InitialState.projectData;
     },
     setError: (state, action) => {
       state.error = action.error.message;

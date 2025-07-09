@@ -25,6 +25,7 @@ import {
   NewspaperIcon,
   CurrencyDollarIcon,
   UserIcon,
+  BanknotesIcon,
 } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
@@ -50,6 +51,7 @@ const ApproveLoans = () => {
   const { approveLoans, loading, approveLoansTotalElements, fullLoanDetails } =
     useSelector((state) => state.smeLoans);
   const { userData, roleName } = useSelector((state) => state.auth);
+  const [filteredApproveLoansData, setFilteredApproveLoansData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showLoanModal, setShowLoanModal] = useState(false);
   const [showDocumentsModal, setDocumentsLoanModal] = useState(false);
@@ -78,8 +80,6 @@ const ApproveLoans = () => {
       })
     );
   };
-
-  const approveLoansData = transformData(approveLoans);
 
   const handleSearch = async () => {
     await dispatch(
@@ -141,9 +141,9 @@ const ApproveLoans = () => {
         getPayload: { roleNames: [roleName] },
       })
     ).unwrap();
-    if (rowData?.rolePermissions?.finalApprove) {
-      navigate(`/loan/loan-origination-system/sme/loans/loan-history`);
-    }
+    // if (rowData?.rolePermissions?.finalApprove) {
+    //   navigate(`/loan/loan-origination-system/sme/loans/loan-history`);
+    // }
   };
 
   const handleReject = async (rowData) => {
@@ -165,9 +165,8 @@ const ApproveLoans = () => {
   };
 
   const handleLoanAgreement = async (loanId, uid) => {
-    navigate(
-      `/loan/loan-origination-system/sme/loans/loan-agreement/${loanId}/${uid}`
-    );
+    const printUrl = `/loan-agreement-sme/${loanId}/${uid}`;
+    window.open(printUrl, "_blank");
     await dispatch(getLoanAgreement({ loanId, uid })).unwrap();
   };
 
@@ -179,11 +178,32 @@ const ApproveLoans = () => {
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
+    { label: "Loan Id", field: "loanId" },
     { label: "Borrower Serial No.", field: "uid" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
     { label: "Aging", field: "aging" },
   ];
+
+  useEffect(() => {
+    const filteredApproveLoansDataFunction = () => {
+      if (!approveLoans) return [];
+
+      const filteredData = approveLoans.filter(
+        (item) =>
+          // Exclude object if any loanItem has recommendedBy or rejectedBy matching userData.username
+          !item?.loanActionDetailsList?.some(
+            (loanItem) =>
+              loanItem?.recommendedBy === userData.username ||
+              loanItem?.rejectedBy === userData.username
+          )
+      );
+
+      return transformData(filteredData);
+    };
+
+    setFilteredApproveLoansData(filteredApproveLoansDataFunction());
+  }, [approveLoans, roleName, userData]);
 
   const renderExpandedRow = (rowData) => (
     <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
@@ -276,6 +296,31 @@ const ApproveLoans = () => {
             <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
           </div>
         </CardInfo>
+        <div className="col-span-2">
+
+          {rowData?.refinanceDetails && <CardInfo
+            cardIcon={BanknotesIcon}
+            cardTitle="Refinancing Details"
+            className={"bg-white border-border-gray-primary border"}
+            colorText={"text-blue-primary"}
+          >
+
+            {rowData?.refinanceDetails.map((refinance) => (
+              <div className="grid grid-cols-4 pb-3">
+                <div>
+                  <div className="text-gray-500">Loan Id</div>
+                  <div className="font-semibold">{refinance.loanId}</div>
+                </div>
+                <div>
+                  <div className="text-gray-500">Refinance Amount</div>
+                  <div className="font-semibold"> {refinance.refinanceAmount}</div>
+                </div>
+              </div>
+            ))
+            }
+
+          </CardInfo>}
+        </div>
       </div>
       <div className="bg-white p-3 shadow border-border-gray-primary border rounded-md my-5">
         <div className="font-semibold text-xl mb-3">
@@ -414,7 +459,7 @@ const ApproveLoans = () => {
       </ContainerTile>
       <ExpandableTable
         columns={columns}
-        data={approveLoansData}
+        data={filteredApproveLoansData}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
       />

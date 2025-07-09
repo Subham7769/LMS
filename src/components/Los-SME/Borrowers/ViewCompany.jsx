@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { accountStatusOptions } from "../../../data/LosData";
+import { accountStatusOptionsSME } from "../../../data/LosData";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
@@ -92,7 +92,7 @@ const ViewCompany = () => {
   // Trigger Filtering on Search Value Change
   useEffect(() => {
     applyFilters();
-  }, [searchValue]);
+  }, [searchValue, searchBy]);
 
   const applyFilters = () => {
     const filtered = allBorrowersData.filter((borrower) => {
@@ -105,29 +105,18 @@ const ViewCompany = () => {
       // console.log("searchValue:", searchValue);
 
       let matchesSearchValue = false;
-
-      // If 'searchBy' is specified, search based on that field
-      if (searchBy) {
-        matchesSearchValue = searchValue
-          ? companyDetails[searchBy]
-              ?.toLowerCase()
-              .includes(searchValue.toLowerCase())
-          : true;
-      } else {
-        // Search through multiple fields if no specific 'searchBy'
-        matchesSearchValue = searchValue
-          ? [
-              companyDetails.companyName,
-              companyDetails.companyShortName,
-              companyDetails.companyUniqueId,
-              companyDetails.companyRegistrationNo,
-              companyContactDetails.email,
-              companyContactDetails.mobile1,
-            ]
-              .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
-              .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
-          : true;
-      }
+      matchesSearchValue = searchValue
+        ? [
+            companyDetails.companyName,
+            companyDetails.companyShortName,
+            companyDetails.companyUniqueId,
+            companyDetails.companyRegistrationNo,
+            borrower.customerId,
+            companyContactDetails.mobile1,
+          ]
+            .map((field) => (field ? field.toString().toLowerCase() : "")) // Ensure each field is a string and lowercase
+            .some((field) => field.includes(searchValue.toLowerCase())) // Check if any field matches
+        : true;
 
       return matchesSearchValue;
     });
@@ -270,7 +259,7 @@ const ViewCompany = () => {
                 <InputSelect
                   labelName={"Account Status"}
                   inputName={"accountStatus"}
-                  inputOptions={accountStatusOptions}
+                  inputOptions={accountStatusOptionsSME}
                   inputValue={currentStatus}
                   onChange={(e) => setCurrentStatus(e.target.value)}
                   disabled={false}
@@ -744,7 +733,7 @@ const ViewCompany = () => {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
                             {/* Shareholder Personal Details */}
                             <CardInfo
-                              cardTitle="Shareholder Personal Details"
+                              cardTitle="Personal Details"
                               cardIcon={UserIcon}
                               colorText={"text-blue-primary"}
                               colorBG={"bg-blue-tertiary"}
@@ -790,7 +779,7 @@ const ViewCompany = () => {
 
                             {/*Shareholder Contact Details */}
                             <CardInfo
-                              cardTitle="Shareholder Contact Details"
+                              cardTitle="Contact Details"
                               cardIcon={PhoneIcon}
                               colorText={"text-green-primary"}
                               colorBG={"bg-green-tertiary"}

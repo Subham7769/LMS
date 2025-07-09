@@ -116,6 +116,7 @@ export const HeaderList = [
   "Date",
   "Entry ID",
   "Entry Name",
+  "Loan ID",
   "Borrower ID",
   "Debit Amount",
   "Credit Amount",

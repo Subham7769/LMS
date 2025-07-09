@@ -1,11 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import InputText from "../../Common/InputText/InputText";
-import InputNumber from "../../Common/InputNumber/InputNumber";
-import InputDate from "../../Common/InputDate/InputDate";
-import InputSelect from "../../Common/InputSelect/InputSelect";
-import InputEmail from "../../Common/InputEmail/InputEmail";
-import InputFile from "../../Common/InputFile/InputFile"; // Assuming InputFile component for file upload
-import InputTextArea from "../../Common/InputTextArea/InputTextArea"; // Assuming InputFile component for file upload
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,
@@ -21,6 +14,8 @@ import {
   districtOptions,
   locationOptions,
 } from "../../../data/CountryData";
+import DynamicForm from "../../Common/DynamicForm/DynamicForm";
+import { isValidationFailed } from "../../../utils/isValidationFailed";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
@@ -31,9 +26,7 @@ const AddLoanFields = ({ addLoanData }) => {
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredProvinces2, setFilteredProvinces2] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
-  
-  const today = new Date();
-  
+
   useEffect(() => {
     setFilteredProvinces1(
       locationOptions[addLoanData.offTakerDetails.country] || []
@@ -144,12 +137,13 @@ const AddLoanFields = ({ addLoanData }) => {
       product?.loanProductId === addLoanData?.generalLoanDetails?.loanProductId
   );
 
+  console.log(selectedLoanProduct);
+
   // Generate unique loan tenure options combining loanTenure & loanTenureType
   const loanTenureOptions = useMemo(() => {
     if (!selectedLoanProduct) return [];
 
     const uniqueLoanTenure = new Set();
-
     return selectedLoanProduct.interestEligibleTenure
       .filter((tenure) => {
         const combinedValue = `${tenure.loanTenure} ${tenure.loanTenureType}`;
@@ -171,13 +165,13 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
-    // dispatch(
-    //   updateLoanField({
-    //     section: "generalLoanDetails",
-    //     field: "repaymentTenureStr",
-    //     value: "",
-    //   })
-    // );
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "interestMethod",
+        value: selectedLoanProduct?.interestMethod,
+      })
+    );
 
     const uniqueRepaymentTenure = new Set();
 
@@ -290,21 +284,93 @@ const AddLoanFields = ({ addLoanData }) => {
     );
   }, [loanInterestStr]);
 
-  const interestMethod = useMemo(() => {
-    return selectedLoanProduct?.interestMethod || "";
-  }, [selectedLoanProduct]);
+  // const interestMethod = useMemo(() => {
+  //   return selectedLoanProduct?.interestMethod || "";
+  // }, [selectedLoanProduct]);
 
   useEffect(() => {
-    if (!interestMethod) return;
+    if (!selectedLoanProduct) return;
 
     dispatch(
       updateLoanField({
         section: "generalLoanDetails",
         field: "interestMethod",
-        value: interestMethod,
+        value: selectedLoanProduct?.interestMethod,
       })
     );
-  }, [interestMethod]);
+  }, [selectedLoanProduct]);
+
+  const today = new Date();
+  const { loanCreationDate, loanReleaseDate, firstEmiDate } =
+    addLoanData.generalLoanDetails;
+
+  // Helper to add months to a date
+  const addMonths = (date, months) => {
+    const result = new Date(date);
+    result.setMonth(result.getMonth() + months);
+    return result;
+  };
+  // Ensure loanCreationDate is set to today if not selected
+  useEffect(() => {
+    if (!loanCreationDate) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanCreationDate",
+          value: new Date().toISOString().split("T")[0], // Setting default to today
+        })
+      );
+    }
+  }, [loanCreationDate, dispatch]);
+  // Reset loanReleaseDate & firstEmiDate if loanCreationDate changes
+  useEffect(() => {
+    if (loanCreationDate) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanReleaseDate",
+          value: "",
+        })
+      );
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "firstEmiDate",
+          value: "",
+        })
+      );
+    }
+  }, [loanCreationDate, dispatch]);
+
+  // Ensure loanReleaseDate ≥ loanCreationDate
+  useEffect(() => {
+    if (
+      loanReleaseDate &&
+      new Date(loanReleaseDate) < new Date(loanCreationDate)
+    ) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanReleaseDate",
+          value: "",
+        })
+      );
+    }
+  }, [loanCreationDate, loanReleaseDate, dispatch]);
+
+  // Ensure firstEmiDate ≥ loanReleaseDate + 1 month
+  useEffect(() => {
+    const minFirstEmiDate = addMonths(new Date(loanReleaseDate), 1);
+    if (firstEmiDate && new Date(firstEmiDate) < minFirstEmiDate) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "firstEmiDate",
+          value: "",
+        })
+      );
+    }
+  }, [loanReleaseDate, firstEmiDate, dispatch]);
 
   // All Fields Configuration
   const generalLoanDetailsConfig = [
@@ -330,11 +396,10 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
-      labelName: "Loan Release Date",
-      inputName: "loanReleaseDate",
-      type: "date",
-      validation: true,
-      minSelectableDate: today,
+      labelName: "Agent Name",
+      inputName: "agentName",
+      type: "text",
+      validation: false,
     },
     {
       labelName: "Loan Duration",
@@ -362,6 +427,27 @@ const AddLoanFields = ({ addLoanData }) => {
       inputName: "principalAmount",
       type: "number",
       validation: true,
+    },
+    {
+      labelName: "Loan Creation Date",
+      inputName: "loanCreationDate",
+      type: "date",
+      validation: true,
+    },
+    {
+      labelName: "Loan Release Date",
+      inputName: "loanReleaseDate",
+      type: "date",
+      validation: true,
+      minSelectableDate: loanCreationDate ? new Date(loanCreationDate) : today,
+    },
+    {
+      labelName: "First EMI Date",
+      inputName: "firstEmiDate",
+      type: "date",
+      minSelectableDate: loanReleaseDate
+        ? addMonths(new Date(loanReleaseDate), 1)
+        : today,
     },
     {
       labelName: "Reason for Borrowing",
@@ -397,12 +483,7 @@ const AddLoanFields = ({ addLoanData }) => {
       type: "number",
       validation: false,
     },
-    {
-      labelName: "Agent Name",
-      inputName: "agentName",
-      type: "text",
-      validation: false,
-    },
+
     // {
     //   labelName: "CO Name",
     //   inputName: "lhacoName",
@@ -683,9 +764,9 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: false,
     },
     {
-      labelName: "Plot Vehicle No",
+      labelName: "Plot / Vehicle No",
       inputName: "plotVehicleNo",
-      type: "number",
+      type: "text",
       validation: false,
     },
     {
@@ -739,151 +820,6 @@ const AddLoanFields = ({ addLoanData }) => {
     (state) => state.validation.validationError
   );
 
-  const generalLoanDetailsInputNames = generalLoanDetailsConfig.map(
-    (field) => field.inputName
-  );
-  const proformaDetailsInputNames = proformaDetailsConfig.map(
-    (field) => field.inputName
-  );
-  const offTakerInputNames = offTakerConfig.map((field) => field.inputName);
-  const supplierDetailsInputNames = supplierDetailsConfig.map(
-    (field) => field.inputName
-  );
-  const collateralDetailsInputNames = collateralDetailsConfig.map(
-    (field) => field.inputName
-  );
-  const lhaDetailsInputNames = lhaDetailsConfig.map((field) => field.inputName);
-
-  const renderDetails = (details, config, sectionName) => (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-      {config.map((field, index) => {
-        const value = details[field.inputName] ?? ""; // Fallback to empty string
-        switch (field.type) {
-          case "text":
-            return (
-              <InputText
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "number":
-            return (
-              <InputNumber
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "select":
-            return (
-              <InputSelect
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputOptions={field.options}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                isValidation={field.validation || false}
-                searchable={field.searchable || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "date":
-            return (
-              <div className="col-span-1" key={index}>
-                <InputDate
-                  labelName={field.labelName}
-                  inputName={field.inputName}
-                  inputValue={value}
-                  onChange={(e) => handleInputChange(e, sectionName)}
-                  isValidation={field.validation || false}
-                  minSelectableDate={field.minSelectableDate || null}
-                  maxSelectableDate={field.maxSelectableDate || null}
-                  isDisabled={field.disabled || false}
-                />
-              </div>
-            );
-          case "email":
-            return (
-              <InputEmail
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-              />
-            );
-          case "file":
-            return (
-              <InputFile
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleFileChange(e, sectionName)}
-                accept={field.accept || "*"}
-                isValidation={field.validation || false}
-              />
-            );
-          case "textarea":
-            return (
-              <InputTextArea
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                rowCount={field.rowCount || 3}
-                isValidation={field.validation || false}
-              />
-            );
-          default:
-            return null;
-        }
-      })}
-    </div>
-  );
-
-  // Dedicated UI Components
-  const generalLoanDetails = (generalLoanDetails) =>
-    renderDetails(
-      generalLoanDetails,
-      generalLoanDetailsConfig,
-      "generalLoanDetails"
-    );
-
-  const proformaDetails = (proformaDetails) =>
-    renderDetails(proformaDetails, proformaDetailsConfig, "proformaDetails");
-
-  const offTakerDetails = (offTakerDetails) =>
-    renderDetails(offTakerDetails, offTakerConfig, "offTakerDetails");
-
-  const supplierDetails = (supplierDetails) =>
-    renderDetails(supplierDetails, supplierDetailsConfig, "supplierDetails");
-
-  const collateralDetails = (collateralDetails) =>
-    renderDetails(
-      collateralDetails,
-      collateralDetailsConfig,
-      "collateralDetails"
-    );
-
-  const lhaDetails = (lhaDetails) =>
-    renderDetails(lhaDetails, lhaDetailsConfig, "lhaDetails");
-
   const handleDeleteDocument = (docId) => {
     if (!docId) return;
     const fileDeleteParams = {
@@ -892,8 +828,6 @@ const AddLoanFields = ({ addLoanData }) => {
     };
     dispatch(deleteDocumentFile(fileDeleteParams));
   };
-
-  // console.log(addLoanData);
 
   const requiredDocuments = (documents) => {
     return documents.map((document, index) => (
@@ -912,66 +846,89 @@ const AddLoanFields = ({ addLoanData }) => {
     ));
   };
 
-  // Validation Checks
-  const isValidationFailed = (errors, fields) => {
-    // Iterate over fields and check if any corresponding error is true
-    return fields.some((field) => errors[field] === true);
-  };
-
   return (
     <>
       <Accordion
         heading={"General Loan Details"}
-        renderExpandedContent={() =>
-          generalLoanDetails(addLoanData?.generalLoanDetails)
-        }
-        isOpen={true}
-        error={isValidationFailed(
-          validationError,
-          generalLoanDetailsInputNames
+        renderExpandedContent={() => (
+          <DynamicForm
+            details={addLoanData.generalLoanDetails}
+            config={generalLoanDetailsConfig}
+            sectionName={"generalLoanDetails"}
+            handleInputChange={handleInputChange}
+          />
         )}
+        isOpen={true}
+        error={isValidationFailed(validationError, generalLoanDetailsConfig)}
       />
       <Accordion
         heading={"Profoma Details"}
-        renderExpandedContent={() =>
-          proformaDetails(addLoanData?.proformaDetails)
-        }
-        error={isValidationFailed(validationError, proformaDetailsInputNames)}
+        renderExpandedContent={() => (
+          <DynamicForm
+            details={addLoanData.proformaDetails}
+            config={proformaDetailsConfig}
+            sectionName={"proformaDetails"}
+            handleInputChange={handleInputChange}
+          />
+        )}
+        error={isValidationFailed(validationError, proformaDetailsConfig)}
       />
       <Accordion
         heading={"Off-Taker Details"}
         subHeading="(applicable to IDF and POF)"
-        renderExpandedContent={() =>
-          offTakerDetails(addLoanData.offTakerDetails)
-        }
-        error={isValidationFailed(validationError, offTakerInputNames)}
+        renderExpandedContent={() => (
+          <DynamicForm
+            details={addLoanData.offTakerDetails}
+            config={offTakerConfig}
+            sectionName={"offTakerDetails"}
+            handleInputChange={handleInputChange}
+          />
+        )}
+        error={isValidationFailed(validationError, offTakerConfig)}
       />
       <Accordion
         heading={"Supplier Details"}
         subHeading="(Not applicable to IDF)"
-        renderExpandedContent={() =>
-          supplierDetails(addLoanData.supplierDetails)
-        }
-        error={isValidationFailed(validationError, supplierDetailsInputNames)}
+        renderExpandedContent={() => (
+          <DynamicForm
+            details={addLoanData.supplierDetails}
+            config={supplierDetailsConfig}
+            sectionName={"supplierDetails"}
+            handleInputChange={handleInputChange}
+          />
+        )}
+        error={isValidationFailed(validationError, supplierDetailsConfig)}
       />
       <Accordion
         heading={"Collateral Details"}
-        renderExpandedContent={() =>
-          collateralDetails(addLoanData.collateralDetails)
-        }
-        error={isValidationFailed(validationError, collateralDetailsInputNames)}
+        renderExpandedContent={() => (
+          <DynamicForm
+            details={addLoanData.collateralDetails}
+            config={collateralDetailsConfig}
+            sectionName={"collateralDetails"}
+            handleInputChange={handleInputChange}
+          />
+        )}
+        error={isValidationFailed(validationError, collateralDetailsConfig)}
       />
       <Accordion
         heading={"Loan Officer's Findings"}
-        renderExpandedContent={() => lhaDetails(addLoanData.lhaDetails)}
-        error={isValidationFailed(validationError, lhaDetailsInputNames)}
+        renderExpandedContent={() => (
+          <DynamicForm
+            details={addLoanData.lhaDetails}
+            config={lhaDetailsConfig}
+            sectionName={"lhaDetails"}
+            handleInputChange={handleInputChange}
+          />
+        )}
+        error={isValidationFailed(validationError, lhaDetailsConfig)}
       />
       <Accordion
         heading={"Required Documents"}
         renderExpandedContent={() => requiredDocuments(addLoanData.documents)}
       />
       <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
-        <div>{`${uploadedCount} of 8 documents uploaded`}</div>
+        <div>{`${uploadedCount} of ${addLoanData.documents.length} documents uploaded`}</div>
         <div>{`${verifiedCount} documents verified`}</div>
       </div>
     </>

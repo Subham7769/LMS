@@ -26,7 +26,7 @@ export const MenusInitial = [
     isOpen: false,
   },
   {
-    title: "Dynamic RAC",
+    title: "Decision Engine",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/dynamic-rac",
     icon: "ClipboardDocumentCheckIcon",
@@ -34,7 +34,7 @@ export const MenusInitial = [
     createButton: true,
     editable: true,
     createFunction: "createNewDynamicRac",
-    buttonName: "Create RAC",
+    buttonName: "Create Decision Engine",
     placeholder: "Enter Name",
     navigateSuccess: "/loan/dynamic-rac/",
     navigateFail: "/login",
@@ -232,6 +232,13 @@ export const MenusInitial = [
     current: false,
   },
   {
+    title: "Banks",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/banks",
+    icon: "BanknotesIcon",
+    current: false,
+  },
+  {
     title: "Approval Config",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/loan-approval",
@@ -346,6 +353,13 @@ export const MenusInitial = [
     icon: "WrenchScrewdriverIcon",
     current: false,
   },
+  {
+    title: "App Config",
+    sectionName: "CONFIGURATION",
+    href: "/loan/app-config",
+    icon: "CpuChipIcon",
+    current: false,
+  },
 
   // LOAN ORIGINATION
   {
@@ -427,6 +441,11 @@ export const MenusInitial = [
         href: "/loan/loan-origination-system/personal/repayments/add-bulk-repayment",
         current: false,
       },
+      {
+        name: "Refund",
+        href: "/loan/loan-origination-system/personal/refund/refund-application",
+        current: false,
+      },
     ],
     isOpen: false,
   },
@@ -456,7 +475,15 @@ export const MenusInitial = [
     icon: "NewspaperIcon",
     current: false,
   },
-
+  {
+    title: "ELK Reports",
+    sectionName: "REPORTS & ANALYSIS",
+    href: import.meta.env.VITE_KIBANA_APP_LINK || "/loan/reports",
+    icon: "CubeTransparentIcon",
+    current: false,
+    isOpen: false,
+    openInNewTab:true,
+  },
   // USER TOOLS
   {
     title: "Customer Care",

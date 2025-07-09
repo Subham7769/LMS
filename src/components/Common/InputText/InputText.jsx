@@ -23,6 +23,7 @@ const InputText = ({
   isValidation = false,
   isIndex,
   isAutoFocus,
+  maxLength=null,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -83,6 +84,7 @@ const InputText = ({
         required
         readOnly={readOnly}
         autoFocus={isAutoFocus}
+        maxLength={maxLength}
       />
     </div>
   );

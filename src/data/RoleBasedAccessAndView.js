@@ -1,0 +1,58 @@
+// Decision Engine
+export const ViewerRolesDynamicRac = [
+  "ROLE_LOAN_OFFICER",
+  "ROLE_CHIEF_EXECUTIVE_OFFICER",
+  "ROLE_MANAGEMENT_CREDIT_COMMITTEE",
+  "ROLE_CUSTOMER_CARE_USER",
+  "ROLE_BOARD",
+];
+export const EditorRolesDynamicRac = [
+  "ROLE_ADMIN",
+  "ROLE_SUPERADMIN",
+  "ROLE_CREDITOR_ADMIN",
+  "ROLE_CREDIT_OFFICER",
+  "ROLE_CCO_AND_FINTECH_OFFICER",
+];
+
+// LOS repayments
+export const ViewerRolesAddBulkRepayment = [
+  "ROLE_CREDITOR_ADMIN",
+  "ROLE_CREDIT_OFFICER",
+  "ROLE_CCO_AND_FINTECH_OFFICER",
+  "ROLE_CHIEF_EXECUTIVE_OFFICER",
+  "ROLE_MANAGEMENT_CREDIT_COMMITTEE",
+  "ROLE_BOARD",
+];
+export const EditorRolesAddBulkRepayment = [
+  "ROLE_ADMIN",
+  "ROLE_SUPERADMIN",
+  "ROLE_LOAN_OFFICER",
+];
+
+export const ViewerRolesUploadRepayment = [
+  "ROLE_CREDITOR_ADMIN",
+  "ROLE_CREDIT_OFFICER",
+  "ROLE_CCO_AND_FINTECH_OFFICER",
+  "ROLE_CHIEF_EXECUTIVE_OFFICER",
+  "ROLE_MANAGEMENT_CREDIT_COMMITTEE",
+  "ROLE_BOARD",
+];
+export const EditorRolesUploadRepayment = [
+  "ROLE_ADMIN",
+  "ROLE_SUPERADMIN",
+  "ROLE_LOAN_OFFICER",
+];
+
+export const ViewerRolesApproveRepayment = [
+  "ROLE_LOAN_OFFICER",
+];
+export const EditorRolesApproveRepayment = [
+  "ROLE_ADMIN",
+  "ROLE_SUPERADMIN",
+  "ROLE_CREDITOR_ADMIN",
+  "ROLE_CREDIT_OFFICER",
+  "ROLE_CCO_AND_FINTECH_OFFICER",
+  "ROLE_CHIEF_EXECUTIVE_OFFICER",
+  "ROLE_MANAGEMENT_CREDIT_COMMITTEE",
+  "ROLE_BOARD",
+];

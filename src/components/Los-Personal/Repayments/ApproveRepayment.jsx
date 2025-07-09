@@ -20,6 +20,7 @@ import {
   UserIcon,
   ClockIcon,
   CalendarDaysIcon,
+  DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
@@ -27,12 +28,15 @@ import FullLoanDetailModal from "../FullLoanDetailModal";
 import { convertDate } from "../../../utils/convertDate";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
+import { EditorRolesApproveRepayment } from "../../../data/RoleBasedAccessAndView";
+import { AccessChecker } from "../../../utils/AccessChecker";
+import exportToExcel from "../../../utils/exportToExcel";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     collectionDate: convertDate(item?.collectionDate),
-    aging: calculateAging(item?.loanCreationDate),
+    aging: calculateAging(item?.collectionDate),
   }));
 }
 
@@ -45,6 +49,7 @@ const ApproveRepayment = () => {
     error,
   } = useSelector((state) => state.personalRepayments);
   const { fullLoanDetails } = useSelector((state) => state.personalLoans);
+  const { roleName } = useSelector((state) => state.auth);
   const loading2 = useSelector((state) => state.personalLoans.loading);
   const [searchTerm, setSearchTerm] = useState("");
   const [showLoanModal, setShowLoanModal] = useState(false);
@@ -210,19 +215,28 @@ const ApproveRepayment = () => {
           buttonIcon={CalendarDaysIcon}
           buttonType="tertiary"
         />
-        <Button
-          buttonName={"Reject"}
-          onClick={() => handleReject(rowData.transactionId)}
-          rectangle={true}
-          buttonIcon={FiXCircle}
-          buttonType="destructive"
-        />
-        <Button
-          buttonName={"Approve"}
-          onClick={() => handleApprove(rowData.transactionId)}
-          rectangle={true}
-          buttonIcon={FiCheckCircle}
-        />
+
+        {
+
+          AccessChecker(EditorRolesApproveRepayment, roleName) && (
+            <>
+              <Button
+                buttonName={"Reject"}
+                onClick={() => handleReject(rowData.transactionId)}
+                rectangle={true}
+                buttonIcon={FiXCircle}
+                buttonType="destructive"
+              />
+              <Button
+                buttonName={"Approve"}
+                onClick={() => handleApprove(rowData.transactionId)}
+                rectangle={true}
+                buttonIcon={FiCheckCircle}
+              />
+            </>
+          )
+        }
+
       </div>
     </div>
   );
@@ -233,23 +247,23 @@ const ApproveRepayment = () => {
       if (searchBy) {
         matchesSearchValue = searchValue
           ? repayment[searchBy]
-              ?.toLowerCase()
-              .includes(searchValue.toLowerCase())
+            ?.toLowerCase()
+            .includes(searchValue.toLowerCase())
           : true;
       } else {
         matchesSearchValue = searchValue
           ? [
-              repayment.userId,
-              repayment.loan,
-              repayment.collectionBy,
-              repayment.accounting,
-              repayment.method,
-              repayment.transactionId,
-              repayment.installmentId,
-              repayment.requestId,
-            ].some((field) =>
-              field?.toLowerCase().includes(searchValue.toLowerCase())
-            )
+            repayment.userId,
+            repayment.loan,
+            repayment.collectionBy,
+            repayment.accounting,
+            repayment.method,
+            repayment.transactionId,
+            repayment.installmentId,
+            repayment.requestId,
+          ].some((field) =>
+            field?.toLowerCase().includes(searchValue.toLowerCase())
+          )
           : true;
       }
 
@@ -283,10 +297,10 @@ const ApproveRepayment = () => {
 
   const searchOptions = [
     { label: "User Id", value: "userId" },
-    { label: "Loan Id", value: "loan" },
-    { label: "Collection By", value: "collectionBy" },
+    { label: "Loan Id", value: "loanId" },
+    { label: "Collection By", value: "reconciliationMethod" },
     { label: "Accounting", value: "accounting" },
-    { label: "Method", value: "method" },
+    { label: "Method", value: "repaymentOriginator" },
     { label: "Transaction Id", value: "transactionId" },
     { label: "Installment Id", value: "installmentId" },
     { label: "Request Id", value: "requestId" },
@@ -297,6 +311,17 @@ const ApproveRepayment = () => {
     setSearchBy("");
     setSearchValue("");
   };
+
+    // Define the mapping for repayment data excel file fields
+    const repaymentMapping = {
+      amount: "Amount",
+      collectionDate: "Collection Date",
+      "borrowerProfile.userId": "User ID",
+      loan: "Loan Id",
+      collectionBy: "Collected By",
+      method: "Method",
+      accounting: "Accounting",
+    };
 
   return (
     <div className={`flex flex-col gap-3`}>
@@ -339,6 +364,15 @@ const ApproveRepayment = () => {
           />
         </div>
       </ContainerTile>
+      {approveRepaymentData.length > 0 && <div className="flex justify-end">
+        <Button
+          buttonName={"Export Excel"}
+          onClick={() => exportToExcel(approveRepaymentData, repaymentMapping, "Repayment_Data.xlsx")}
+          rectangle={true}
+          buttonIcon={DocumentArrowDownIcon}
+        // buttonType="tertiary"
+        />
+      </div>}
 
       <ExpandableTable
         columns={ApproveRepaymentColumns}

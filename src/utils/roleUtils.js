@@ -32,3 +32,10 @@ export const hasViewOnlyAccessGroup3 = (roleName) => {
   ];
   return viewOnlyRoles.includes(roleName);
 };
+
+export const hasViewOnlyAccessGroup4 = (roleName) => {
+  const viewOnlyRoles = [
+    "ROLE_VIEWER",
+  ];
+  return viewOnlyRoles.includes(roleName);
+};

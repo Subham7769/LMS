@@ -1,12 +1,8 @@
 import React, { useEffect, useMemo } from "react";
 import InputText from "../../Common/InputText/InputText";
 import InputNumber from "../../Common/InputNumber/InputNumber";
-import InputDate from "../../Common/InputDate/InputDate";
-import InputSelect from "../../Common/InputSelect/InputSelect";
 import Button from "../../Common/Button/Button";
 import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
-import InputFile from "../../Common/InputFile/InputFile"; // Assuming InputFile component for file upload
-import InputTextArea from "../../Common/InputTextArea/InputTextArea"; // Assuming InputFile component for file upload
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   deleteDocumentFile,
@@ -24,16 +20,14 @@ import {
 } from "@heroicons/react/24/outline";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
-
-const today = new Date();
+import DynamicForm from "../../Common/DynamicForm/DynamicForm";
+import { isValidationFailed } from "../../../utils/isValidationFailed";
 
 const AddLoanFields = ({ addLoanData }) => {
   const dispatch = useDispatch();
   const { loanProductOptions, loanProductData } = useSelector(
     (state) => state.personalLoans
   );
-
-  // console.log(addLoanData);
 
   // Helper to calculate uploaded and verified documents
   const calculateDocumentStats = () => {
@@ -86,9 +80,9 @@ const AddLoanFields = ({ addLoanData }) => {
 
   const handleFileChange = (e, section, index) => {
     const fileUploadParams = {
-      loanApplicationId: addLoanData.loanApplicationId,
-      documentKey: addLoanData.documents[index].documentKey,
-      verified: addLoanData.documents[index].verified,
+      loanApplicationId: addLoanData?.loanApplicationId,
+      documentKey: addLoanData?.documents[index].documentKey,
+      verified: addLoanData?.documents[index].verified,
       borrowerType: "PERSONAL_BORROWER",
       authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
     };
@@ -113,6 +107,8 @@ const AddLoanFields = ({ addLoanData }) => {
     (product) =>
       product?.loanProductId === addLoanData?.generalLoanDetails?.loanProductId
   );
+
+  console.log(selectedLoanProduct);
 
   // Generate unique loan tenure options combining loanTenure & loanTenureType
   const loanTenureOptions = useMemo(() => {
@@ -141,13 +137,13 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
-    // dispatch(
-    //   updateLoanField({
-    //     section: "generalLoanDetails",
-    //     field: "repaymentTenureStr",
-    //     value: "",
-    //   })
-    // );
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "interestMethod",
+          value: selectedLoanProduct?.interestMethod,
+        })
+      );
 
     const uniqueRepaymentTenure = new Set();
 
@@ -232,7 +228,7 @@ const AddLoanFields = ({ addLoanData }) => {
 
     const [loanInterest, loanInterestTypeStr] = loanInterestStr.split(" PER "); // Extract interest & type
     const loanInterestType = loanInterestTypeStr
-      ? loanInterestTypeStr.split(" ")[0]
+      ? loanInterestTypeStr?.split(" ")[0]
       : ""; // Extract only YEAR
 
     dispatch(
@@ -260,21 +256,95 @@ const AddLoanFields = ({ addLoanData }) => {
     );
   }, [loanInterestStr]);
 
-  const interestMethod = useMemo(() => {
-    return selectedLoanProduct?.interestMethod || "";
-  }, [selectedLoanProduct]);
+  // const interestMethod = useMemo(() => {
+  //   return selectedLoanProduct?.interestMethod || "";
+  // }, [selectedLoanProduct]);
 
   useEffect(() => {
-    if (!interestMethod) return;
+      if (!selectedLoanProduct) return;
+  
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "interestMethod",
+          value: selectedLoanProduct?.interestMethod,
+        })
+      );
+    }, [selectedLoanProduct]);
 
-    dispatch(
-      updateLoanField({
-        section: "generalLoanDetails",
-        field: "interestMethod",
-        value: interestMethod,
-      })
-    );
-  }, [interestMethod]);
+  const today = new Date();
+  const { loanCreationDate, loanReleaseDate, loanProductId, firstEmiDate } =
+    addLoanData?.generalLoanDetails;
+
+  // Helper to add months to a date
+  const addMonths = (date, months) => {
+    const result = new Date(date);
+    result.setMonth(result.getMonth() + months);
+    return result;
+  };
+
+  // Ensure loanCreationDate is set to today if not selected
+  useEffect(() => {
+    if (!loanCreationDate) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanCreationDate",
+          value: new Date().toISOString().split("T")[0], // Setting default to today
+        })
+      );
+    }
+  }, [loanCreationDate, dispatch]);
+
+  // Reset loanReleaseDate & firstEmiDate if loanCreationDate changes
+  useEffect(() => {
+    if (loanCreationDate) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanReleaseDate",
+          value: "",
+        })
+      );
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "firstEmiDate",
+          value: "",
+        })
+      );
+    }
+  }, [loanCreationDate, dispatch]);
+
+  // Ensure loanReleaseDate ≥ loanCreationDate
+  useEffect(() => {
+    if (
+      loanReleaseDate &&
+      new Date(loanReleaseDate) < new Date(loanCreationDate)
+    ) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "loanReleaseDate",
+          value: "",
+        })
+      );
+    }
+  }, [loanCreationDate, loanReleaseDate, dispatch]);
+
+  // Ensure firstEmiDate ≥ loanReleaseDate + 1 month
+  useEffect(() => {
+    const minFirstEmiDate = addMonths(new Date(loanReleaseDate), 1);
+    if (firstEmiDate && new Date(firstEmiDate) < minFirstEmiDate) {
+      dispatch(
+        updateLoanField({
+          section: "generalLoanDetails",
+          field: "firstEmiDate",
+          value: "",
+        })
+      );
+    }
+  }, [loanReleaseDate, firstEmiDate, dispatch]);
 
   // All Fields Configuration
   const generalLoanDetailsConfig = [
@@ -287,12 +357,6 @@ const AddLoanFields = ({ addLoanData }) => {
       searchable: true,
     },
     {
-      labelName: "Borrower Unique ID",
-      inputName: "uniqueID",
-      type: "text",
-      validation: true,
-    },
-    {
       labelName: "Disbursed By",
       inputName: "disbursedBy",
       type: "select",
@@ -300,11 +364,16 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
-      labelName: "Loan Release Date",
-      inputName: "loanReleaseDate",
-      type: "date",
+      labelName: "Borrower Unique ID",
+      inputName: "uniqueID",
+      type: "text",
       validation: true,
-      minSelectableDate: today,
+    },
+    {
+      labelName: "Agent Name",
+      inputName: "agentName",
+      type: "text",
+      validation: false,
     },
     {
       labelName: "Loan Duration",
@@ -336,6 +405,29 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: true,
     },
     {
+      labelName: "Loan Creation Date",
+      inputName: "loanCreationDate",
+      type: "date",
+      validation: true,
+    },
+    {
+      labelName: "Loan Release Date",
+      inputName: "loanReleaseDate",
+      type: "date",
+      validation: true,
+      minSelectableDate: loanCreationDate ? new Date(loanCreationDate) : today,
+    },
+    {
+      labelName: "First EMI Date",
+      inputName: "firstEmiDate",
+      type: "date",
+      validation: false,
+      disabled: loanProductId === "payrollb-acke-dloa-nsfa-432a5a477cf6",
+      minSelectableDate: loanReleaseDate
+        ? addMonths(new Date(loanReleaseDate), 1)
+        : today,
+    },
+    {
       labelName: "Branch",
       inputName: "branch",
       type: "select",
@@ -351,139 +443,11 @@ const AddLoanFields = ({ addLoanData }) => {
       validation: false,
       searchable: true,
     },
-    {
-      labelName: "Agent Name",
-      inputName: "agentName",
-      type: "text",
-      validation: false,
-    },
-    // {
-    //   labelName: "CO Name",
-    //   inputName: "lhacoName",
-    //   type: "text",
-    //   validation: false,
-    // },
   ];
 
   const validationError = useSelector(
     (state) => state.validation.validationError
   );
-
-  const generalLoanDetailsInputNames = generalLoanDetailsConfig.map(
-    (field) => field.inputName
-  );
-
-  const renderDetails = (details, config, sectionName) => (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-      {config.map((field, index) => {
-        const value = details[field.inputName] ?? ""; // Fallback to empty string
-        switch (field.type) {
-          case "text":
-            return (
-              <InputText
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "number":
-            return (
-              <InputNumber
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "select":
-            return (
-              <InputSelect
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputOptions={field.options}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "date":
-            return (
-              <div className="col-span-1" key={index}>
-                <InputDate
-                  labelName={field.labelName}
-                  inputName={field.inputName}
-                  inputValue={value}
-                  onChange={(e) => handleInputChange(e, sectionName)}
-                  isValidation={field.validation || false}
-                  isDisabled={field.disabled || false}
-                  minSelectableDate={field.minSelectableDate || null}
-                  maxSelectableDate={field.maxSelectableDate || null}
-                />
-              </div>
-            );
-          case "email":
-            return (
-              <InputEmail
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-              />
-            );
-          case "file":
-            return (
-              <InputFile
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleFileChange(e, sectionName)}
-                accept={field.accept || "*"}
-                isValidation={field.validation || false}
-              />
-            );
-          case "textarea":
-            return (
-              <InputTextArea
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={value}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                rowCount={field.rowCount || 3}
-                isValidation={field.validation || false}
-              />
-            );
-          default:
-            return null;
-        }
-      })}
-    </div>
-  );
-
-  // Dedicated UI Components
-  const generalLoanDetails = (generalLoanDetails) =>
-    renderDetails(
-      generalLoanDetails,
-      generalLoanDetailsConfig,
-      "generalLoanDetails"
-    );
-
-  // console.log(addLoanData);
 
   const handleDeleteDocument = (docId) => {
     if (!docId) return;
@@ -592,24 +556,20 @@ const AddLoanFields = ({ addLoanData }) => {
     </>
   );
 
-  // Validation Checks
-  const isValidationFailed = (errors, fields) => {
-    // Iterate over fields and check if any corresponding error is true
-    return fields.some((field) => errors[field] === true);
-  };
-
   return (
     <>
       <Accordion
         heading={"General Loan Details"}
-        renderExpandedContent={() =>
-          generalLoanDetails(addLoanData?.generalLoanDetails)
-        }
-        isOpen={true}
-        error={isValidationFailed(
-          validationError,
-          generalLoanDetailsInputNames
+        renderExpandedContent={() => (
+          <DynamicForm
+            details={addLoanData?.generalLoanDetails}
+            config={generalLoanDetailsConfig}
+            sectionName={"generalLoanDetails"}
+            handleInputChange={handleInputChange}
+          />
         )}
+        isOpen={true}
+        error={isValidationFailed(validationError, generalLoanDetailsConfig)}
       />
       <Accordion
         heading={"Refinance Details"}
@@ -619,10 +579,10 @@ const AddLoanFields = ({ addLoanData }) => {
       />
       <Accordion
         heading={"Requirement"}
-        renderExpandedContent={() => requirements(addLoanData.documents)}
+        renderExpandedContent={() => requirements(addLoanData?.documents)}
       />
       <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
-        <div>{`${uploadedCount} of 3 documents uploaded`}</div>
+        <div>{`${uploadedCount} of ${addLoanData?.documents.length} documents uploaded`}</div>
         <div>{`${verifiedCount} documents verified`}</div>
       </div>
     </>

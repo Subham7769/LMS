@@ -4,6 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getLoanAgreement } from "../../../redux/Slices/smeLoansSlice";
 import { creditCommitteDecision, documentsData } from "../../../data/LosData";
+import longHornLogo from "../../../assets/image/longhorn-logo.png";
+import formatNumber from "../../../utils/formatNumber";
+import { convertDate } from "../../../utils/convertDate";
+import isDateString from "../../../utils/isDateString";
 
 const ShimmerTable = () => {
   return (
@@ -50,6 +54,8 @@ const LoanAgreementPrint = () => {
     ccoFoComments = {},
   } = loanAgreementData || {};
 
+  
+
   if (loading) {
     return (
       <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
@@ -63,8 +69,13 @@ const LoanAgreementPrint = () => {
   return (
     <>
       <div className={"flex flex-col justify-center align-middle gap-5 m-10"}>
-        <div className="text-xl font-semibold text-center">
-          LOAN AGREEMENT - PART A
+        <div className="flex w-full items-center relative">
+          <div className="absolute left-0 top-0">
+            <img src={longHornLogo} className="w-32" />
+          </div>
+          <div className="font-semibold text-center flex-1">
+            LOAN AGREEMENT - PART A
+          </div>
         </div>
         <div className="border-2 border-gray-500 text-sm">
           <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
@@ -139,7 +150,12 @@ const LoanAgreementPrint = () => {
                   key={key}
                   className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                 >
-                  &nbsp;{profomaDetails[key] ?? "-"}
+                  &nbsp;
+                  {typeof profomaDetails[key] === "number"
+                    ? formatNumber(profomaDetails[key])
+                    : isDateString(profomaDetails[key])
+                    ? convertDate(profomaDetails[key])
+                    : profomaDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
@@ -214,7 +230,12 @@ const LoanAgreementPrint = () => {
                   key={key}
                   className="border-b border-border-gray-primary pr-1 pt-1 text-right"
                 >
-                  &nbsp;{generalLoanDetails[key] ?? "-"}
+                  &nbsp;
+                  {typeof generalLoanDetails[key] === "number"
+                    ? formatNumber(generalLoanDetails[key])
+                    : isDateString(generalLoanDetails[key])
+                    ? convertDate(generalLoanDetails[key])
+                    : generalLoanDetails[key] ?? "-"}
                 </div>
               ))}
             </div>

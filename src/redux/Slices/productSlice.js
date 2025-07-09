@@ -232,6 +232,7 @@ const productInitialState = {
   productData: {
     approvalsConfigurationsTempId: "",
     dynamicDocumentTempId: null,
+    dynamicRefundDocTempId:null,
     loanProductId: "",
     blockEmployersTempId: "",
     creditScoreEqTempId: "",
@@ -261,6 +262,7 @@ const productInitialState = {
     interestMethod: "",
     insuranceFee: "",
     insuranceLevy: "",
+    notApplyInsuranceLevyDeduction:false,
   },
   loading: false,
   error: null,
@@ -275,6 +277,7 @@ const productSlice = createSlice({
     },
     setProductData: (state, action) => {
       const { productType } = action.payload;
+      state.loading = false;
       state.productData = {
         ...productInitialState.productData, // Reset to initial state
         ...action.payload, // Apply the new changes

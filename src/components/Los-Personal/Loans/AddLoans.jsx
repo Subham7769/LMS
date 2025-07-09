@@ -22,6 +22,8 @@ import store from "../../../redux/store";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { sanitizeUid } from "../../../utils/sanitizeUid";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import { toast } from "react-toastify";
 
 const AddLoans = () => {
   const dispatch = useDispatch();
@@ -32,7 +34,7 @@ const AddLoans = () => {
   const { addLoanData, loading, loanProductData } = useSelector(
     (state) => state.personalLoans
   );
-
+  console.log(addLoanData);
   // Decode the BorrowerId to restore its original value
   const decodedBorrowerId = decodeURIComponent(BorrowerId);
   // const isValid = useSelector((state) => state.validation.isValid);
@@ -63,7 +65,7 @@ const AddLoans = () => {
   }, [dispatch, loanApplicationId, decodedBorrowerId]);
 
   useEffect(() => {
-    if (addLoanData.generalLoanDetails.loanProductId) {
+    if (addLoanData?.generalLoanDetails?.loanProductId) {
       const selectedDynamicDoc = loanProductData.find(
         (product) =>
           product?.loanProductId ===
@@ -76,25 +78,7 @@ const AddLoans = () => {
         })
       );
     }
-  }, [dispatch, addLoanData.generalLoanDetails.loanProductId]);
-
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    // console.log(result);
-    return result;
-  }
+  }, [dispatch, addLoanData?.generalLoanDetails?.loanProductId]);
 
   // console.log(addLoanData);
   const handleSubmit = async (e) => {
@@ -128,6 +112,9 @@ const AddLoans = () => {
 
   const handleDraft = async () => {
     // Ensure borrowerId is set to the sanitized uniqueID
+    if (!addLoanData?.generalLoanDetails?.uniqueID) {
+      toast.error("Please enter a valid Borrower Unique ID ");
+    }
     const sanitizedUniqueID = sanitizeUid(
       addLoanData.generalLoanDetails.uniqueID
     );
@@ -163,6 +150,8 @@ const AddLoans = () => {
     return <ContainerTile loading={loading} />;
   }
 
+  console.log(addLoanData);
+
   return (
     <>
       <div
@@ -189,6 +178,12 @@ const AddLoans = () => {
             onClick={getMaxPrincipal}
             buttonType="tertiary"
             rectangle={true}
+            disabled={
+              !(
+                addLoanData?.generalLoanDetails?.loanDuration &&
+                addLoanData?.generalLoanDetails?.repaymentTenureStr
+              )
+            }
           />
           <Button
             buttonName="Save Draft"

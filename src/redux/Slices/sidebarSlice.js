@@ -380,7 +380,7 @@ const ROLE_CREDITOR_ADMIN = [
   "Product Group",
   "Business Rule",
   "Global Config",
-  "Dynamic RAC",
+  "Decision Engine",
 ];
 const ROLE_CUSTOMER_CARE_MANAGER = ["Customer Care"];
 const ROLE_CUSTOMER_CARE_USER = ["Customer Care"];
@@ -399,7 +399,7 @@ const ROLE_MAKER_ADMIN = [
   "Product Group",
   "Business Rule",
   "Global Config",
-  "Dynamic RAC",
+  "Decision Engine",
 ];
 const ROLE_CHECKER_ADMIN = [
   "Home",
@@ -416,7 +416,7 @@ const ROLE_CHECKER_ADMIN = [
   "Product Group",
   "Business Rule",
   "Global Config",
-  "Dynamic RAC",
+  "Decision Engine",
 ];
 const ROLE_TECHNICAL = ["Customer Care", "Product Testing", "General Ledger"];
 const ROLE_VIEWER = [
@@ -439,7 +439,7 @@ const ROLE_VIEWER = [
   "Server Config",
   "Customer Care",
   "General Ledger",
-  "Dynamic RAC",
+  "Decision Engine",
   "Reporting Config",
   "Reports",
 ];
@@ -449,6 +449,7 @@ const ROLE_LOAN_OFFICER = [
   "Recovery",
   "Affordability",
   "Employer",
+  "Banks",
   "Approval Config",
   "Document Config",
   "TCL",
@@ -460,11 +461,12 @@ const ROLE_LOAN_OFFICER = [
   "Rule Policy",
   "Product Group",
   "Customer Care",
-  "Dynamic RAC",
+  "Decision Engine",
   "Reporting Config",
   "Reports",
   "SME Loans",
   "Personal Loans",
+  "Banks"
 ];
 
 const initialState = {
@@ -891,7 +893,7 @@ const sidebarSlice = createSlice({
       .addCase(fetchDynamicRacData.fulfilled, (state, action) => {
         const submenuItems = action.payload;
         const updatedMenus = state.menus.map((menu) => {
-          if (menu.title === "Dynamic RAC") {
+          if (menu.title === "Decision Engine") {
             return { ...menu, submenuItems };
           }
           return menu;

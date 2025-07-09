@@ -119,6 +119,8 @@ const employerInitialState = {
   employerData: {
     employerName: "",
     affordabilityCriteriaTempId: "",
+    firstEmiDay: "",
+    moratoriumMonths: "",
   },
   loading: false,
   error: null,

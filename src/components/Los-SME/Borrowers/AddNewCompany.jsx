@@ -12,6 +12,8 @@ import AddUpdateCompanyBorrowerFields from "./AddUpdateCompanyBorrowerFields";
 import store from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { nanoid } from "nanoid";
+import { toast } from "react-toastify";
+import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
 
 const AddNewCompany = () => {
   const dispatch = useDispatch();
@@ -20,23 +22,6 @@ const AddNewCompany = () => {
     (state) => state.smeBorrowers
   );
   // console.log(addCompanyData)
-
-  function flattenToSimpleObject(nestedObject) {
-    const result = {};
-
-    function recurse(current) {
-      for (const key in current) {
-        if (typeof current[key] === "object" && current[key] !== null) {
-          recurse(current[key]);
-        } else {
-          result[key] = current[key];
-        }
-      }
-    }
-
-    recurse(nestedObject);
-    return result;
-  }
 
   if (!addCompanyData.companyDetails.loanOfficer) {
     const loanOfficer = localStorage.getItem("username");
@@ -77,9 +62,14 @@ const AddNewCompany = () => {
       borrowerProfileDraftId: nanoid(),
       companyBorrowerProfileDraft: { ...addCompanyData },
     }
-    dispatch(draftCompanyBorrowerInfo(addDraftCompanyData))
-    navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
-    dispatch(resetCompanyData())
+    if (addDraftCompanyData.companyBorrowerProfileDraft.companyDetails.companyName !== "") {
+
+      dispatch(draftCompanyBorrowerInfo(addDraftCompanyData))
+      navigate(`/loan/loan-origination-system/sme/borrowers/add-company`);
+      dispatch(resetCompanyData())
+    } else {
+      toast.error("Company Name Required");
+    }
   }
 
   const handleCancel = () => {

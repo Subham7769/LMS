@@ -1,10 +1,4 @@
-import React, { useEffect, useState } from "react";
-import InputText from "../../Common/InputText/InputText";
-import InputNumber from "../../Common/InputNumber/InputNumber";
-import InputEmail from "../../Common/InputEmail/InputEmail";
-import InputFile from "../../Common/InputFile/InputFile";
-import InputDate from "../../Common/InputDate/InputDate";
-import InputSelect from "../../Common/InputSelect/InputSelect";
+import React, { useEffect, useRef, useState } from "react";
 import Accordion from "../../Common/Accordion/Accordion";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -21,11 +15,10 @@ import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
-import {
-  BankNameOptions,
-  BranchNameOptions,
-  bankBranches,
-} from "../../../data/BankData";
+import DynamicForm from "../../Common/DynamicForm/DynamicForm";
+import { isValidationFailed } from "../../../utils/isValidationFailed";
+import { useLocation } from "react-router-dom";
+import { fetchAllBank } from "../../../redux/Slices/bankSlice";
 
 const AddUpdateCompanyBorrowerFields = ({
   BorrowerData,
@@ -34,39 +27,23 @@ const AddUpdateCompanyBorrowerFields = ({
   const dispatch = useDispatch();
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
+  const [bankName, setBankName] = useState(null);
+  const [branchName, setBranchName] = useState(null);
   const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
     []
   );
   const [filteredDistrictLocations2, setFilteredDistrictLocations2] = useState(
     []
   );
-  const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
-    []
-  );
+  const { bankOptions, bankBranchOptions, sortCodeBranchCodeOptions } = useSelector((state) => state.bank);
   const loanOfficer = localStorage.getItem("username");
+
+  // Fetch all Banks Data
   useEffect(() => {
-    setFilteredLocations1(
-      locationOptions[BorrowerData.companyDetails.countryOfRegistration] || []
-    );
-    setFilteredLocations2(
-      locationOptions[BorrowerData.companyContactDetails.country] || []
-    );
-    setFilteredDistrictLocations1(
-      districtOptions[BorrowerData.companyDetails.province] || []
-    );
-    setFilteredDistrictLocations2(
-      districtOptions[BorrowerData.companyContactDetails.province] || []
-    );
-    setFilteredBranchNameOptions(
-      BranchNameOptions[BorrowerData.bankDetails.bankName] || []
-    );
-  }, [
-    BorrowerData.companyDetails.countryOfRegistration,
-    BorrowerData.companyContactDetails.country,
-    BorrowerData.companyDetails.province,
-    BorrowerData.companyContactDetails.province,
-    BorrowerData.bankDetails.bankName,
-  ]);
+    // if (bankOptions.length) {
+    dispatch(fetchAllBank());
+    // }
+  }, [])
 
   useEffect(() => {
     const keysArray = [
@@ -118,12 +95,44 @@ const AddUpdateCompanyBorrowerFields = ({
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    setFilteredLocations1(
+      locationOptions[BorrowerData.companyDetails.countryOfRegistration] || []
+    );
+    setFilteredLocations2(
+      locationOptions[BorrowerData.companyContactDetails.country] || []
+    );
+    setFilteredDistrictLocations1(
+      districtOptions[BorrowerData.companyDetails.province] || []
+    );
+    setFilteredDistrictLocations2(
+      districtOptions[BorrowerData.companyContactDetails.province] || []
+    );
+  }, [
+    BorrowerData.companyDetails.countryOfRegistration,
+    BorrowerData.companyContactDetails.country,
+    BorrowerData.companyDetails.province,
+    BorrowerData.companyContactDetails.province,
+    BorrowerData.bankDetails.bankName,
+  ]);
+
   const handleInputChange = (e, section, index) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, label, checked } = e.target;
+    console.log(e.target)
+    if (name === "bankName") {
+      setBankName(value)
+
+    }
+    else if (name === "branch") {
+      setBranchName(value)
+
+    }
+
     // Use section to update the correct part of the state
     dispatch(
       handleChangeReducer({ section, field: name, value, type, checked, index })
     );
+
   };
 
   const handleFileUpload = (e, section) => {
@@ -134,12 +143,62 @@ const AddUpdateCompanyBorrowerFields = ({
     );
   };
 
+  console.log(BorrowerData)
+
+
+  const location = useLocation();
+  const isUpdateCompany = location.pathname.includes("update-company");
+  const isDraftCompany = location.pathname.includes("draft");
+  const isAddCompany = !isUpdateCompany && !isDraftCompany;
+
+  // 1. Fetch all banks on mount
   useEffect(() => {
+    if (!bankOptions.length) {
+    dispatch(fetchAllBank());
+    }
+  }, []);
+
+  // 2. Set initial bankName if in update mode
+  useEffect(() => {
+    if ((isUpdateCompany || isDraftCompany) && BorrowerData?.bankDetails?.bankName) {
+      setBankName(BorrowerData.bankDetails.bankName);
+    }
+  }, [isUpdateCompany, isDraftCompany, BorrowerData?.bankDetails?.bankName]);
+
+  // 3. Set initial branch if in update mode
+  useEffect(() => {
+    if ((isUpdateCompany || isDraftCompany) && BorrowerData?.bankDetails?.branch) {
+      setBranchName(BorrowerData.bankDetails.branch);
+    }
+  }, [isUpdateCompany, isDraftCompany, BorrowerData?.bankDetails?.branch]);
+
+  // 4. Reset branch-related fields when bankName changes
+  const prevBankNameRef = useRef();
+
+  useEffect(() => {
+    // if (!(isUpdateCompany || isDraftCompany)) return;
+
+    const prevBankName = prevBankNameRef.current;
+    const currentBankName = BorrowerData.bankDetails.bankName;
+
+    if (prevBankName !== undefined && prevBankName !== currentBankName) {
+      dispatch(handleChangeReducer({ section: "bankDetails", field: "branch", value: "" }));
+      dispatch(handleChangeReducer({ section: "bankDetails", field: "branchCode", value: "" }));
+      dispatch(handleChangeReducer({ section: "bankDetails", field: "sortCode", value: "" }));
+    }
+
+    prevBankNameRef.current = currentBankName;
+  }, [BorrowerData.bankDetails.bankName, isUpdateCompany, isDraftCompany]);
+
+  // 5. Set sortCode and branchCode based on selected branch
+  useEffect(() => {
+    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch) return;
+
     dispatch(
       handleChangeReducer({
         section: "bankDetails",
         field: "branchCode",
-        value: "",
+        value: sortCodeBranchCodeOptions[branchName]?.branchCode,
       })
     );
 
@@ -147,39 +206,11 @@ const AddUpdateCompanyBorrowerFields = ({
       handleChangeReducer({
         section: "bankDetails",
         field: "sortCode",
-        value: "",
+        value: sortCodeBranchCodeOptions[branchName]?.sortCode,
       })
     );
-  }, [BorrowerData.bankDetails.bankName]);
+  }, [BorrowerData.bankDetails.branch, branchName]);
 
-  useEffect(() => {
-    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
-      return;
-
-    const branch = bankBranches.find(
-      (b) =>
-        b.bankName === BorrowerData.bankDetails.bankName &&
-        b.branchName === BorrowerData.bankDetails.branch
-    );
-
-    if (branch) {
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "branchCode",
-          value: branch.branchCode,
-        })
-      );
-
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "sortCode",
-          value: branch.sortCode,
-        })
-      );
-    }
-  }, [BorrowerData.bankDetails.bankName, BorrowerData.bankDetails.branch]);
 
   //   All Fields Configuration
   const companyDetailsConfig = [
@@ -228,6 +259,7 @@ const AddUpdateCompanyBorrowerFields = ({
       inputName: "companyRegistrationNo",
       type: "text",
       validation: true,
+      disabled: isUpdateCompany && !isDraftCompany,
     },
     {
       labelName: "Borrower Serial No.",
@@ -283,20 +315,23 @@ const AddUpdateCompanyBorrowerFields = ({
     {
       labelName: "Mobile 1",
       inputName: "mobile1",
-      type: "number",
+      type: "text",
       validation: true,
+      maxLength: 10,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
-      type: "number",
+      type: "text",
       validation: false,
+      maxLength: 10,
     },
     {
       labelName: "Landline Phone",
       inputName: "landlinePhone",
       type: "text",
       validation: false,
+      maxLength: 10,
     },
     {
       labelName: "House Number",
@@ -354,7 +389,7 @@ const AddUpdateCompanyBorrowerFields = ({
       labelName: "Name of Bank",
       inputName: "bankName",
       type: "select",
-      options: BankNameOptions,
+      options: bankOptions,
       validation: true,
       searchable: true,
     },
@@ -367,7 +402,7 @@ const AddUpdateCompanyBorrowerFields = ({
     {
       labelName: "Account No.",
       inputName: "accountNo",
-      type: "number",
+      type: "text",
       validation: true,
     },
     {
@@ -381,7 +416,7 @@ const AddUpdateCompanyBorrowerFields = ({
       labelName: "Branch",
       inputName: "branch",
       type: "select",
-      options: filteredBranchNameOptions,
+      options: bankBranchOptions[bankName],
       validation: true,
       searchable: true,
     },
@@ -451,184 +486,71 @@ const AddUpdateCompanyBorrowerFields = ({
     // },
   ];
 
-  // Generate the Form Field
-  const companyDetailsInputNames = companyDetailsConfig.map(
-    (field) => field.inputName
-  );
-
-  const companyContactDetailsInputNames = companyContactDetailsConfig.map(
-    (field) => field.inputName
-  );
-
-  const bankDetailsInputNames = bankDetailsConfig.map(
-    (field) => field.inputName
-  );
-
-  const companyOtherDetailsInputNames = companyOtherDetailsConfig.map(
-    (field) => field.inputName
-  );
-
-  // Rendering Input Fields
-  const renderDetails = (details, config, sectionName) => (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-      {config.map((field, index) => {
-        switch (field.type) {
-          case "text":
-            return (
-              <InputText
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "number":
-            return (
-              <InputNumber
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={
-                  field.labelName === "Credit Score"
-                    ? "Enter between 0 to 1"
-                    : `Enter ${field.labelName}`
-                }
-                isValidation={field.validation || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "select":
-            return (
-              <InputSelect
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputOptions={field.options}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                isValidation={field.validation || false}
-                searchable={field.searchable || false}
-                disabled={field.disabled || false}
-              />
-            );
-          case "date":
-            return (
-              <div className="col-span-1" key={index}>
-                <InputDate
-                  labelName={field.labelName}
-                  inputName={field.inputName}
-                  inputValue={details[field.inputName]}
-                  onChange={(e) => handleInputChange(e, sectionName)}
-                  isValidation={field.validation || false}
-                  isDisabled={field.disabled || false}
-                />
-              </div>
-            );
-          case "email":
-            return (
-              <InputEmail
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleInputChange(e, sectionName)}
-                placeHolder={`Enter ${field.labelName}`}
-                isValidation={field.validation || false}
-              />
-            );
-          case "file":
-            return (
-              <InputFile
-                key={index}
-                labelName={field.labelName}
-                inputName={field.inputName}
-                inputValue={details[field.inputName]}
-                onChange={(e) => handleFileUpload(e, sectionName)}
-                accept={field.accept || "*"}
-                isValidation={field.validation || false}
-              />
-            );
-          default:
-            return null;
-        }
-      })}
-    </div>
-  );
-
-  // Dedicated UI Components Creation
-  const companyDetails = (companyDetails) =>
-    renderDetails(companyDetails, companyDetailsConfig, "companyDetails");
-
-  const companyContactDetails = (companyContactDetails) =>
-    renderDetails(
-      companyContactDetails,
-      companyContactDetailsConfig,
-      "companyContactDetails"
-    );
-
-  const bankDetails = (bankDetails) =>
-    renderDetails(bankDetails, bankDetailsConfig, "bankDetails");
-
-  const companyOtherDetails = (companyOtherDetails) =>
-    renderDetails(
-      companyOtherDetails,
-      companyOtherDetailsConfig,
-      "companyOtherDetails"
-    );
-
   //   Validation Error Object from Validation slice to check Error state
   const validationError = useSelector(
     (state) => state.validation.validationError
   );
-
-  //   Validation Checks
-  const isValidationFailed = (validationError, sectionInputFields) => {
-    // Iterate over fields and check if any corresponding error is true
-    return sectionInputFields.some((field) => validationError[field] === true);
-  };
 
   return (
     <>
       <Accordion
         heading={"General Details"}
         renderExpandedContent={() =>
-          companyDetails(BorrowerData.companyDetails)
+          // companyDetails(BorrowerData.companyDetails)
+          <DynamicForm
+            details={BorrowerData.companyDetails}
+            config={companyDetailsConfig}
+            sectionName={"companyDetails"}
+            handleInputChange={handleInputChange}
+          />
         }
         isOpen={true}
-        error={isValidationFailed(validationError, companyDetailsInputNames)}
+        error={isValidationFailed(validationError, companyDetailsConfig)}
       />
 
       <Accordion
         heading={"Contact Details"}
         renderExpandedContent={() =>
-          companyContactDetails(BorrowerData.companyContactDetails)
+          <DynamicForm
+            details={BorrowerData.companyContactDetails}
+            config={companyContactDetailsConfig}
+            sectionName={"companyContactDetails"}
+            handleInputChange={handleInputChange}
+          />
         }
         error={isValidationFailed(
           validationError,
-          companyContactDetailsInputNames
+          companyContactDetailsConfig
         )}
       />
 
       <Accordion
         heading={"Bank Details"}
-        renderExpandedContent={() => bankDetails(BorrowerData.bankDetails)}
-        error={isValidationFailed(validationError, bankDetailsInputNames)}
+        renderExpandedContent={() =>
+          <DynamicForm
+            details={BorrowerData.bankDetails}
+            config={bankDetailsConfig}
+            sectionName={"bankDetails"}
+            handleInputChange={handleInputChange}
+          />
+        }
+        error={isValidationFailed(validationError, bankDetailsConfig)}
       />
 
       <Accordion
         heading={"Other Details"}
         renderExpandedContent={() =>
-          companyOtherDetails(BorrowerData.companyOtherDetails)
+          <DynamicForm
+            details={BorrowerData.companyOtherDetails}
+            config={companyOtherDetailsConfig}
+            sectionName={"companyOtherDetails"}
+            handleInputChange={handleInputChange}
+            handleFileUploads={handleFileUpload}
+          />
         }
         error={isValidationFailed(
           validationError,
-          companyOtherDetailsInputNames
+          companyOtherDetailsConfig
         )}
       />
     </>

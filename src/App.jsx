@@ -66,6 +66,9 @@ const Affordability = lazy(() =>
 // Employer Imports
 const Employer = lazy(() => import("./components/Employer/Employer"));
 
+// Banks Imports
+const Banks = lazy(() => import("./components/Banks/Banks"));
+
 // Approval Config Imports
 const LoanApprovalPage = lazy(() => import("./pages/LoanApprovalPage"));
 const LoanApproval = lazy(() =>
@@ -244,6 +247,11 @@ const ServerConfig = lazy(() =>
   import("./components/ServerConfig/ServerConfig")
 );
 
+//App Config imports
+const AppConfig = lazy(() =>
+  import("./components/AppConfig/AppConfig")
+);
+
 // Reporting Config imports
 const ReportingConfigPage = lazy(() => import("./pages/ReportingConfigPage"));
 const ReportingConfig = lazy(() =>
@@ -312,11 +320,17 @@ const AddLoans = lazy(() => import("./components/Los-Personal/Loans/AddLoans"));
 const LoanHistory = lazy(() =>
   import("./components/Los-Personal/Loans/LoanHistory")
 );
-const LoanAgreement = lazy(() =>
-  import("./components/Los-Personal/Loans/LoanAgreement")
-);
 const LoanAgreementPrint = lazy(() =>
   import("./components/Los-Personal/Loans/LoanAgreementPrint")
+);
+const LoanStatementPrint = lazy(() =>
+  import("./components/Los-Personal/Loans/LoanStatementPrint")
+);
+const OutrightSettlementPrint = lazy(() =>
+  import("./components/Los-Personal/Loans/OutrightSettlementPrint")
+);
+const DisbursementFilePrint = lazy(() =>
+  import("./components/Los-Personal/Loans/DisbursementFilePrint")
 );
 const CollateralRegister = lazy(() =>
   import("./components/Los-Personal/Loans/CollateralRegister")
@@ -335,6 +349,27 @@ const ApproveRepayment = lazy(() =>
 const UploadRepayment = lazy(() =>
   import("./components/Los-Personal/Repayments/UploadRepayment")
 );
+
+//------------Refund-----------------
+const Refund = lazy(() =>
+  import("./components/Los-Personal/Refund/Refund")
+);
+const RefundApplication = lazy(() =>
+  import("./components/Los-Personal/Refund/RefundApplication")
+);
+const AddRefund = lazy(() =>
+  import("./components/Los-Personal/Refund/AddRefund")
+);
+const ApproveRefunds = lazy(() =>
+  import("./components/Los-Personal/Refund/ApproveRefunds")
+);
+const RefundFormPrint = lazy(() =>
+  import("./components/Los-Personal/Refund/RefundFormPrint")
+);
+const RefundHistory = lazy(() =>
+  import("./components/Los-Personal/Refund/RefundHistory")
+);
+
 
 // LOS-SME Imports
 const LosSME = lazy(() => import("./components/Los-SME/LosSME"));
@@ -389,6 +424,15 @@ const LoanAgreementSME = lazy(() =>
 );
 const LoanAgreementPrintSME = lazy(() =>
   import("./components/Los-SME/Loans/LoanAgreementPrint")
+);
+const LoanStatementPrintSME = lazy(() =>
+  import("./components/Los-SME/Loans/LoanStatementPrint")
+);
+const OutrightSettlementPrintSME = lazy(() =>
+  import("./components/Los-SME/Loans/OutrightSettlementPrint")
+);
+const DisbursementFilePrintSME = lazy(() =>
+  import("./components/Los-SME/Loans/DisbursementFilePrint")
 );
 const CollateralRegisterSME = lazy(() =>
   import("./components/Los-SME/Loans/CollateralRegister")
@@ -564,6 +608,11 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
+        path: "app-config",
+        element: <AppConfig />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
         path: "reporting-config",
         element: <ReportingConfigPage />,
         errorElement: <RouteErrorBoundary />,
@@ -650,6 +699,11 @@ const routes = [
       {
         path: "employer",
         element: <Employer />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "banks",
+        element: <Banks />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -1017,11 +1071,6 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "loan-agreement/:loanApplicationId/:userId",
-            element: <LoanAgreement />,
-            errorElement: <RouteErrorBoundary />,
-          },
-          {
             path: "collateral-register",
             element: <CollateralRegister />,
             errorElement: <RouteErrorBoundary />,
@@ -1046,6 +1095,43 @@ const routes = [
           {
             path: "approve-repayment",
             element: <ApproveRepayment />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
+      {
+        path: "loan-origination-system/personal/refund",
+        element: <Refund />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "refund-application",
+            element: <RefundApplication />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-refund/new/:refundApplicationId",
+            element: <AddRefund />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-refund/new/:refundApplicationId/:loanId/:uid",
+            element: <AddRefund />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "add-refund/:refundApplicationId",
+            element: <AddRefund />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "approve-refund",
+            element: <ApproveRefunds />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "refund-history",
+            element: <RefundHistory />,
             errorElement: <RouteErrorBoundary />,
           },
         ],
@@ -1250,8 +1336,43 @@ const routes = [
     errorElement: <RouteErrorBoundary />,
   },
   {
+    path: "/loan-statement/:loanApplicationId/:userId",
+    element: <LoanStatementPrint />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/outright-settlement/:loanApplicationId/:userId",
+    element: <OutrightSettlementPrint />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/disbursement/:loanApplicationId/:userId",
+    element: <DisbursementFilePrint />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
     path: "/loan-agreement-sme/:loanApplicationId/:userId",
     element: <LoanAgreementPrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/loan-statement-sme/:loanApplicationId/:userId",
+    element: <LoanStatementPrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/outright-settlement-sme/:loanApplicationId/:userId",
+    element: <OutrightSettlementPrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/disbursement-sme/:loanApplicationId/:userId",
+    element: <DisbursementFilePrintSME />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/refund-form/:refundProcessId",
+    element: <RefundFormPrint />,
     errorElement: <RouteErrorBoundary />,
   },
 

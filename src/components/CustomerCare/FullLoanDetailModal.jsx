@@ -9,7 +9,7 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
       <div className="font-bold text-black flex w-[120px] items-center">
         : <span className="mr-2">{""}</span>
         <div className="whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">
-          {loanDetails.loanId}
+          {loanDetails?.loanId}
         </div>
         <button onClick={copyToClipboard} className="ml-2">
           <svg
@@ -31,38 +31,38 @@ const LoanDetailSection = ({ loanDetails, copyToClipboard }) => (
       <div>Total Amount</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
-        {loanDetails.totalAmount}
+        {loanDetails?.totalAmount}
       </div>
     </div>
     <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-border-gray-primary px-4">
       <div>Remaining Principal</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
-        {loanDetails.remainingPrincipal}
+        {loanDetails?.remainingPrincipal}
       </div>
       <div>Remaining Interest</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
-        {loanDetails.remainingInterest}
+        {loanDetails?.remainingInterest}
       </div>
     </div>
     <div className="grid grid-cols-[auto,1fr] gap-x-2 border-r border-border-gray-primary px-4">
       <div>Loan Status</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
-        {loanStatusOptions[loanDetails.loanStatus].label}
+        {loanStatusOptions[loanDetails?.loanStatus]?.label}
       </div>
       <div>Total Outstanding</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
-        {loanDetails.totalOutstanding}
+        {loanDetails?.totalOutstanding}
       </div>
     </div>
     <div className="grid grid-cols-[auto,1fr] gap-x-2 pl-4">
-      <div>Submit Date</div>
+      <div>Release Date</div>
       <div className="font-bold text-black">
         : <span className="mr-2">{""}</span>
-        {convertDate(loanDetails.submitDate)}
+        {convertDate(loanDetails?.releaseDate)}
       </div>
     </div>
   </div>
@@ -100,12 +100,12 @@ const TableRow = ({ loan, index }) => (
   </tr>
 );
 
-const InstallmentScheduleTable = ({ loansarrModal }) => (
+const InstallmentScheduleTable = ({ loansArrModal }) => (
   <div className="overflow-auto max-h-[260px]">
     <table className="divide-y divide-gray-300 w-full">
       <TableHeader />
       <tbody className="divide-y divide-gray-200 bg-white">
-        {loansarrModal.map((loan, index) => (
+        {loansArrModal && loansArrModal.map((loan, index) => (
           <TableRow key={loan.installmentId} loan={loan} index={index} />
         ))}
       </tbody>
@@ -127,7 +127,7 @@ const ShimmerTable = () => {
 const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(loanDetails.loanId);
+      await navigator.clipboard.writeText(loanDetails?.loanId);
       toast.success("ID was copied successfully!");
     } catch (err) {
       toast.error("The ID was not copied!");
@@ -170,7 +170,7 @@ const FullLoanDetailModal = ({ isOpen, onClose, loanDetails, loading }) => {
             copyToClipboard={copyToClipboard}
           />
           <div className="text-lg mt-5 text-center">Installment Schedule</div>
-          <InstallmentScheduleTable loansarrModal={loanDetails.installments} />
+          <InstallmentScheduleTable loansArrModal={loanDetails?.installments} />
           <div
             onClick={onClose}
             className="h-9 w-9 cursor-pointer rounded-full text-white absolute top-2 right-2"

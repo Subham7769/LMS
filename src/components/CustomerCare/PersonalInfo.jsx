@@ -30,6 +30,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { viewPhoto } from "../../redux/Slices/personalBorrowersSlice";
 import ViewPhotoModal from "../Los-Personal/Borrowers/ViewPhotoModal";
+import toPascalCase from "../../utils/toPascalCase";
 
 const PersonalInfo = () => {
   const { subID } = useParams();
@@ -42,7 +43,7 @@ const PersonalInfo = () => {
     (state) => state.customerCare
   );
 
-  console.log(personalInfo);
+
   function flattenToSimpleObjectArray(filteredBorrowers) {
     return filteredBorrowers.map((borrower) => {
       const result = {};
@@ -96,7 +97,6 @@ const PersonalInfo = () => {
     personalInfo?.companyBorrowerProfile,
   ]);
 
-  console.log(flattenData);
 
   const transformFlattenData = transformData(flattenData);
   const transformFlattenDataCompany = transformData(flattenDataCompany);
@@ -126,7 +126,6 @@ const PersonalInfo = () => {
   };
 
   const renderExpandedRowPersonal = (rowData) => {
-    console.log(rowData);
     return (
       <div className="space-y-2 text-sm text-gray-600 p-5 relative">
         {rowData ? (
@@ -174,7 +173,7 @@ const PersonalInfo = () => {
                     />
                     <CardInfoRow
                       icon={WindowIcon}
-                      label={rowData.uniqueIDType}
+                      label={toPascalCase(rowData.uniqueIDType)}
                       value={rowData.uniqueID}
                     />
                   </div>
@@ -786,24 +785,48 @@ const PersonalInfo = () => {
       </div>
     );
   };
+  console.log(personalInfo)
+
+  const ShimmerTable = () => {
+    return (
+      <div className="grid grid-cols-4 gap-4 animate-pulse">
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+        <div className="h-4 bg-background-light-primary rounded"></div>
+      </div>
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
+        <ShimmerTable />
+        <ShimmerTable />
+        <ShimmerTable />
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="flex flex-col gap-2">
-        <ContainerTile
-          className="flex items-center gap-2"
-          loading={loading}
-          // error={error}
-        >
-          {/* <img
+
+        {/* <img
             className="rounded-full w-12"
             src="https://lmscarbon.com/assets/index.png"
             alt=""
           /> */}
-          <div className="text-xl font-semibold">Borrower Id: {subID}</div>
-        </ContainerTile>
+        <div className="flex justify-between items-center w-full bg-indigo-50 p-3 rounded-lg">
+
+          <div className="text-xl font-semibold p-3 rounded-lg">Customer Id: {personalInfo?.customerId}</div>
+          {personalInfo?.borrowerProfileType === "PERSONAL_BORROWER" && <div className="text-xl font-semibold p-3 rounded-lg ">Borrower Id: {personalInfo?.borrowerProfile.personalDetails.uniqueID}</div>}
+          {personalInfo?.borrowerProfileType === "COMPANY_BORROWER" && <div className="text-xl font-semibold p-3 rounded-lg">Unique Id: {personalInfo?.companyBorrowerProfile.companyDetails.companyUniqueId}</div>}
+
+        </div>
+
         <>
-          {personalInfo.borrowerProfileType === "PERSONAL_BORROWER" ? (
+          {personalInfo?.borrowerProfileType === "PERSONAL_BORROWER" ? (
             <>{renderExpandedRowPersonal(...transformFlattenData)}</>
           ) : (
             <>{renderExpandedRowCompany(...transformFlattenDataCompany)}</>

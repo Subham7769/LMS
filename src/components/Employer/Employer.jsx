@@ -21,11 +21,12 @@ import {
   validateForm,
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
-import { hasViewOnlyAccess, hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
 import { fetchAffordibilityData } from "../../redux/Slices/sidebarSlice";
 import { convertDate } from "../../utils/convertDate";
 import AddEmployerModal from "./AddEmployerModal";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
 
 const Employer = () => {
   const dispatch = useDispatch();
@@ -140,7 +141,7 @@ const Employer = () => {
                 placeHolder="Search by employer name"
               />
             </div>
-            {!hasViewOnlyAccessGroup2(roleName) ? (
+            {!hasViewOnlyAccess(roleName) ? (
               <div>
                 <Button
                   buttonIcon={PlusIcon}
@@ -154,29 +155,35 @@ const Employer = () => {
 
           {/* Employer Data Table */}
           <div className="shadow-md border border-border-gray-primary rounded-md text-center bg-white">
-            <div className="grid grid-cols-4 items-end mb-4 bg-background-light-secondary px-5">
+            <div className="grid grid-cols-6 items-end mb-4 bg-background-light-secondary px-5">
               <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Employer Name
               </div>
               <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Affordability Criteria
               </div>
+
               <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Creation Date
+                Day of Month
               </div>
               <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
+                Which Month ?
+              </div>
+              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                 Creation Date
+              </div>
+              <div className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                 Actions
               </div>
             </div>
-            {filteredEmployers?.map((empData, index) => (
-              <div
+            {filteredEmployers?.map((empData, index) => ( 
+              <div 
                 key={empData.employerId}
-                className={`grid grid-cols-4 gap-4 items-center pb-3 px-5 mb-3 
-                ${
-                  index !== filteredEmployers.length - 1
+                className={`grid grid-cols-6 gap-4 items-center pb-3 px-5 mb-3 
+                ${index !== filteredEmployers.length - 1
                     ? "border-b border-border-gray-primary"
                     : ""
-                }`}
+                  }`}
               >
                 <InputText
                   inputName="employerName"
@@ -194,10 +201,25 @@ const Employer = () => {
                   inputValue={empData?.affordabilityCriteriaTempId}
                   onChange={(e) => handleChange(e, empData?.employerId)}
                 />
+
+                <InputSelect
+                  inputOptions={daysOfMonth}
+                  id={`firstEmiDay_${empData?.employerId}`}
+                  inputName="firstEmiDay"
+                  inputValue={empData?.firstEmiDay}
+                  onChange={(e) => handleChange(e, empData?.employerId)}
+                />
+                <InputSelect
+                  inputOptions={upcomingMonths}
+                  id={`moratoriumMonths_${empData?.employerId}`}
+                  inputName="moratoriumMonths"
+                  inputValue={empData?.moratoriumMonths}
+                  onChange={(e) => handleChange(e, empData?.employerId)}
+                />
                 <div className="text-gray-600">
                   {convertDate(empData?.creationDate)}
                 </div>
-                {!hasViewOnlyAccessGroup2(roleName) ? (
+                {!hasViewOnlyAccess(roleName) ? (
                   <div className="flex items-center justify-center gap-4">
                     <Button
                       buttonIcon={CheckCircleIcon}

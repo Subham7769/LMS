@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import HoverButton from "../../Common/HoverButton/HoverButton";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
+import { TrashIcon, PencilIcon, DocumentDuplicateIcon } from "@heroicons/react/20/solid";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
@@ -16,6 +15,7 @@ import {
   getLoanApplications,
   getLoanApplicationsByID,
   cancelLoanApplicationsByID,
+  cloneLoanApplicationsByID,
   getLoanApplicationByField,
   resetAddLoanData,
   deleteLoanOffers,
@@ -32,7 +32,7 @@ function transformData(inputArray) {
   return inputArray.map((item) => ({
     loanApplicationId: item?.loanApplicationId,
     uniqueID: item?.generalLoanDetails?.uniqueID,
-    borrowerId: item?.generalLoanDetails?.borrowerId,
+    borrowerName: item?.borrowerName,
     creationDate: convertDate(item?.creationDate),
     lastUpdate: item?.lastUpdate ? convertDate(item?.lastUpdate) : " - ",
     status: convertToTitleCase(item?.status),
@@ -63,10 +63,12 @@ const LoanApplication = () => {
   const searchOptions = [
     { label: "Loan Application Id", value: "loanApplicationId" },
     { label: "Unique ID", value: "uniqueID" },
+    { label: "Status", value: "status" },
   ];
 
   const columns = [
     { label: "Loan Application ID", field: "loanApplicationId" },
+    { label: "Borrower Name", field: "borrowerName" },
     { label: "Unique ID", field: "uniqueID" },
     { label: "Created Date", field: "creationDate" },
     { label: "Last Updated", field: "lastUpdate" },
@@ -76,14 +78,29 @@ const LoanApplication = () => {
   const loanApplicationsData = transformData(loanApplications);
 
   const handleSearch = async () => {
+    let normalizedValue = plaSearchValue;
+
+    if (plaSearchBy === "status" && typeof plaSearchValue === "string") {
+      normalizedValue = plaSearchValue
+        .trim()
+        .toUpperCase()
+        .replace(/\s+/g, "_");
+    }
+
     await dispatch(
-      validateForm({ plaSearchBy: plaSearchBy, plaSearchValue: plaSearchValue })
+      validateForm({
+        plaSearchBy: plaSearchBy,
+        plaSearchValue: normalizedValue,
+      })
     );
     const state = store.getState();
     const isValid = state.validation.isValid;
     if (isValid) {
       dispatch(
-        getLoanApplicationByField({ field: plaSearchBy, value: plaSearchValue })
+        getLoanApplicationByField({
+          field: plaSearchBy,
+          value: normalizedValue,
+        })
       );
     }
     // setPlaSearchBy("");
@@ -127,13 +144,27 @@ const LoanApplication = () => {
     dispatch(getLoanApplications({ page: 0, size: 20 }));
   };
 
+  const handleCloneLoanApplication = async (loanApplicationId) => {
+    await dispatch(cloneLoanApplicationsByID(loanApplicationId)).unwrap();
+    navigate(`/loan/loan-origination-system/personal/loans/add-loan/${loanApplicationId}`)
+  }
+
   const renderActionList = (rowData) => {
     if (
       rowData.status === "Completed" ||
       rowData.status === "Cancel" ||
       hasViewOnlyAccessGroup3(roleName)
     ) {
-      return <div className="py-6">-</div>;
+      return <div className="flex justify-center gap-4 px-5">
+        <Button
+          onClick={() => handleCloneLoanApplication(rowData.loanApplicationId)}
+          buttonIcon={DocumentDuplicateIcon}
+          circle={true}
+          className={`mt-4 h-fit self-center`}
+          buttonType="secondary"
+          title={"Clone"}
+        />
+      </div>;
     }
     return (
       <div className="flex justify-center gap-4 px-5">
@@ -155,6 +186,7 @@ const LoanApplication = () => {
     );
   };
 
+  
   return (
     <div className={`flex flex-col gap-3`}>
       <div className="grid grid-cols-4 gap-5 items-center">

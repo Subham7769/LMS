@@ -46,7 +46,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import { toast } from "react-toastify";
 import store from "../../redux/store";
-import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from './RoleBasedView'
+import { ViewerRolesDynamicRac, EditorRolesDynamicRac } from '../../data/RoleBasedAccessAndView'
 import ErrorFailure from "../Common/ErrorFailure/ErrorFailure";
 
 const DynamicRAC = () => {
@@ -61,11 +61,9 @@ const DynamicRAC = () => {
   const [newSize, setNewSize] = useState("");
   const [selectedSectionId, setSelectedSectionId] = useState(null);
   const [selectedSectionName, setSelectedSectionName] = useState(null);
-  const { racConfig, loading, error } = useSelector(
-    (state) => state.dynamicRac
-  );
-  const { name } = racConfig.racDetails;
-  const sections = racConfig.sections;
+  const { racConfig, loading, error } = useSelector((state) => state.dynamicRac);
+  const { name } = racConfig?.racDetails;
+  const sections = racConfig?.sections;
   const { roleName } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -74,7 +72,7 @@ const DynamicRAC = () => {
         // First, fetch the option list
         await dispatch(fetchOptionList(racId));
 
-        // After fetching the option list, fetch the dynamic RAC details
+        // After fetching the option list, fetch the Decision Engine details
         await dispatch(fetchDynamicRacDetails(racId));
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -378,6 +376,8 @@ const DynamicRAC = () => {
               </div>
             )}
           </div>
+
+          {/* Utility Functions */}
           <div className="flex justify-between items-center">
             <div className="flex justify-between gap-5 w-full  border-b-2 pb-2">
               <div className="flex gap-2"></div>
@@ -431,6 +431,8 @@ const DynamicRAC = () => {
               )}
             </div>
           </div>
+          
+          {/* Drag and Drop Context */}
           <div className={`flex items-start "max-h-screen"`}>
             <div
               className={`basis-4/5 px-2 flex-grow overflow-y-scroll max-h-screen overflow-hidden pb-20`}

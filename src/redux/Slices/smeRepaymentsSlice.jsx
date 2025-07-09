@@ -234,8 +234,7 @@ export const fetchRepaymentByField = createAsyncThunk(
       const auth = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env
-            .VITE_REPAYMENT_READ_ALL_BY_FIELD_NAME_PERSONAL_BORROWER
+          import.meta.env.VITE_REPAYMENT_READ_ALL_BY_FIELD_NAME_COMPANY_BORROWER
         }?fieldName=${field}&value=${value}`,
         {
           method: "GET",
@@ -452,6 +451,9 @@ const smeRepaymentsSlice = createSlice({
       const { rowIndex, fieldName, value } = action.payload;
       state.draftRepaymentDTOList[rowIndex][fieldName] = value;
     },
+    resetAddBulkRepaymentData: (state) => {
+      state.draftRepaymentDTOList=initialState.draftRepaymentDTOList;
+    },
     addBulkRepaymentRow: (state) => {
       const newRow = {
         loan: "",
@@ -461,6 +463,9 @@ const smeRepaymentsSlice = createSlice({
         collectionBy: "",
         description: "",
         accounting: "",
+        userId: "",
+        repaymentType: "COMPANY",
+        payAll: false,
       };
       state.draftRepaymentDTOList.push(newRow);
     },
@@ -565,18 +570,26 @@ const smeRepaymentsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchClosingBalance.fulfilled, (state, action) => {
-        const { userId } = action.meta.arg;
+        const { rowIndex } = action.meta.arg;
         const { totalOutstanding } = action.payload;
         // Update the amount in the draftRepaymentDTOList
-        state.draftRepaymentDTOList = state.draftRepaymentDTOList.map((entry) =>
-          entry.userId === userId
-            ? {
-                ...entry,
-                amount: totalOutstanding,
-                closingBalance: action.payload,
-              }
-            : entry
-        );
+        // Fix - Update only the amount in the current Row. It was wrongly updating amounts for all the entries where userId is matching
+        // state.draftRepaymentDTOList = state.draftRepaymentDTOList.map((entry) =>
+        //   entry.userId === userId
+        //     ? {
+        //         ...entry,
+        //         amount: totalOutstanding,
+        //         closingBalance: action.payload,
+        //       }
+        //     : entry
+        // );
+        if (state.draftRepaymentDTOList[rowIndex]) {
+          state.draftRepaymentDTOList[rowIndex] = {
+            ...state.draftRepaymentDTOList[rowIndex],
+            amount: totalOutstanding,
+            closingBalance: action.payload,
+          };
+        }
         state.loading = false;
       })
       .addCase(fetchClosingBalance.rejected, (state, action) => {
@@ -655,6 +668,7 @@ const smeRepaymentsSlice = createSlice({
 export const {
   updateBulkRepaymentData,
   addBulkRepaymentRow,
+  resetAddBulkRepaymentData,
   removeBulkRepaymentRow,
   setRepaymentData,
   updateRepaymentData,

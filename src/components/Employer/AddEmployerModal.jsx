@@ -4,6 +4,7 @@ import InputText from "../Common/InputText/InputText";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputSelectCreatable from "../Common/InputSelectCreatable/InputSelectCreatable";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import { daysOfMonth, upcomingMonths } from "../../data/OptionsData";
 
 const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, handleInputChange, handleAddFields, employerOptions, setEmployerOptions }) => {
 
@@ -12,10 +13,10 @@ const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, 
   return (
     <>
       <div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
-        <div className="bg-white border border-red-600 p-8 rounded-xl w-1/3 relative shadow-lg transition-all duration-500 ease-in-out">
+        <div className="bg-white border border-red-600 p-8 rounded-xl w-1/2 relative shadow-lg transition-all duration-500 ease-in-out">
           <div
             onClick={onClose}
-            className="h-9 w-9 cursor-pointer rounded-full text-white absolute top-2 right-2"
+            className="h-9 w-9 cursor-pointer rounded-full text-white absolute top-1 right-1"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -57,6 +58,22 @@ const AddEmployerModal = ({ isOpen, onClose, employerData,affordabilityOptions, 
               inputOptions={affordabilityOptions}
               inputName="affordabilityCriteriaTempId"
               inputValue={employerData?.affordabilityCriteriaTempId}
+              onChange={handleInputChange}
+              isValidation={true}
+            />
+            <InputSelect
+              labelName="Day of Month"
+              inputOptions={daysOfMonth}
+              inputName="firstEmiDay"
+              inputValue={employerData?.firstEmiDay}
+              onChange={handleInputChange}
+              isValidation={true}
+            />
+            <InputSelect
+              labelName="Which Month ?"
+              inputOptions={upcomingMonths}
+              inputName="moratoriumMonths"
+              inputValue={employerData?.moratoriumMonths}
               onChange={handleInputChange}
               isValidation={true}
             />

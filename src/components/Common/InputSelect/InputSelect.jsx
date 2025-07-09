@@ -42,6 +42,7 @@ const InputSelect = ({
       target: {
         name: inputName,
         value: selectedOption ? selectedOption.value : "",
+        label:selectedOption ? selectedOption.label : "",
         id: inputId,
       },
     });

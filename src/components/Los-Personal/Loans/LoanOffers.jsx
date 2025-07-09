@@ -46,6 +46,7 @@ const LoanOffers = () => {
   } = useSelector((state) => state.personalLoans);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
+  const userName = userData?.username || "";
 
   useEffect(() => {
     dispatch(fetchLoanProductData());
@@ -60,12 +61,14 @@ const LoanOffers = () => {
 
   const SubmitProceed = async (transactionId, index) => {
     const uid = sanitizeUid(loanOfferFields.uid);
+
     const proceedPayload = {
       transactionId: transactionId,
       loanApplicationId: loanConfigData.loanApplicationId,
+      createdBy: userName,
     };
     await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
-    navigate(`/loan/loan-origination-system/personal/loans/approve-loans`);
+    navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
   };
 
   const handleChange = (e) => {

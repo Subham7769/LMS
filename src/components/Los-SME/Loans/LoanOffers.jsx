@@ -46,7 +46,8 @@ const LoanOffers = () => {
   } = useSelector((state) => state.smeLoans);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
-
+  const userName = userData?.username;
+  
   useEffect(() => {
     dispatch(fetchLoanProductData());
     return () => {
@@ -60,9 +61,10 @@ const LoanOffers = () => {
     const proceedPayload = {
       transactionId: transactionId,
       loanApplicationId: loanConfigData.loanApplicationId,
+      createdBy: userName,
     };
     await dispatch(handleProceed({ proceedPayload, uid })).unwrap();
-    navigate(`/loan/loan-origination-system/sme/loans/approve-loans`);
+    navigate(`/loan/loan-origination-system/sme/loans/loan-history`);
   };
 
   const handleChange = (e) => {
