@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Children, useEffect, useState } from "react";
 import ExpandableTable from "../../Common/ExpandableTable/ExpandableTable";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -14,6 +14,8 @@ import {
   getLoanStatement,
   getOutrightSettlement,
   closeLoan,
+  downloadDocumentFile,
+  previewDocumentFile,
 } from "../../../redux/Slices/personalLoansSlice";
 import Button from "../../Common/Button/Button";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
@@ -30,7 +32,6 @@ import ViewDocumentsModal from "./ViewDocumentsModal";
 import {
   CalendarDaysIcon,
   CheckCircleIcon,
-  NewspaperIcon,
   CurrencyDollarIcon,
   UserIcon,
   ReceiptRefundIcon,
@@ -38,7 +39,6 @@ import {
   WalletIcon,
 } from "@heroicons/react/24/outline";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
-import { FiInfo } from "react-icons/fi";
 import convertToReadableString from "../../../utils/convertToReadableString";
 import {
   clearValidationError,
@@ -48,17 +48,25 @@ import store from "../../../redux/store";
 import ActionOption from "../../Common/ActionOptions/ActionOption";
 import { generateRefundApplicationId } from "../../../redux/Slices/personalRefundSlice";
 
+import { initiateDebtCollectionWorkflow } from "../../../utils/camundaService";
+import useConfirm from "../../../hooks/useConfirm";
+
+import {toast} from "react-toastify";
+
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     loanProduct: item?.loanProductName?.replace(/_/g, " "),
     loanReleaseDate: convertDate(item?.loanReleaseDate),
+    loanStatus: convertToTitleCase(item?.loanStatus),
   }));
 }
 
 const LoanHistory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { confirm, ConfirmDialog } = useConfirm();
+
   const {
     loanHistory,
     paymentHistory,
@@ -76,9 +84,14 @@ const LoanHistory = () => {
   const { uniqueID } = useParams();
   // Pagination state
   const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
 
   // Decode the BorrowerId to restore its original value
   const decodedUniqueID = decodeURIComponent(uniqueID);
+
+  const { userData } = useSelector((state) => state.auth);
+  const roleName = userData?.roles[0]?.name;
+  const userName = userData?.username || "";
 
   useEffect(() => {
     return () => {
@@ -110,6 +123,7 @@ const LoanHistory = () => {
   const handleReset = () => {
     setPlhSearchBy("");
     setPlhSearchValue("");
+    setCurrentPage(0);
     dispatch(getLoanHistory({ page: 0, size: pageSize }));
     navigate(`/loan/loan-origination-system/personal/loans/loan-history`);
   };
@@ -166,6 +180,50 @@ const LoanHistory = () => {
     navigate(
       `/loan/loan-origination-system/personal/loans/add-loan/new/${loanApplicationId}`
     );
+  };
+
+  // const handleDebtCollection = async (loanId, uid) => {
+  //   console.log(loanId + uid);
+    
+  //   navigate(`/workflow/workflow-list?loanId=${loanId}&uid=${uid}`);
+  // };
+
+  const handleDebtCollection = async (loanId, uid) => {
+    console.log("hdfdfdfdf")
+    const ok = await confirm(
+      "Start Debt Collection",
+      "This Process will handle the pending loan installment payment. <br /> Are you sure you want to start the Debt Collection for this loan?"
+    );
+    if (!ok) return;
+
+    const today = new Date();
+    const dueDate = new Date();
+    dueDate.setDate(today.getDate() + 5);
+
+    // Format to 'YYYY-MM-DD' (Camunda-friendly ISO format)
+    const formattedDueDate = dueDate.toISOString().split('T')[0];
+
+    const payload = {
+      loanId: loanId ? loanId : "LHP20000030LUS",
+      email: 'umesh.kshirsagar@gmail.com',
+      fullName: 'Full Name',
+      customerType: "Personal",
+      paymentHistory: "Good",
+      accountNumber:"ACC293030",
+      daysPastDue:10,
+      amountDue:1000,
+      dueDate:formattedDueDate,
+      assignedUser:userName,
+      // etc.
+    };
+
+    try {
+      console.log("hdfdfdfdf")
+      await initiateDebtCollectionWorkflow(payload);
+      toast.success("Workflow started successfully!");
+    } catch (error) {
+      toast.error("Failed to start workflow:" + error);
+    }
   };
 
   const handleCloseLoan = async (loanId, uid) => {
@@ -246,6 +304,10 @@ const LoanHistory = () => {
       name: "Documents",
       action: (rowData) => handleViewDocuments(rowData.verifiedDocuments),
     },
+    {
+        name: "Debt Collection",
+        action: (rowData) => handleDebtCollection(rowData.loanId, rowData.uid),
+    },    
   ];
 
   const excludedForPendingOrCanceled = [
@@ -254,251 +316,250 @@ const LoanHistory = () => {
     "Outright Settlement",
   ];
 
-  const renderExpandedRow = (rowData) => {
-    const { loanStatus } = rowData;
+  const renderExpandedRow = (rowData) => (
+    <div className="border-y-2 dark:border-gray-600 py-5 px-2">
+      <div className="grid grid-cols-2 gap-4">
+        <CardInfo
+          cardIcon={UserIcon}
+          cardTitle="Borrower Information"
+          className={
+            "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
+          }
+          colorText={"text-sky-800 dark:text-sky-500"}
+        >
+          <div className="grid grid-cols-2 text-gray-800 dark:text-gray-100 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
+            <div>
+              <div className="">Employment</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.employerName}
+              </div>
+              <div className=" font-light text-xs">
+                {rowData?.borrowerDetails?.employmentDuration}
+              </div>
+            </div>
+            <div>
+              <div className="">Monthly Income</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.monthlyIncome}
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 text-gray-800 dark:text-gray-100">
+            <div>
+              <div className="">Credit Score</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.creditScore}
+              </div>
+            </div>
+            <div>
+              <div className="">Active Loans</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.activeLoans}
+              </div>
+            </div>
+            <div>
+              <div className="">Payment History</div>
+              <div className="font-semibold">
+                {rowData?.borrowerDetails?.paymentHistory}
+              </div>
+            </div>
+          </div>
+        </CardInfo>
+        <CardInfo
+          cardIcon={CurrencyDollarIcon}
+          cardTitle="Loan Information"
+          className={
+            "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
+          }
+          colorText={"text-sky-800 dark:text-sky-500"}
+        >
+          <div className="grid grid-cols-2 text-gray-800 dark:text-gray-100 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
+            <div>
+              <div className="">Disbursed Amount</div>
+              <div className="font-semibold">{rowData?.disbursedAmount}</div>
+            </div>
+            <div>
+              <div className="">Interest Rate</div>
+              <div className="font-semibold">
+                {rowData.loanInterest}% {rowData.interestMethod} per{" "}
+                {rowData.perLoanInterest}
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 text-gray-800 dark:text-gray-100 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
+            <div>
+              <div className="">Tenure</div>
+              <div className="font-semibold">
+                {rowData.numberOfTenure} {rowData.perLoanDuration}
+              </div>
+            </div>
+            <div>
+              <div className="">Monthly EMI</div>
+              <div className="font-semibold">{rowData.monthlyEMI}</div>
+            </div>
+            <div>
+              <div className="">First Payment</div>
+              <div className="font-semibold">
+                {convertDate(rowData.firstEmiPayment)}
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-5 flex-wrap">
+            <div
+              className="text-sky-700 dark:text-sky-600 font-semibold cursor-pointer flex gap-2"
+              onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
+            >
+              <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
+            </div>
+            <div
+              className="text-sky-700 dark:text-sky-600 font-semibold cursor-pointer flex gap-2"
+              onClick={() => handleRepaymentHistory(rowData.loanId)}
+            >
+              <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View Repayment
+              History
+            </div>
+          </div>
+        </CardInfo>
+      </div>
+      <div className="p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md my-5">
+        <div className="font-semibold text-xl mb-3 ">
+          Verified Documents{" "}
+          <span className="font-light text-xs">
+            ({rowData?.verifiedDocuments?.filter((doc) => doc.verified).length}{" "}
+            documents)
+          </span>
+        </div>
+        <div className="flex gap-10">
+          {rowData?.verifiedDocuments
+            ?.filter((doc) => doc.verified) // Filter only verified documents
+            .map((doc) => (
+              <div className="flex gap-1.5" key={doc.docId}>
+                <CheckCircleIcon className="-ml-0.5 h-5 w-5 text-green-600" />{" "}
+                {convertToTitleCase(doc.documentKey)}
+              </div>
+            ))}
+        </div>
+      </div>
+      {rowData?.loanActionDetailsList && (
+        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md p-3 my-5">
+          <div className="font-semibold text-xl mb-3">Loan Action History</div>
+          {rowData?.loanActionDetailsList.map((action, index) => {
+            const actionKeys = Object.keys(action);
+            let sentence = "";
 
+            actionKeys.forEach((key) => {
+              if (key.includes("By")) {
+                const role = convertToTitleCase(action[key]);
+
+                // Finding the corresponding date key dynamically
+                const baseKey = key.replace("By", "").toLowerCase(); // Normalize key
+                const dateKey = actionKeys.find(
+                  (k) =>
+                    k.toLowerCase().includes(baseKey) &&
+                    k.toLowerCase().includes("date")
+                );
+
+                const formattedDate = dateKey
+                  ? `on ${convertDate(new Date(action[dateKey]))}`
+                  : "";
+                sentence = `Loan has been ${convertToReadableString(
+                  key.replace("By", "")
+                )} By ${role} ${formattedDate}`;
+              }
+            });
+
+            return (
+              <div
+                key={index}
+                className="border-b dark:border-gray-500 pb-2 mb-2"
+              >
+                <p>{sentence}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <div className="flex justify-between items-end">
+        {rowData.verifiedDocuments.some(
+          (doc) => doc.documentKey === "SIGNED_LOAN_AGREEMENT" && doc.verified
+        ) ? (
+          <div>&nbsp;</div>
+        ) : (
+          <div>
+            <InputFile
+              placeholder="Upload Signed Agreement"
+              inputName={"signedAgreement"}
+              inputValue={signedAgreement}
+              onChange={(e) => handleFileChange(e, rowData.loanId)}
+            />
+          </div>
+        )}
+        <div className="flex justify-end gap-2 px-5">
+          {(rowData.loanStatus === "Activated" ||
+            rowData.loanStatus === "Closed") && (
+            <div className="">
+              <Button
+                buttonName={"Initiate Refund"}
+                onClick={() =>
+                  handleInitiateRefund(rowData.loanId, rowData.uid)
+                }
+                buttonIcon={ReceiptRefundIcon}
+                buttonType="tertiary"
+              />
+            </div>
+          )}
+          {(rowData.loanStatus === "Activated" ||
+            rowData.loanStatus === "Late") && (
+            <div className="flex gap-2">
+              <Button
+                buttonName={"Refinance Loan"}
+                onClick={() =>
+                  handleRefinanceLoan(
+                    rowData.loanId,
+                    rowData.uid,
+                    rowData.uniqueID
+                  )
+                }
+                rectangle={true}
+                buttonIcon={ArrowPathIcon}
+                buttonType="tertiary"
+              />
+              <Button
+                buttonName={"Close Loan via Wallet"}
+                onClick={() => handleCloseLoan(rowData.loanId, rowData.uid)}
+                rectangle={true}
+                buttonIcon={WalletIcon}
+                buttonType="tertiary"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+  const ListAction = (rowData) => {
+    const { loanStatus } = rowData;
     const filteredUserNavigation = userNavigation.filter((item) => {
-      if (["PENDING", "CANCELED"].includes(loanStatus)) {
+      if (["Pending", "Canceled"].includes(loanStatus)) {
         return !excludedForPendingOrCanceled.includes(item.name);
       }
       return true;
     });
     return (
-      <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
-        <div className="grid grid-cols-2 gap-4">
-          <CardInfo
-            cardIcon={UserIcon}
-            cardTitle="Borrower Information"
-            className={"bg-white border-border-gray-primary border"}
-            colorText={"text-blue-primary"}
-          >
-            <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
-              <div>
-                <div className="text-gray-500">Employment</div>
-                <div className="font-semibold">
-                  {rowData?.borrowerDetails?.employerName}
-                </div>
-                <div className="text-gray-500 font-light text-xs">
-                  {rowData?.borrowerDetails?.employmentDuration}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500">Monthly Income</div>
-                <div className="font-semibold">
-                  {rowData?.borrowerDetails?.monthlyIncome}
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-3">
-              <div>
-                <div className="text-gray-500">Credit Score</div>
-                <div className="font-semibold">
-                  {rowData?.borrowerDetails?.creditScore}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500">Active Loans</div>
-                <div className="font-semibold">
-                  {rowData?.borrowerDetails?.activeLoans}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500">Payment History</div>
-                <div className="font-semibold">
-                  {rowData?.borrowerDetails?.paymentHistory}
-                </div>
-              </div>
-            </div>
-          </CardInfo>
-          <CardInfo
-            cardIcon={CurrencyDollarIcon}
-            cardTitle="Loan Information"
-            className={"bg-white border-border-gray-primary border"}
-            colorText={"text-blue-primary"}
-          >
-            <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
-              <div>
-                <div className="text-gray-500">Disbursed Amount</div>
-                <div className="font-semibold">{rowData?.disbursedAmount}</div>
-              </div>
-              <div>
-                <div className="text-gray-500">Interest Rate</div>
-                <div className="font-semibold">
-                  {rowData.loanInterest}% {rowData.interestMethod} per{" "}
-                  {rowData.perLoanInterest}
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 border-b border-border-gray-primary pb-3 mb-3">
-              <div>
-                <div className="text-gray-500">Tenure</div>
-                <div className="font-semibold">
-                  {rowData.numberOfTenure} {rowData.perLoanDuration}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500">Monthly EMI</div>
-                <div className="font-semibold">{rowData.monthlyEMI}</div>
-              </div>
-              <div>
-                <div className="text-gray-500">First Payment</div>
-                <div className="font-semibold">
-                  {convertDate(rowData.firstEmiPayment)}
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-5 flex-wrap">
-              <div
-                className="text-blue-600 font-semibold cursor-pointer flex gap-2"
-                onClick={() =>
-                  handleFullLoanDetails(rowData.loanId, rowData.uid)
-                }
-              >
-                <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI
-                Schedule
-              </div>
-              <div
-                className="text-blue-600 font-semibold cursor-pointer flex gap-2"
-                onClick={() => handleRepaymentHistory(rowData.loanId)}
-              >
-                <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View Repayment
-                History
-              </div>
-            </div>
-          </CardInfo>
-        </div>
-        <div className="bg-white p-3 shadow-md border-border-gray-primary border rounded-md my-5">
-          <div className="font-semibold text-xl mb-3">
-            Verified Documents{" "}
-            <span className="font-light text-xs">
-              (
-              {rowData?.verifiedDocuments?.filter((doc) => doc.verified).length}{" "}
-              documents)
-            </span>
-          </div>
-          <div className="flex gap-10">
-            {rowData?.verifiedDocuments
-              ?.filter((doc) => doc.verified) // Filter only verified documents
-              .map((doc) => (
-                <div className="flex gap-1.5" key={doc.docId}>
-                  <CheckCircleIcon className="-ml-0.5 h-5 w-5 text-green-600" />{" "}
-                  {convertToTitleCase(doc.documentKey)}
-                </div>
-              ))}
-          </div>
-        </div>
-        {rowData?.loanActionDetailsList && (
-          <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
-            <div className="font-semibold text-xl mb-3">
-              Loan Action History
-            </div>
-            {rowData?.loanActionDetailsList.map((action, index) => {
-              const actionKeys = Object.keys(action);
-              let sentence = "";
-
-              actionKeys.forEach((key) => {
-                if (key.includes("By")) {
-                  const role = convertToTitleCase(action[key]);
-
-                  // Finding the corresponding date key dynamically
-                  const baseKey = key.replace("By", "").toLowerCase(); // Normalize key
-                  const dateKey = actionKeys.find(
-                    (k) =>
-                      k.toLowerCase().includes(baseKey) &&
-                      k.toLowerCase().includes("date")
-                  );
-
-                  const formattedDate = dateKey
-                    ? `on ${convertDate(new Date(action[dateKey]))}`
-                    : "";
-                  sentence = `Loan has been ${convertToReadableString(
-                    key.replace("By", "")
-                  )} By ${role} ${formattedDate}`;
-                }
-              });
-
-              return (
-                <div key={index} className="border-b pb-2 mb-2">
-                  <p>{sentence}</p>
-                </div>
-              );
-            })}
-          </div>
-        )}
-        <div className="flex justify-between items-end">
-          {rowData.verifiedDocuments.some(
-            (doc) => doc.documentKey === "SIGNED_LOAN_AGREEMENT" && doc.verified
-          ) ? (
-            <div>&nbsp;</div>
-          ) : (
-            <div>
-              <InputFile
-                placeholder="Upload Signed Agreement"
-                inputName={"signedAgreement"}
-                inputValue={signedAgreement}
-                onChange={(e) => handleFileChange(e, rowData.loanId)}
-              />
-            </div>
-          )}
-          <div className="flex justify-end gap-2 px-5">
-            {(rowData.loanStatus === "ACTIVATED" ||
-              rowData.loanStatus === "CLOSED") && (
-              <div className="">
-                <Button
-                  buttonName={"Initiate Refund"}
-                  onClick={() =>
-                    handleInitiateRefund(
-                      rowData.loanId,
-                      rowData.uid,
-                    )
-                  }
-                  rectangle={true}
-                  buttonIcon={ReceiptRefundIcon}
-                  buttonType="tertiary"
-                />
-              </div>
-            )}
-            {(rowData.loanStatus === "ACTIVATED" ||
-              rowData.loanStatus === "LATE") && (
-              <div className="flex gap-2">
-                <Button
-                  buttonName={"Refinance Loan"}
-                  onClick={() =>
-                    handleRefinanceLoan(
-                      rowData.loanId,
-                      rowData.uid,
-                      rowData.uniqueID
-                    )
-                  }
-                  rectangle={true}
-                  buttonIcon={ArrowPathIcon}
-                  buttonType="tertiary"
-                />
-                <Button
-                  buttonName={"Close Loan via Wallet"}
-                  onClick={() => handleCloseLoan(rowData.loanId, rowData.uid)}
-                  rectangle={true}
-                  buttonIcon={WalletIcon}
-                  buttonType="tertiary"
-                />
-              </div>
-            )}
-            <div>
-              <ActionOption
-                userNavigation={filteredUserNavigation}
-                actionID={rowData}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <ActionOption
+        userNavigation={filteredUserNavigation}
+        actionID={rowData}
+        align={"right"}
+      />
     );
   };
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
+      <ContainerTile
+        className={`p-5 md:flex justify-between gap-5 align-middle`}
+      >
+        <div className="w-full md:w-[45%] mb-2">
           <InputSelect
             labelName="Search By"
             inputName="plhSearchBy"
@@ -509,7 +570,7 @@ const LoanHistory = () => {
             isValidation={true}
           />
         </div>
-        <div className="w-[45%]">
+        <div className="w-full md:w-[45%]">
           <InputText
             labelName="Enter Value"
             inputName="plhSearchValue"
@@ -521,7 +582,7 @@ const LoanHistory = () => {
           />
         </div>
 
-        <div className="flex align-middle gap-5">
+        <div className="flex align-middle gap-5 justify-end">
           <Button
             buttonName={"Search"}
             onClick={handleSearch}
@@ -542,13 +603,18 @@ const LoanHistory = () => {
         columns={columns}
         data={loanHistoryData}
         renderExpandedRow={renderExpandedRow}
+        ListAction={ListAction}
         loading={loading}
+        ListName="List of all loans"
+        ListNameLength={loanHistoryTotalElements}
       />
       {decodedUniqueID === "undefined" && (
         <Pagination
           totalElements={loanHistoryTotalElements}
           dispatcherFunction={dispatcherFunction}
           pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
         />
       )}
       <FullLoanDetailModal
@@ -567,8 +633,16 @@ const LoanHistory = () => {
         isOpen={showDocumentsModal}
         onClose={closeViewDocumentModal}
         documents={documentsData}
+        downloadDocumentFile={downloadDocumentFile}
+        previewDocumentFile={previewDocumentFile}
       />
+
+
+      <ConfirmDialog />
     </div>
+
+    
+      
   );
 };
 

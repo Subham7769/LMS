@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { HeaderList, ProductGroupList } from "../../data/GroupData";
 import { toast } from "react-toastify";
+import convertToTitleCase from "../../utils/convertToTitleCase";
 
 export const fetchPGroups = createAsyncThunk(
   "productGroup/fetchPGroups",
@@ -286,7 +287,7 @@ const productGroupSlice = createSlice({
         };
         const formattedTags = state.productGroupData.activeLoansCount.map(
           (item) => ({
-            product: item.productType,
+            product: convertToTitleCase(item.productType),
             limit: item.activeLoansCount,
           })
         );

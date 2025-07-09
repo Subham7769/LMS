@@ -91,6 +91,7 @@ export const locationOptions = {
     { value: "Muchinga", label: "Muchinga" },
     { value: "North-Western", label: "North-Western" },
     { value: "Western", label: "Western" },
+    { value: "Ndola", label: "Ndola" },
   ],
   Venezuela: [
     { value: "Caracas", label: "Caracas" },
@@ -2890,7 +2891,7 @@ export const currencyOptions = [
   { value: "KPW", label: "North Korean Won (₩)" },
   { value: "KRW", label: "South Korean Won (₩)" },
   { value: "MGA", label: "Malagasy Ariary (Ar)" },
-  { value: "USD", label: "US Dollar ($)" }
+  { value: "USD", label: "US Dollar ($)" },
 ];
 
 export const currencySymbolOptions = [
@@ -2970,7 +2971,7 @@ export const currencySymbolOptions = [
   { value: "CF", label: "Comorian Franc (CF)" },
   { value: "₩", label: "North Korean Won (₩)" },
   { value: "₩", label: "South Korean Won (₩)" },
-  { value: "$", label: "US Dollar ($)" }
+  { value: "$", label: "US Dollar ($)" },
 ];
 
 export const dateFormateOptions = [
@@ -2989,13 +2990,12 @@ export const dateFormateOptions = [
   { value: "DD/MM/YYYY HH:mm", label: "DD/MM/YYYY HH:mm" },
   { value: "MMMM DD, YYYY", label: "MMMM DD, YYYY" },
   { value: "YYYY-MM-DDTHH:mm:ssZ", label: "ISO 8601 (YYYY-MM-DDTHH:mm:ssZ)" },
-  { value: "ddd, MMM D, YYYY", label: "ddd, MMM D, YYYY" }
+  { value: "ddd, MMM D, YYYY", label: "ddd, MMM D, YYYY" },
 ];
 
 export const thousandSeparatorsOptions = [
   { value: ",", label: "Comma (,)" },
   { value: ".", label: "Period (.)" },
-
 ];
 
 export const isdCodesOptions = [

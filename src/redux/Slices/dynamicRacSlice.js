@@ -44,8 +44,6 @@ export const fetchList = createAsyncThunk(
   }
 );
 
-
-
 // Define the asyncThunk for fetching dynamicRac details
 export const fetchDynamicRacDetails = createAsyncThunk(
   "rac/fetchDynamicRacDetails",
@@ -604,13 +602,14 @@ const dynamicRacSlice = createSlice({
     },
     setCurrentRule(state, action) {
       const { sectionId, dynamicRacRuleId } = action.payload;
+      console.log("setCurrentRule");
       state.racConfig.sections = state.racConfig.sections.map((section) => {
         if (section.sectionId === sectionId) {
           return {
             ...section,
             rules: section.rules.map((rule) => {
               if (rule.dynamicRacRuleId === dynamicRacRuleId) {
-                state.currentRule = { ...state.currentRule, ...rule };
+                state.currentRule = { ...state.currentRule, ...rule };//setting Current Rule
               }
               return rule;
             }),
@@ -620,30 +619,7 @@ const dynamicRacSlice = createSlice({
       });
     },
     restoreRule(state, action) {
-      const { sectionId, dynamicRacRuleId } = action.payload;
-      state.racConfig.sections = state.racConfig.sections.map((section) => {
-        if (section.sectionId === sectionId) {
-          return {
-            ...section,
-            rules: section.rules.map((rule) => {
-              if (rule.dynamicRacRuleId === dynamicRacRuleId) {
-                if (state.currentRule.firstOperator !== null) {
-                  return {
-                    ...state.currentRule,
-                  };
-                }
-              }
-              return rule;
-            }),
-          };
-        }
-        return section;
-      });
-      state.currentRule = {
-        firstOperator: null,
-        secondOperator: null,
-        numberCriteriaRangeList: null,
-      };
+      state.currentRule = initialState.currentRule; // Resetting currentRule to initial state
     },
   },
   extraReducers: (builder) => {

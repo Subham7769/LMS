@@ -1,6 +1,7 @@
 import { Outlet, Link, useParams, useLocation } from "react-router-dom";
 import Tab from "../Common/Tab/Tab";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import LoadingState from "../LoadingState/LoadingState";
 
 const CustomerCare = () => {
   const { subID } = useParams();
@@ -42,54 +43,18 @@ const CustomerCare = () => {
     // },
     {
       id: "back-to-user-page",
-      path: `/loan/product-testing/term-loan/${subID}/eligibilty`,
+      path: `/loan/product-testing/term-loan/${subID}/loan-config`,
       label: "Back to User Page",
     },
   ];
 
   return (
-    <div className="mt-4">
-      <div className="flex justify-between text-sm font-medium text-center text-gray-500 border-b border-gray-200 mb-4 ">
-        <ul className="flex flex-wrap">
-          {tabs
-            .slice(0, 3)
-            .map((tab) =>
-              roleName === "ROLE_CUSTOMER_CARE_USER" &&
-              tab.label === "Credit Bureau Details" ? (
-                <></>
-              ) : (
-                <Tab
-                  id={tab.id}
-                  label={tab.label}
-                  to={tab.path}
-                  activeTab={activeTab}
-                  setActiveTab={setActiveTab}
-                />
-              )
-            )}
-        </ul>
-        {roleName === "ROLE_CUSTOMER_CARE_MANAGER" ||
-        roleName === "ROLE_CUSTOMER_CARE_USER" ? (
-          ""
-        ) : (
-          <div className="px-2">
-            {/* <Link
-              to={tabs[3].path}
-              className={`bg-gray-500 rounded py-1 px-1.5 text-[16px] ${
-                currentPath === tabs[3].path
-                  ? "text-white bg-blue-tertiary rounded"
-                  : "text-white hover:border-b hover:bg-violet-primary hover:font-medium"
-              }`}
-            >
-              {tabs[3].label}
-            </Link> */}
-          </div>
-        )}
-      </div>
-      <div>
+    <>
+      <Tab tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Suspense fallback={<LoadingState />}>
         <Outlet />
-      </div>
-    </div>
+      </Suspense>
+    </>
   );
 };
 

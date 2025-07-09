@@ -18,6 +18,7 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
+import { CheckIcon } from "../../assets/icons";
 
 const NotificationText = () => {
   const dispatch = useDispatch();
@@ -48,18 +49,19 @@ const NotificationText = () => {
       <h2>
         <b
           title="Notification Text"
-          className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
+          className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-500 hover:p-2 p-2 hover:rounded-md"
         >
           Notification Text
         </b>
       </h2>
       {notificationInputList?.map((notificationData, index) => (
         <ContainerTile
-        loading={loading}
-        // error={error}
-        key={"notification"+index}
+          loading={loading}
+          // error={error}
+          key={"notification" + index}
+          className={"p-5 mb-5"}
         >
-          <div key={notificationData.id} className="flex flex-col gap-y-6 ">
+          <div key={notificationData.id} className="flex flex-col gap-y-2 ">
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5">
               <InputText
                 labelName="Notification Type"
@@ -89,7 +91,6 @@ const NotificationText = () => {
                       name: e.target.name,
                       value: e.target.value,
                     })
-                    
                   )
                 }
               />
@@ -97,7 +98,7 @@ const NotificationText = () => {
             <div className="grid grid-cols-[repeat(3,_minmax(0,_1fr))_50px] gap-5 items-end">
               <InputTextarea
                 labelName="Notification Message En"
-                rowCount={2}
+                rowCount={3}
                 inputName="notificationMessageEn"
                 inputId={notificationData?.id}
                 inputValue={notificationData?.notificationMessageEn}
@@ -116,7 +117,7 @@ const NotificationText = () => {
               />
               <InputTextarea
                 labelName="Notification Message Hi"
-                rowCount={2}
+                rowCount={3}
                 inputName="notificationMessageAr"
                 inputId={notificationData?.id}
                 inputValue={notificationData?.notificationMessageAr}
@@ -135,7 +136,7 @@ const NotificationText = () => {
               />
               <InputTextarea
                 labelName="Notification Description"
-                rowCount={2}
+                rowCount={3}
                 inputName="notificationDescription"
                 inputId={`notificationDescription_${notificationData?.id}`}
                 inputValue={notificationData?.notificationDescription}
@@ -145,9 +146,9 @@ const NotificationText = () => {
               {!hasViewOnlyAccessGroup2(roleName) ? (
                 <div>
                   <Button
-                    buttonIcon={CheckCircleIcon}
+                    buttonIcon={CheckIcon}
+                    buttonType="success"
                     onClick={() => handleSave(notificationData?.id, index)}
-                    circle={true}
                   />
                 </div>
               ) : (

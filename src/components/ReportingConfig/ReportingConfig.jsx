@@ -80,8 +80,8 @@ const CreateNewReportingConfig = () => {
         loading={loading}
         error={error}
       />
-      <ContainerTile loading={loading} error={error}>
-        <div className="grid grid-cols-4 gap-2 mb-5 items-end">
+      <ContainerTile className={"p-5"} loading={loading} error={error}>
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-2 mb-5 items-end">
           <InputNumber
             labelName="Default Time Range Days"
             inputName="defaultTimeRangeDays"

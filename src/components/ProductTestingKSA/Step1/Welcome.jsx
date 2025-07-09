@@ -1,6 +1,7 @@
 import React from "react";
 import { ChevronRight } from "lucide-react";
 import Stepper from "../../Common/Stepper/Stepper";
+import Button from "../../Common/Button/Button"
 
 const Step1Welcome = ({ onNext }) => {
 
@@ -8,20 +9,28 @@ const Step1Welcome = ({ onNext }) => {
     onNext();
   }
   return (
-    <div className="p-6 mx-auto bg-white rounded-xl shadow-md">
+    <>
       <div className="flex justify-end items-center mb-4">
-        <button className="text-teal-600 font-medium" onClick={GetStarted}>Register Account</button>
+        <Button
+          buttonName="Register Account"
+          buttonType="secondary"
+          onClick={GetStarted}
+        />
       </div>
 
       {/* Stepper */}
-      <Stepper title={"KSA Financing"} currentStep={1} steps={["Welcome", "Personal Info", "OTP Verification","Completion"]} />
-      
+      <Stepper
+        title={"KSA Financing"}
+        currentStep={1}
+        steps={["Welcome", "Personal Info", "OTP Verification", "Completion"]}
+      />
+
       <div className="text-center mb-6">
-        <div className="mx-auto w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mb-3">
-          <span className="text-teal-600 text-xl">🧾</span>
+        <div className="mx-auto w-10 h-10 bg-violet-700/20 rounded-full flex items-center justify-center mb-3">
+          <span className="text-violet-700 text-xl">🧾</span>
         </div>
         <h2 className="text-lg font-semibold">Welcome to KSA Financing</h2>
-        <p className="text-sm text-gray-600 mb-6">
+        <p className="text-sm text-gray-500 mb-6">
           Your path to Shariah-compliant financing solutions
         </p>
 
@@ -45,7 +54,7 @@ const Step1Welcome = ({ onNext }) => {
             },
           ].map((item, index) => (
             <div key={index} className="flex items-start space-x-3">
-              <div className="text-teal-600 font-bold">{index + 1}</div>
+              <div className="text-violet-600 font-bold">{index + 1}</div>
               <div>
                 <p className="font-medium">{item.title}</p>
                 <p className="text-sm text-gray-500">{item.desc}</p>
@@ -54,28 +63,27 @@ const Step1Welcome = ({ onNext }) => {
           ))}
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
+        <div className="flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 hover:dark:bg-gray-700/50 transition">
           <span className="text-sm font-medium">
             Registration takes just 2 minutes
           </span>
-          <ChevronRight className="w-4 h-4 text-teal-600" />
+          <ChevronRight className="w-4 h-4 text-violet-600" />
         </div>
       </div>
 
       <div className="flex justify-center items-center mt-4">
-        <button
-          className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition"
+        <Button
+          buttonName="Get Started"
+          buttonType="primary"
           onClick={GetStarted}
-        >
-          Get Started
-        </button>
+        />
       </div>
 
-      <p className="text-center text-sm text-gray-500 mt-4">
+      <p className="text-center text-sm mt-4">
         Already have an account?{" "}
-        <span className="text-teal-600 font-medium cursor-pointer">Login</span>
+        <span className="text-violet-600 font-medium cursor-pointer">Login</span>
       </p>
-    </div>
+    </>
   );
 };
 

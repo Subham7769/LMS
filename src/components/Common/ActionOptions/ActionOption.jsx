@@ -1,51 +1,107 @@
-import React from "react";
-import { Menu, Transition } from "@headlessui/react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import Transition from "../../../utils/Transition";
+import { createPortal } from "react-dom";
 
+const ActionOption = ({ userNavigation, actionID, align }) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownStyles, setDropdownStyles] = useState({ top: 0, left: 0 });
 
-const ActionOption = ({ userNavigation, actionID }) => {
+  const trigger = useRef(null);
+  const dropdown = useRef(null);
 
+  useEffect(() => {
+    if (dropdownOpen && trigger.current) {
+      const rect = trigger.current.getBoundingClientRect();
+      setDropdownStyles({
+        top: rect.bottom + window.scrollY + 6,
+        left: align === "right" ? rect.right - 176 : rect.left, // adjust for width
+      });
+    }
+  }, [dropdownOpen]);
+
+  console.log(dropdownStyles);
+
+  // close on click outside
+  useEffect(() => {
+    const clickHandler = ({ target }) => {
+      if (!dropdown.current) return;
+      if (
+        !dropdownOpen ||
+        dropdown.current.contains(target) ||
+        trigger.current.contains(target)
+      )
+        return;
+      setDropdownOpen(false);
+    };
+    document.addEventListener("click", clickHandler);
+    return () => document.removeEventListener("click", clickHandler);
+  });
+
+  // close if the esc key is pressed
+  useEffect(() => {
+    const keyHandler = ({ keyCode }) => {
+      if (!dropdownOpen || keyCode !== 27) return;
+      setDropdownOpen(false);
+    };
+    document.addEventListener("keydown", keyHandler);
+    return () => document.removeEventListener("keydown", keyHandler);
+  });
   return (
     <>
-      <Menu as="div" className="relative">
-        <div className="flex items-center justify-center gap-2">
-          <Menu.Button className="relative flex justify-center items-center rounded-md p-2 bg-green-500 text-white" onClick={(event) => event.stopPropagation()}>
-            <span>OPTIONS</span>
-            <ChevronDownIcon
-              aria-hidden="true"
-              className="-mr-1 h-4 w-4"
-            />
-          </Menu.Button>
-        </div>
-        <Transition
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
+      <div className="relative inline-flex">
+        <button
+          ref={trigger}
+          className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700/50 dark:lg:hover:bg-gray-800 rounded-full ${
+            dropdownOpen && "bg-gray-200 dark:bg-gray-800"
+          }`}
+          aria-haspopup="true"
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          aria-expanded={dropdownOpen}
         >
-          <Menu.Items className="absolute right-0 z-50 mt-1 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            {userNavigation.map((item) => (
-              <Menu.Item key={item?.name}>
-                {({ active }) => (
-                  <Link
-                    to={item.href}
-                    className={`block px-4 py-2 text-sm ${active
-                      ? "bg-background-light-secondary text-gray-700"
-                      : "text-gray-700"
-                      }`}
-                    onClick={() => item?.action(actionID)}
-                  >
-                    {item?.name}
-                  </Link>
-                )}
-              </Menu.Item>
-            ))}
-          </Menu.Items>
-        </Transition>
-      </Menu>
+          <span className="sr-only">Need help?</span>
+          <EllipsisHorizontalIcon className="h-7 w-7 " />
+        </button>
+        {createPortal(
+          <div
+            className="fixed z-50"
+            style={{ top: dropdownStyles.top, left: dropdownStyles.left }}
+          >
+            <Transition
+              className={` min-w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 py-1.5 rounded-lg shadow-lg overflow-hidden mt-1 `}
+              show={dropdownOpen}
+              enter="transition ease-out duration-200 transform"
+              enterStart="opacity-0 -translate-y-2"
+              enterEnd="opacity-100 translate-y-0"
+              leave="transition ease-out duration-200"
+              leaveStart="opacity-100"
+              leaveEnd="opacity-0"
+            >
+              <div
+                ref={dropdown}
+                onFocus={() => setDropdownOpen(true)}
+                onBlur={() => setDropdownOpen(false)}
+              >
+                <ul>
+                  {userNavigation.map((item) => (
+                    <li key={item.name}>
+                      <Link
+                        to={item.href}
+                        className="font-medium text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-200 flex py-1 px-3"
+                        onClick={() => item?.action(actionID)}
+                      >
+                        <span>{item.name}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Transition>
+          </div>,
+          document.body // Portal target
+        )}
+      </div>
     </>
   );
 };

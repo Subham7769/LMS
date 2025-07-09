@@ -6,6 +6,7 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import InputText from "../Common/InputText/InputText";
 import { useSelector } from "react-redux";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import { AddIcon } from "../../assets/icons";
 
 const TagInput = ({
   inputSelectName,
@@ -17,6 +18,7 @@ const TagInput = ({
   inputTextPlaceholder,
   formData,
   handleChange,
+  buttonTagName,
   addTag,
   deleteTag,
   productTypeOptions,
@@ -34,7 +36,7 @@ const TagInput = ({
   const tagsGridCSS = `grid-cols-${tagsPerRow}`;
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-end">
+      <div className="grid md:grid-cols-3 gap-5 items-end">
         {inputSelectName && productTypeOptions && (
           <InputSelect
             labelName={inputSelectLabel}
@@ -68,24 +70,24 @@ const TagInput = ({
             isIndex={isIndex2}
           />
         )}
-        {!hasViewOnlyAccess(roleName) ? (
-          <div className="">
+        {!hasViewOnlyAccess(roleName) && (
+          <div className="text-right md:text-left">
             <Button
-              buttonIcon={PlusIcon}
+              buttonIcon={AddIcon}
               onClick={addTag}
-              circle={true}
+              buttonName={buttonTagName}
               buttonType="secondary"
             />
           </div>
-        ) : (
-          ""
         )}
       </div>
-      <div className={`grid ${tagsGridCSS} gap-3 mt-3`}>
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 xl:${tagsGridCSS} gap-3 mt-5`}
+      >
         {formData.tags.map((tag, index) => (
           <div
             key={index}
-            className="bg-background-light-primary border border-gray-400 my-1 p-2 rounded-md flex  justify-between items-center cursor-auto text-sm"
+            className="bg-gray-200 border border-gray-400 my-1 p-2 rounded-md flex  justify-between items-center cursor-auto text-sm"
           >
             <div className="flex-1 flex justify-between align-middle">
               <>
@@ -131,11 +133,11 @@ const TagInput = ({
                       </>
                     ) : (
                       <>
-                        <div className="text-xs w-[65%] text-center">
+                        <div className="text-xs text-center">
                           {tag[inputSelectName]}
                         </div>
                         <div className="text-xs text-center">|</div>
-                        <div className="text-xs w-[34%] text-center">
+                        <div className="text-xs text-center">
                           {tag[inputNumberName]}
                         </div>
                       </>

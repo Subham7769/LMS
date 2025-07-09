@@ -11,7 +11,9 @@ import { useDispatch, useSelector } from "react-redux";
 import DocumentUploaderVerifier from "../../Common/DocumentUploaderVerifier/DocumentUploaderVerifier";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
+import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
+import { CreditCardIcon } from "@heroicons/react/24/outline";
 
 const AddRefundFields = ({ refundData, openLoans }) => {
   const dispatch = useDispatch();
@@ -140,16 +142,33 @@ const AddRefundFields = ({ refundData, openLoans }) => {
   const requirements = (documents) => {
     return documents.map((document, index) => (
       <React.Fragment key={document.documentKey}>
-        <DocumentUploaderVerifier
-          label={convertToTitleCase(document.documentKey)}
-          inputFileName="docName"
-          inputFileValue={documents[index]?.docName}
-          onFileChange={(e) => handleFileChange(e, "documents", index)}
-          onFileDelete={() => handleDeleteDocument(documents[index]?.docId)}
-          checkboxName="verified"
-          checkboxChecked={documents[index]?.verified}
-          onCheckboxChange={(e) => handleInputChange(e, "documents", index)}
-        />
+        {document.documentKey === "ATM_CARD" ? (
+          <div className="flex justify-between items-center border-b border-gray-300 dark:border-gray-600 mb-3 pb-3">
+            <div>ATM Card</div>
+            <div className="flex gap-x-5 items-baseline">
+              <CreditCardIcon className="h-5 w-5" aria-hidden="true" />
+              <div>
+                <InputCheckbox
+                  labelName={"Verified"}
+                  inputChecked={documents[index]?.verified}
+                  onChange={(e) => handleInputChange(e, "documents", index)}
+                  inputName="verified"
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <DocumentUploaderVerifier
+            label={convertToTitleCase(document.documentKey)}
+            inputFileName="docName"
+            inputFileValue={documents[index]?.docName}
+            onFileChange={(e) => handleFileChange(e, "documents", index)}
+            onFileDelete={() => handleDeleteDocument(documents[index]?.docId)}
+            checkboxName="verified"
+            checkboxChecked={documents[index]?.verified}
+            onCheckboxChange={(e) => handleInputChange(e, "documents", index)}
+          />
+        )}
       </React.Fragment>
     ));
   };
@@ -164,6 +183,7 @@ const AddRefundFields = ({ refundData, openLoans }) => {
             config={refundDetailsConfig}
             sectionName={"refundDetails"}
             handleInputChange={handleInputChange}
+            columnsPerRow={3}
           />
         )}
         isOpen={true}
@@ -173,7 +193,7 @@ const AddRefundFields = ({ refundData, openLoans }) => {
         heading={"Requirement"}
         renderExpandedContent={() => requirements(refundData?.documents)}
       />
-      <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
+      <div className="flex justify-between bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm py-2 text-sm px-5">
         <div>{`${uploadedCount} of ${refundData?.documents.length} documents uploaded`}</div>
         <div>{`${verifiedCount} documents verified`}</div>
       </div>

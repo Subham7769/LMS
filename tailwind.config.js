@@ -3,6 +3,7 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
+  darkMode: "class", // Ensure it's set to 'class' and not 'media'
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     input: {
@@ -15,6 +16,7 @@ module.exports = {
         center: true,
         padding: "15px",
       },
+
       fontFamily: {
         sans: ["Inter var", ...defaultTheme.fontFamily.sans],
       },

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { PlusIcon, TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
 import { useParams } from "react-router-dom";
 import InputNumber from "../Common/InputNumber/InputNumber";
 import Button from "../Common/Button/Button";
@@ -18,6 +17,7 @@ import ListTable from "../Common/ListTable/ListTable";
 import { validateForm } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import { AddIcon, DeleteIcon, EditIcon } from "../../assets/icons";
 
 const MaxFinAmtTen = ({ FAWTData, loading, error }) => {
   const { rulePolicyId } = useParams();
@@ -95,13 +95,13 @@ const MaxFinAmtTen = ({ FAWTData, loading, error }) => {
   const ActionList = !hasViewOnlyAccess(roleName)
     ? [
         {
-          icon: PencilIcon,
+          icon: EditIcon,
           circle: true,
           action: handleUpdate,
           type: "secondary",
         },
         {
-          icon: TrashIcon,
+          icon: DeleteIcon,
           circle: true,
           action: handleDelete,
           type: "destructive",
@@ -119,10 +119,10 @@ const MaxFinAmtTen = ({ FAWTData, loading, error }) => {
 
   return (
     <>
-      <ContainerTile loading={loading} error={error}>
-        <div className="text-lg mb-5">Max Finance Amount With Tenure</div>
+      <ContainerTile loading={loading} className={"p-5"}>
+        {/* <div className="text-lg mb-5">Max Finance Amount With Tenure</div> */}
         {!hasViewOnlyAccess(roleName) ? (
-          <div className="grid grid-cols-3 gap-5 items-end">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 items-end">
             <InputNumber
               labelName={"Amount"}
               inputName={"financeAmount"}
@@ -141,12 +141,14 @@ const MaxFinAmtTen = ({ FAWTData, loading, error }) => {
               isValidation={true}
               isIndex={maxFinAmtRules.dataIndex}
             />
-            <Button
-              buttonIcon={PlusIcon}
-              onClick={CreateEntry}
-              circle={true}
-              buttonType="secondary"
-            />
+            <div className="col-span-2 text-right md:col-span-1 md:text-left">
+              <Button
+                buttonIcon={AddIcon}
+                buttonName="Add"
+                onClick={CreateEntry}
+                buttonType="secondary"
+              />
+            </div>
           </div>
         ) : (
           ""
@@ -155,6 +157,8 @@ const MaxFinAmtTen = ({ FAWTData, loading, error }) => {
         <div className="mt-6">
           {tableDataWithoutId.length > 0 ? (
             <ListTable
+              ListName="Max Finance Amount With Tenure"
+              ListNameLength={tableDataWithoutId.length}
               ListHeader={MaxFinAmtHeaderList}
               ListItem={tableDataWithoutId}
               ListAction={ActionList}

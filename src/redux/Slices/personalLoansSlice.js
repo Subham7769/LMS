@@ -225,8 +225,8 @@ export const uploadSignedLoanAgreement = createAsyncThunk(
   "personalLoans/uploadSignedLoanAgreement",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
-      // const token = localStorage.getItem("authToken");
-      const { loanId, authToken } = fileUploadParams;
+      const token = localStorage.getItem("authToken");
+      const { loanId } = fileUploadParams;
       const response = await fetch(
         `${
           import.meta.env.VITE_LOAN_SIGNED_AGREEMENT_UPLOAD
@@ -234,7 +234,7 @@ export const uploadSignedLoanAgreement = createAsyncThunk(
         {
           method: "POST",
           headers: {
-            Authorization: `${authToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: formData,
         }
@@ -256,14 +256,9 @@ export const uploadDocumentFile = createAsyncThunk(
   "personalLoans/uploadDocumentFile",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
-      // const token = localStorage.getItem("authToken");
-      const {
-        loanApplicationId,
-        documentKey,
-        verified,
-        borrowerType,
-        authToken,
-      } = fileUploadParams;
+      const token = localStorage.getItem("authToken");
+      const { loanApplicationId, documentKey, verified, borrowerType } =
+        fileUploadParams;
       const response = await fetch(
         `${
           import.meta.env.VITE_LOAN_FILE_UPLOAD_PERSONAL
@@ -271,7 +266,7 @@ export const uploadDocumentFile = createAsyncThunk(
         {
           method: "POST",
           headers: {
-            Authorization: `${authToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: formData,
         }
@@ -292,8 +287,8 @@ export const uploadDocumentFile = createAsyncThunk(
 export const deleteDocumentFile = createAsyncThunk(
   "personalLoans/deleteDocumentFile",
   async (fileDeleteParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken } = fileDeleteParams;
+    const token = localStorage.getItem("authToken");
+    const { docId } = fileDeleteParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_DELETE_PERSONAL}${docId}`;
 
     try {
@@ -301,7 +296,7 @@ export const deleteDocumentFile = createAsyncThunk(
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -318,8 +313,8 @@ export const deleteDocumentFile = createAsyncThunk(
 export const downloadDocumentFile = createAsyncThunk(
   "personalLoans/downloadDocumentFile",
   async (fileDownloadParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken, docName } = fileDownloadParams;
+    const token = localStorage.getItem("authToken");
+    const { docId, docName } = fileDownloadParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_DOWNLOAD_PERSONAL}${docId}`;
 
     try {
@@ -327,7 +322,7 @@ export const downloadDocumentFile = createAsyncThunk(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -364,8 +359,8 @@ export const downloadDocumentFile = createAsyncThunk(
 export const previewDocumentFile = createAsyncThunk(
   "personalLoans/previewDocumentFile",
   async (filePreviewParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken, docName } = filePreviewParams;
+    const token = localStorage.getItem("authToken");
+    const { docId } = filePreviewParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_PREVIEW_PERSONAL}${docId}`;
 
     try {
@@ -373,7 +368,7 @@ export const previewDocumentFile = createAsyncThunk(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -984,6 +979,42 @@ export const getRefinanceDetails = createAsyncThunk(
   }
 );
 
+export const fetchBorrowerDataLoanHistory = createAsyncThunk(
+  "personalLoans/fetchBorrowerDataLoanHistory",
+  async ({ subID }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_BORROWER_INFO_LOAN_HISTORY}${subID}/all-loans`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 404) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Borrower Not Found");
+      }
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("authToken");
+        return rejectWithValue({ message: "Unauthorized" });
+      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to get Details");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+
 const initialState = {
   borrowerData: {},
   loanApplications: [],
@@ -1008,7 +1039,7 @@ const initialState = {
       repaymentTenure: 0,
       repaymentTenureType: "",
       repaymentTenureStr: "",
-      principalAmount: 0,
+      principalAmount: "",
       sector: "",
       branch: "",
       agentName: "",
@@ -1030,9 +1061,179 @@ const initialState = {
   approveLoans: [],
   approveLoansTotalElements: 0,
   loanHistory: [],
+  borrowerLoanHistory: [],
   paymentHistory: [],
   loanHistoryTotalElements: 0,
-  loanConfigData: {},
+  loanConfigData: {
+    profile: {
+      cashTCL: 1500000,
+      netCashTCL: 1500000,
+      cashCreditScore: 0.9,
+    },
+    cashLoanStats: {
+      maxLoanDuration: 186,
+      minLoanDuration: 186,
+      maxLoanDurationMonths: 6,
+      minLoanDurationMonths: 6,
+      maxLoanAmount: 60000,
+      minLoanAmount: 60000,
+      maxTenure: 6,
+      minTenure: 6,
+      maxEligibleDuration: 1116,
+      minEligibleDuration: 31,
+      maxEligibleDurationMonths: 36,
+      minEligibleDurationMonths: 1,
+      minLoanProductAmount: 100,
+      maxLoanAmountForBorrower: 151315,
+    },
+    dynamicCashLoanOffers: [
+      {
+        transactionId: "2bd78e19-51b4-438a-a368-cc31c78caadc",
+        serviceFee: 2700,
+        serviceFeeTax: 0,
+        totalLoanAmount: 71374.28,
+        totalInterestAmount: 8674.28,
+        totalManagementFee: 0,
+        totalManagementVatFee: 0,
+        principalAmount: 60000,
+        duration: 186,
+        instalmentsNumber: 6,
+        dailyInterestRate: 0.00126598497855257,
+        durationInMonths: 6,
+        schema: "Payroll Backed Loans",
+        installmentSummaryResponse: [
+          {
+            installmentValue: 11445.71,
+            installmentDate: "2025-07-10",
+            totalRequiredAmount: 11895.71,
+            interestValue: 2400,
+            principalValue: 9045.71,
+            closingAmount: 60000,
+            earlySettlementFee: 0,
+            savedFee: 8674.26,
+            savedFeePercent: 100,
+            principalOutstandingAmount: 50954.29,
+            totalOutstandingAmount: 59478.55,
+            termCost: 0,
+            thirdPartyCost: 0,
+            serviceFee: 450,
+            managementFee: 0,
+            vatFee: 0,
+          },
+          {
+            installmentValue: 11445.71,
+            installmentDate: "2025-08-10",
+            totalRequiredAmount: 11895.71,
+            interestValue: 2038.17,
+            principalValue: 9407.54,
+            closingAmount: 50954.29,
+            earlySettlementFee: 0,
+            savedFee: 6274.26,
+            savedFeePercent: 100,
+            principalOutstandingAmount: 41546.75,
+            totalOutstandingAmount: 47582.84,
+            termCost: 0,
+            thirdPartyCost: 0,
+            serviceFee: 450,
+            managementFee: 0,
+            vatFee: 0,
+          },
+          {
+            installmentValue: 11445.71,
+            installmentDate: "2025-09-10",
+            totalRequiredAmount: 11895.71,
+            interestValue: 1661.87,
+            principalValue: 9783.84,
+            closingAmount: 41546.75,
+            earlySettlementFee: 0,
+            savedFee: 4236.09,
+            savedFeePercent: 100,
+            principalOutstandingAmount: 31762.91,
+            totalOutstandingAmount: 35687.13,
+            termCost: 0,
+            thirdPartyCost: 0,
+            serviceFee: 450,
+            managementFee: 0,
+            vatFee: 0,
+          },
+          {
+            installmentValue: 11445.71,
+            installmentDate: "2025-10-10",
+            totalRequiredAmount: 11895.71,
+            interestValue: 1270.52,
+            principalValue: 10175.19,
+            closingAmount: 31762.91,
+            earlySettlementFee: 0,
+            savedFee: 2574.22,
+            savedFeePercent: 100,
+            principalOutstandingAmount: 21587.72,
+            totalOutstandingAmount: 23791.42,
+            termCost: 0,
+            thirdPartyCost: 0,
+            serviceFee: 450,
+            managementFee: 0,
+            vatFee: 0,
+          },
+          {
+            installmentValue: 11445.71,
+            installmentDate: "2025-11-10",
+            totalRequiredAmount: 11895.71,
+            interestValue: 863.51,
+            principalValue: 10582.2,
+            closingAmount: 21587.72,
+            earlySettlementFee: 0,
+            savedFee: 1303.7,
+            savedFeePercent: 100,
+            principalOutstandingAmount: 11005.52,
+            totalOutstandingAmount: 11895.71,
+            termCost: 0,
+            thirdPartyCost: 0,
+            serviceFee: 450,
+            managementFee: 0,
+            vatFee: 0,
+          },
+          {
+            installmentValue: 11445.71,
+            installmentDate: "2025-12-10",
+            totalRequiredAmount: 11895.71,
+            interestValue: 440.19,
+            principalValue: 11005.52,
+            closingAmount: 11005.52,
+            earlySettlementFee: 0,
+            savedFee: 440.19,
+            savedFeePercent: 100,
+            principalOutstandingAmount: 0,
+            totalOutstandingAmount: 0,
+            termCost: 0,
+            thirdPartyCost: 0,
+            serviceFee: 450,
+            managementFee: 0,
+            vatFee: 0,
+          },
+        ],
+        annualInterestRatePercent: 24,
+        dailyInterestRatePercentWithoutFee: 0.13,
+        annualInterestRatePercentWithoutFee: 24,
+        monthlyInterestRatePercent: 4,
+        aprAsPerTenorPercent: 0,
+        monthlyInterestRatePercentWithoutFee: 4,
+        annualFlatRatePercent: 48,
+        monthlyFlatRatePercent: 4,
+        aprWithoutFeePerMonthPercent: 2,
+        aprPerMonthPercent: 2,
+        loanFlatRate: 0.14457,
+        averageNumberOfInstallment: 6.016438356098449,
+        disbursedAmount: 55928,
+        crbCharge: 100,
+        insuranceFee: 2400,
+        insuranceLevy: 72,
+        applicationFees: 1500,
+        discountRate: 0,
+        discountFee: 0,
+      },
+    ],
+    loanApplicationId: "LHPX129",
+  },
   loanProductData: [],
   loanProductOptions: [],
   loanOfferFields: {
@@ -1125,8 +1326,11 @@ const personalLoansSlice = createSlice({
       })
       .addCase(getLoanApplications.fulfilled, (state, action) => {
         state.loading = false;
-        state.loanApplications = action.payload.content;
-        state.loanApplicationsTotalElements = action.payload.totalElements;
+        const filteredLoans = action.payload.content.filter(
+          (loan) => loan.status !== "CANCEL"
+        );
+        state.loanApplications = filteredLoans;
+        state.loanApplicationsTotalElements = filteredLoans.length;
       })
       .addCase(getLoanApplications.rejected, (state, action) => {
         state.loading = false;
@@ -1147,17 +1351,30 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getDocsByIdnUsage.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
         state.error = null;
       })
       .addCase(getDocsByIdnUsage.fulfilled, (state, action) => {
         state.loading = false;
-        state.addLoanData.documents = action.payload.map((doc) => ({
-          docName: "",
-          docId: "",
-          verified: false,
-          documentKey: doc.documentKeyName, // Assign documentKeyName to documentKey
-        }));
+
+        // If the payload is an empty array, retain the existing documents
+        if (Array.isArray(action.payload) && action.payload.length === 0) {
+          return;
+        }
+
+        state.addLoanData.documents = action.payload.map((doc) => {
+          // Find matching document from existing state based on documentKeyName
+          const existingDoc = state.addLoanData.documents.find(
+            (d) => d.documentKey === doc.documentKeyName
+          );
+
+          return {
+            docName: existingDoc ? existingDoc.docName : "",
+            docId: existingDoc ? existingDoc.docId : "",
+            verified: existingDoc ? existingDoc.verified : false,
+            documentKey: doc.documentKeyName, // Use documentKeyName from the API response
+          };
+        });
       })
       .addCase(getDocsByIdnUsage.rejected, (state, action) => {
         state.loading = false;
@@ -1249,7 +1466,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(uploadSignedLoanAgreement.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
       })
       .addCase(uploadSignedLoanAgreement.fulfilled, (state, action) => {
         state.loading = false;
@@ -1261,7 +1478,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(uploadDocumentFile.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
       })
       .addCase(uploadDocumentFile.fulfilled, (state, action) => {
         state.loading = false;
@@ -1280,7 +1497,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(deleteDocumentFile.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
         state.error = null;
       })
       .addCase(deleteDocumentFile.fulfilled, (state, action) => {
@@ -1293,7 +1510,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(downloadDocumentFile.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
         state.error = null;
       })
       .addCase(downloadDocumentFile.fulfilled, (state, action) => {
@@ -1306,7 +1523,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(previewDocumentFile.pending, (state) => {
-        // state.loading = true;
+        state.loading = true; //
         state.error = null;
       })
       .addCase(previewDocumentFile.fulfilled, (state, action) => {
@@ -1331,7 +1548,7 @@ const personalLoansSlice = createSlice({
         toast.error(`API Error : ${action.payload}`);
       })
       .addCase(getMaxPrincipalData.pending, (state) => {
-        // state.loading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(getMaxPrincipalData.fulfilled, (state, action) => {
@@ -1394,7 +1611,9 @@ const personalLoansSlice = createSlice({
       })
       .addCase(handleProceed.fulfilled, (state, action) => {
         state.loading = false;
-        toast.success("Loan submittted successfully");
+        toast.success(
+          "Loan submitted successfully. Awaiting approval from the next step approver."
+        );
       })
       .addCase(handleProceed.rejected, (state, action) => {
         state.loading = false;
@@ -1617,6 +1836,18 @@ const personalLoansSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`Error: ${action.payload}`);
+      })
+      .addCase(fetchBorrowerDataLoanHistory.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(fetchBorrowerDataLoanHistory.fulfilled, (state, action) => {
+        state.borrowerLoanHistory = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchBorrowerDataLoanHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`API Error : ${action.payload}`);
       });
   },
 });

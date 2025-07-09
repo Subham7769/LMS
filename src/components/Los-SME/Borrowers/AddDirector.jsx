@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "../../Common/Button/Button";
-import HoverButton from "../../Common/HoverButton/HoverButton";
 import Accordion from "../../Common/Accordion/Accordion";
 import {
   setCompanyId,
@@ -11,7 +10,6 @@ import {
   addDirectorInfo,
   fetchAllCompanyBorrowers,
   fetchCompanyDetails,
-  setUpdateDirector,
   setUpdateExistingDirector,
   deleteDirectorInfo,
 } from "../../../redux/Slices/smeBorrowersSlice";
@@ -20,9 +18,27 @@ import { validateForm } from "../../../redux/Slices/validationSlice";
 import AddUpdateDirectorFields from "../../Los-SME/Borrowers/AddUpdateDirectorFields";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import { XCircleIcon } from "@heroicons/react/20/solid";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import {
+  ArchiveBoxIcon,
+  BriefcaseIcon,
+  BuildingOffice2Icon,
+  CalendarIcon,
+  EnvelopeIcon,
+  HomeIcon,
+  MapPinIcon,
+  PhoneIcon,
+  UserCircleIcon,
+  UserIcon,
+  UsersIcon,
+  WindowIcon,
+} from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import { AddIcon, DeleteIcon, EditIcon } from "../../../assets/icons";
+import CardInfoRow from "../../Common/CardInfoRow/CardInfoRow";
+import CardInfo from "../../Common/CardInfo/CardInfo";
+import { fieldToSectionMapPersonalBorrowers } from "../../../data/fieldSectionMapData";
+import store from "../../../redux/store";
 const AddDirector = () => {
   const isValid = useSelector((state) => state.validation.isValid);
   const navigate = useNavigate();
@@ -36,16 +52,26 @@ const AddDirector = () => {
     loading,
   } = useSelector((state) => state.smeBorrowers);
   const loanOfficer = localStorage.getItem("username");
+  const sectionRefs = useRef({});
 
   useEffect(() => {
-      dispatch(fetchAllCompanyBorrowers());
+    dispatch(fetchAllCompanyBorrowers());
   }, [dispatch]);
-
-
 
   const handleSubmitNewDirector = async (e) => {
     e.preventDefault();
     await dispatch(validateForm(flattenToSimpleObject(directorsKycDetails)));
+    const state = store.getState(); // Ensure 'store' is imported from your Redux setup
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapPersonalBorrowers[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
     if (isValid) {
       dispatch(addDirectorInfo({ directorsKycDetails, companyId }))
         .unwrap()
@@ -73,32 +99,57 @@ const AddDirector = () => {
     dispatch(deleteDirectorInfo({ companyId: uid, directorId: uniqueID }))
       .unwrap()
       .then(() => {
-        dispatch(fetchCompanyDetails({ companyId: uid })).unwrap()
-        .then(() => {
-          
-        })
+        dispatch(fetchCompanyDetails({ companyId: uid }))
+          .unwrap()
+          .then(() => {});
       });
+  };
+
+  const handleViewPhoto = async (e, photoId) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (photoId) {
+      const filePreviewParams = {
+        authToken: "Basic Y2FyYm9uQ0M6Y2FyMjAyMGJvbg==",
+        docId: photoId,
+      };
+      setShowPhotoModal(true);
+      try {
+        const result = await dispatch(viewPhoto(filePreviewParams)).unwrap();
+
+        if (result.base64Content) {
+          console.log(result);
+          setPhotoData(
+            `data:${result.contentType};base64,${result.base64Content}`
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching photo:", error);
+      }
+    }
   };
 
   return (
     <>
-      <div className="mb-4 grid grid-cols-4 gap-5 items-center">
-        <InputSelect
-          labelName={"Company"}
-          inputName={"companyId"}
-          inputOptions={allCompanies}
-          inputValue={companyId}
-          onChange={changeCompany}
-          disabled={false}
-        />
-        <div></div>
-        <div></div>
-        <div className="flex justify-end gap-2 h-[90%]">
+      <div className="mb-4 md:flex justify-between items-center">
+        <div className="min-w-72 mb-2 md:mb-0">
+          <InputSelect
+            labelName={"Company"}
+            inputName={"companyId"}
+            inputOptions={allCompanies}
+            inputValue={companyId}
+            onChange={changeCompany}
+            disabled={false}
+          />
+        </div>
+        <div className="">
           {directorsKycDetails.length < 1 && (
-            <HoverButton
-              icon={PlusIcon}
-              text="Add Director"
+            <Button
+              buttonIcon={AddIcon}
+              buttonName="Add Director"
               onClick={() => dispatch(addDirector({ loanOfficer }))}
+              buttonType="secondary"
             />
           )}
         </div>
@@ -110,85 +161,92 @@ const AddDirector = () => {
           {existingDirectorDetails.map((director, index) => (
             <>
               <Accordion
-              key={index}
+                key={index}
                 heading={`${director.personalDetails.title} 
                       ${director.personalDetails.firstName} 
                       ${director.personalDetails.surname} 
                       ${director.personalDetails.otherName}`}
                 renderExpandedContent={() => (
-                  <div className="grid grid-cols-[80%_20%] gap-4 px-5">
+                  <div className="relative">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
                       {/* Director Personal Details */}
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-lg text-gray-800">
-                          Personal Details
-                        </h3>
-                        <div className="grid grid-cols-2 gap-4">
+                      <div className="shadow-md p-3 rounded-md bg-sky-500/20">
+                        <div className="mb-3 text-sky-700 text-xl font-semibold flex gap-2 items-center">
+                          <div
+                            onClick={(e) =>
+                              handleViewPhoto(
+                                e,
+                                director.otherDetails.customerPhotoId
+                              )
+                            }
+                            className={`${
+                              director.otherDetails.customerPhotoId &&
+                              "cursor-pointer"
+                            }`}
+                            title={"View Client Photo"}
+                          >
+                            <UserCircleIcon
+                              className="-ml-0.5 h-5 w-5"
+                              aria-hidden="true"
+                            />
+                          </div>
+                          Personal Details{" "}
+                          {/* {director.otherDetails.customerPhotoId && (
+                            <p
+                              className="text-[9px] text-gray-600 dark:text-gray-400 -mb-2 cursor-pointer underline"
+                              onClick={(e) =>
+                                handleViewPhoto(e, director.otherDetails.customerPhotoId)
+                              }
+                            >
+                              View Client Photo
+                            </p>
+                          )} */}
+                        </div>
+                        <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                           <p>
-                            <strong>Name:</strong>{" "}
-                            {director.personalDetails.title}{" "}
-                            {director.personalDetails.firstName}{" "}
-                            {director.personalDetails.surname}{" "}
-                            {director.personalDetails.otherName}
+                            {[
+                              director.personalDetails.title,
+                              director.personalDetails.firstName,
+                              director.personalDetails.surname,
+                              director.personalDetails.otherName,
+                            ]
+                              .filter(Boolean)
+                              .join(" ")}{" "}
+                            is a {director.personalDetails.age}-year-old{" "}
+                            {director.personalDetails.nationality} national.
+                            They are {director.personalDetails.maritalStatus}{" "}
+                            and identify as {director.personalDetails.gender}.
                           </p>
-                          <p>
-                            <strong>Unique Id Type:</strong>{" "}
-                            {director.personalDetails.uniqueIDType}
-                          </p>
-                          <p>
-                            <strong>Unique ID:</strong>{" "}
-                            {director.personalDetails.uniqueID}
-                          </p>
-                          <p>
-                            <strong>Gender:</strong>{" "}
-                            {director.personalDetails.gender}
-                          </p>
-                          <p>
-                            <strong>Marital Status:</strong>{" "}
-                            {director.personalDetails.maritalStatus}
-                          </p>
-                          <p>
-                            <strong>nationality:</strong>{" "}
-                            {director.personalDetails.nationality}
-                          </p>
-                          <p>
-                            <strong>Date of Birth:</strong>{" "}
-                            {director.personalDetails.dateOfBirth}
-                          </p>
-                          <p>
-                            <strong>Age:</strong> {director.personalDetails.age}
-                          </p>
-                          <p>
-                            <strong>Place of Birth:</strong>{" "}
-                            {director.personalDetails.placeOfBirth}
-                          </p>
+                          <div className="grid grid-cols-2 gap-4">
+                            <CardInfoRow
+                              icon={CalendarIcon}
+                              label="Born"
+                              value={director.personalDetails.dateOfBirth}
+                            />
+                            <CardInfoRow
+                              icon={MapPinIcon}
+                              label="Place"
+                              value={director.personalDetails.placeOfBirth}
+                            />
+                            <CardInfoRow
+                              icon={WindowIcon}
+                              label={director.personalDetails.uniqueIDType}
+                              value={director.personalDetails.uniqueID}
+                            />
+                          </div>
                         </div>
                       </div>
 
                       {/*Director Contact Details */}
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-lg text-gray-800">
-                          Contact Details
-                        </h3>
-                        <div className="grid grid-cols-2 gap-4">
+                      <CardInfo
+                        cardTitle="Contact Details"
+                        cardIcon={HomeIcon}
+                        colorBG={"bg-green-500/20"}
+                        colorText={"text-green-700"}
+                      >
+                        <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                           <p>
-                            <strong>Mobile 1:</strong>{" "}
-                            {director.contactDetails.mobile1}
-                          </p>
-                          <p>
-                            <strong>Mobile 2:</strong>{" "}
-                            {director.contactDetails.mobile2}
-                          </p>
-                          <p>
-                            <strong>Landline:</strong>{" "}
-                            {director.contactDetails.landlinePhone}
-                          </p>
-                          <p>
-                            <strong>Email:</strong>{" "}
-                            {director.contactDetails.email}
-                          </p>
-                          <p>
-                            <strong>Address:</strong>{" "}
+                            Currently residing in{" "}
                             {[
                               director.contactDetails.houseNumber,
                               director.contactDetails.street,
@@ -200,145 +258,128 @@ const AddDirector = () => {
                               .filter(Boolean)
                               .join(", ")}
                           </p>
-                          <p>
-                            <strong>Post Box:</strong>{" "}
-                            {director.contactDetails.postBox}
-                          </p>
-                        </div>
-                      </div>
 
-                      {/*Director Employment Details */}
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-lg text-gray-800">
-                          Employment Details
-                        </h3>
-                        <div className="grid grid-cols-2 gap-4">
-                          <p>
-                            <strong>Employer:</strong>{" "}
-                            {director.employmentDetails.employer}
-                          </p>
-                          <p>
-                            <strong>Employee No.:</strong>{" "}
-                            {director.employmentDetails.employeeNo}
-                          </p>
-                          <p>
-                            <strong>Work Type:</strong>{" "}
-                            {director.employmentDetails.workType}
-                          </p>
-                          <p>
-                            <strong>Occupation:</strong>{" "}
-                            {director.employmentDetails.occupation}
-                          </p>
-                          <p>
-                            <strong>Work Start Date:</strong>{" "}
-                            {director.employmentDetails.workStartDate}
-                          </p>
-                          <p>
-                            <strong>Work Phone Number:</strong>{" "}
-                            {director.employmentDetails.workPhoneNumber}
-                          </p>
-                          <p>
-                            <strong>Employment Location:</strong>{" "}
-                            {director.employmentDetails.employmentLocation}
-                          </p>
-                          <p>
-                            <strong>Employment District:</strong>{" "}
-                            {director.employmentDetails.employmentDistrict}
-                          </p>
-                          <p>
-                            <strong>Work Physical Address:</strong>{" "}
-                            {director.employmentDetails.workPhysicalAddress}
-                          </p>
+                          <div className="grid grid-cols-2 gap-4">
+                            <CardInfoRow
+                              icon={PhoneIcon}
+                              label="Mobile"
+                              value={director.contactDetails.mobile1}
+                            />
+                            <CardInfoRow
+                              icon={EnvelopeIcon}
+                              label="Email"
+                              value={director.contactDetails.email}
+                            />
+                            <CardInfoRow
+                              icon={ArchiveBoxIcon}
+                              label="Post Box"
+                              value={director.contactDetails.postBox}
+                            />
+                          </div>
                         </div>
-                      </div>
+                      </CardInfo>
+
+                      {/*Director Professional Journey */}
+                      <CardInfo
+                        cardTitle="Professional Journey"
+                        cardIcon={BriefcaseIcon}
+                        colorBG={"bg-violet-500/20"}
+                        colorText={"text-violet-700"}
+                      >
+                        <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
+                          <p>
+                            Working as a {director.employmentDetails.occupation}{" "}
+                            at {director.employmentDetails.employer} since{" "}
+                            {director.employmentDetails.workStartDate} in a{" "}
+                            {director.employmentDetails.workType} capacity.
+                          </p>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <CardInfoRow
+                              icon={PhoneIcon}
+                              label="Work Phone"
+                              value={director.employmentDetails.workPhoneNumber}
+                            />
+                            <CardInfoRow
+                              icon={MapPinIcon}
+                              label="Work Location"
+                              value={
+                                director.employmentDetails.workPhysicalAddress
+                              }
+                            />
+                          </div>
+                        </div>
+                      </CardInfo>
 
                       {/*Director Bank Details */}
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-lg text-gray-800">
-                          Bank Details
-                        </h3>
-                        <div className="grid grid-cols-2 gap-4">
+                      <CardInfo
+                        cardTitle="Banking Details"
+                        cardIcon={BuildingOffice2Icon}
+                        colorBG={"bg-yellow-500/20"}
+                        colorText={"text-yellow-700"}
+                      >
+                        <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                           <p>
-                            <strong>Bank Name:</strong>{" "}
-                            {director.bankDetails.bankName}
+                            Maintains a {director.bankDetails.accountType}{" "}
+                            account with {director.bankDetails.bankName}.
                           </p>
-                          <p>
-                            <strong>Account Name:</strong>{" "}
-                            {director.bankDetails.accountName}
-                          </p>
-                          <p>
-                            <strong>Account No.:</strong>{" "}
-                            {director.bankDetails.accountNo}
-                          </p>
-                          <p>
-                            <strong>Account Type:</strong>{" "}
-                            {director.bankDetails.accountType}
-                          </p>
-                          <p>
-                            <strong>Branch:</strong>{" "}
-                            {director.bankDetails.branch}
-                          </p>
-                          <p>
-                            <strong>Branch Code:</strong>{" "}
-                            {director.bankDetails.branchCode}
-                          </p>
-                          <p>
-                            <strong>Sort Code:</strong>{" "}
-                            {director.bankDetails.sortCode}
-                          </p>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <CardInfoRow
+                              icon={WindowIcon}
+                              label={"Account"}
+                              value={director.bankDetails.accountNo}
+                            />
+                            <CardInfoRow
+                              icon={UserIcon}
+                              label="Name"
+                              value={director.bankDetails.accountName}
+                            />
+                            <CardInfoRow
+                              icon={MapPinIcon}
+                              label="Branch"
+                              value={
+                                director.bankDetails.branch +
+                                " " +
+                                "(" +
+                                director.bankDetails.branchCode +
+                                ")"
+                              }
+                            />
+                            <CardInfoRow
+                              icon={WindowIcon}
+                              label={"Sort Code"}
+                              value={director.bankDetails.sortCode}
+                            />
+                          </div>
                         </div>
-                      </div>
+                      </CardInfo>
 
                       {/*Director Next of Kin Details */}
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-lg text-gray-800">
-                          Next of Kin Details
-                        </h3>
-                        <div className="grid grid-cols-2 gap-4">
+                      <CardInfo
+                        cardTitle="Next of kin Details"
+                        cardIcon={UsersIcon}
+                        colorBG={"bg-red-500/20"}
+                        colorText={"text-red-700"}
+                      >
+                        <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                           <p>
-                            <strong>Name:</strong>{" "}
                             {director.nextOfKinDetails.kinTitle}{" "}
-                            {director.nextOfKinDetails.kinSurname}{" "}
-                            {director.nextOfKinDetails.kinOtherName}
+                            {director.nextOfKinDetails.kinOtherName}{" "}
+                            {director.nextOfKinDetails.kinSurname}, the{" "}
+                            {director.nextOfKinDetails.kinRelationship} of the
+                            applicant. They works as a{" "}
+                            <strong>
+                              {director.nextOfKinDetails.kinOccupation}
+                            </strong>{" "}
+                            at{" "}
+                            <strong>
+                              {director.nextOfKinDetails.kinEmployer}
+                            </strong>
+                            .
                           </p>
                           <p>
-                            <strong>NRC No.:</strong>{" "}
-                            {director.nextOfKinDetails.kinNrcNo}
-                          </p>
-                          <p>
-                            <strong>Gender:</strong>{" "}
-                            {director.nextOfKinDetails.kinGender}
-                          </p>
-                          <p>
-                            <strong>Mobile1:</strong>{" "}
-                            {director.nextOfKinDetails.kinMobile1}
-                          </p>
-                          <p>
-                            <strong>Mobile2:</strong>{" "}
-                            {director.nextOfKinDetails.kinMobile2}
-                          </p>
-                          <p>
-                            <strong>Email:</strong>{" "}
-                            {director.nextOfKinDetails.kinEmail}
-                          </p>
-                          <p>
-                            <strong>Employer:</strong>{" "}
-                            {director.nextOfKinDetails.kinEmployer}
-                          </p>
-                          <p>
-                            <strong>Occupation:</strong>{" "}
-                            {director.nextOfKinDetails.kinOccupation}
-                          </p>
-                          <p>
-                            <strong>Location:</strong>{" "}
-                            {director.nextOfKinDetails.kinLocation}
-                          </p>
-                          <p>
-                            <strong>Work Phone Number:</strong>{" "}
-                            {director.nextOfKinDetails.kinWorkPhoneNumber}
-                          </p>
-                          <p>
-                            <strong>Address:</strong>{" "}
+                            Currently residing in{" "}
                             {[
                               director.nextOfKinDetails.kinHouseNo,
                               director.nextOfKinDetails.kinStreet,
@@ -350,46 +391,51 @@ const AddDirector = () => {
                               .filter(Boolean)
                               .join(", ")}
                           </p>
-                        </div>
-                      </div>
 
-                      {/*Director Other Details */}
-                      <div className="space-y-2">
-                        <h3 className="font-semibold text-lg text-gray-800">
-                          Other Details
-                        </h3>
-                        <div className="grid grid-cols-2 gap-4">
-                          <p>
-                            <strong>Customer Photo Id:</strong>{" "}
-                            {director.otherDetails.customerPhotoId}
-                          </p>
+                          <div className="grid grid-cols-2 gap-4">
+                            <CardInfoRow
+                              icon={PhoneIcon}
+                              label="Mobile"
+                              value={director.nextOfKinDetails.kinMobile1}
+                            />
+                            <CardInfoRow
+                              icon={EnvelopeIcon}
+                              label="Email"
+                              value={director.nextOfKinDetails.kinEmail}
+                            />
+                            <CardInfoRow
+                              icon={WindowIcon}
+                              label="NRC"
+                              value={director.nextOfKinDetails.kinNrcNo}
+                            />
+                          </div>
                         </div>
-                      </div>
+                      </CardInfo>
                     </div>
                     {/*Director Actions */}
-                    <div className="flex justify-start gap-5 flex-col mt-4">
-                      <Button
-                        buttonName={"Edit"}
-                        onClick={() =>
-                          handleEditDirector(
-                            director.uid,
-                            director.personalDetails.uniqueID
-                          )
-                        }
-                        className={"text-center"}
-                        rectangle={true}
-                      />
-                      <Button
-                        buttonName={"Delete"}
-                        onClick={() =>
-                          handleDeleteDirector(
-                            director.uid,
-                            director.personalDetails.uniqueID
-                          )
-                        }
-                        className={"text-center bg-red-500 hover:bg-red-600"}
-                        rectangle={true}
-                      />
+                    <div className="absolute -top-4 -right-4">
+                      <div className="flex gap-2">
+                        <Button
+                          buttonIcon={EditIcon}
+                          onClick={() =>
+                            handleEditDirector(
+                              director.uid,
+                              director.personalDetails.uniqueID
+                            )
+                          }
+                          buttonType="secondary"
+                        />
+                        <Button
+                          buttonIcon={DeleteIcon}
+                          onClick={() =>
+                            handleDeleteDirector(
+                              director.uid,
+                              director.personalDetails.uniqueID
+                            )
+                          }
+                          buttonType="destructive"
+                        />
+                      </div>
                     </div>
                   </div>
                 )}
@@ -411,18 +457,17 @@ const AddDirector = () => {
                     <AddUpdateDirectorFields
                       BorrowerData={Data}
                       handleChangeReducer={handleChangeAddDirectorField}
+                      sectionRefs={sectionRefs}
                     />
-                    <div className="flex justify-end gap-5 col-span-4 mx-10 mt-4">
+                    <div className="flex justify-end gap-5 col-span-4 mt-4">
                       <Button
                         buttonName="Reset"
                         onClick={() => dispatch(resetDirector({ index }))}
-                        rectangle={true}
-                        className={"bg-red-500 hover:bg-red-600"}
+                        buttonType="destructive"
                       />
                       <Button
                         buttonName="Submit"
                         onClick={handleSubmitNewDirector}
-                        rectangle={true}
                         disabled={!companyId}
                       />
                     </div>

@@ -10,10 +10,10 @@ import { getDisbursementFile } from "../../../redux/Slices/personalLoansSlice";
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
     </div>
   );
 };
@@ -76,16 +76,16 @@ const DisbursementFilePrint = () => {
         </div>
 
         <div className="overflow-x-auto mb-5 no-scroll w-[99%] text-center">
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table mb-5">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table mb-5">
             <thead>
               <tr className="bg-background-light-secondary">
-                <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                   No.
                 </th>
                 {Object.keys(transformedDisbursementDetails[0]).map((key) => (
                   <th
                     key={key}
-                    className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
+                    className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold"
                   >
                     {convertToReadableString(key)}
                   </th>
@@ -95,13 +95,13 @@ const DisbursementFilePrint = () => {
             <tbody>
               {transformedDisbursementDetails.map((dbDetails, index) => (
                 <tr key={index} className="even:bg-gray-50">
-                  <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                  <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                     {index + 1}
                   </td>
                   {Object.values(dbDetails).map((value, valueIndex) => (
                     <td
                       key={valueIndex}
-                      className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                      className="border border-gray-300 px-4 py-2 text-gray-600 text-center"
                     >
                       {value}
                     </td>
@@ -110,7 +110,7 @@ const DisbursementFilePrint = () => {
               ))}
             </tbody>
           </table>
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table mb-5 text-left">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table mb-5 text-left">
             <tbody>
               <tr>
                 <td>Approved by (Name and Signature):</td>
@@ -127,7 +127,7 @@ const DisbursementFilePrint = () => {
               </tr>
             </tbody>
           </table>
-          <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table mb-5 text-left">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 print-table mb-5 text-left">
             <tbody>
               <tr>
                 <td>Disbursed by (Name and Signature):</td>

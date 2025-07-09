@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,15 +36,36 @@ const InputSelect = ({
   const { updateFields } = useSelector((state) => state.notification);
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
+  const [isDarkMode, setIsDarkMode] = useState(
+    document.documentElement.classList.contains("dark")
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleChange = (selectedOption) => {
-    onChange({
-      target: {
-        name: inputName,
-        value: selectedOption ? selectedOption.value : "",
-        id: inputId,
-      },
-    });
+    onChange(
+      isMulti
+        ? selectedOption.map((opt) => opt.value)
+        : {
+            target: {
+              name: inputName,
+              value: selectedOption ? selectedOption.value : "",
+              label: selectedOption ? selectedOption.label : "",
+              id: inputId,
+            },
+          }
+    );
   };
 
   // Define custom styles based on dropdownTextSize prop
@@ -57,22 +78,48 @@ const InputSelect = ({
           : dropdownTextSize === "large"
           ? "1rem"
           : "0.875rem", // Change font size
-      fontFamily: "inherit", // Set font to inherit
-      padding: 6,
+      fontFamily: "inherit", // Set font to inherit #242e3c
+      padding: "8px 12px",
+      backgroundColor: isDarkMode
+        ? "#1f2937" // Tailwind's gray-800
+        : "#fff",
+      color: isDarkMode ? "#bfc4cd" : state.isSelected ? "#8e51ff" : "#4a5565",
+      fontWeight: 500,
+      borderBottom: isDarkMode ? "1px solid #374151" : "1px solid #e2e8f0",
+      "&:hover": {
+        backgroundColor: isDarkMode ? "#242e3c" : "#f9fafb",
+        color: isDarkMode
+          ? "#bfc4cd"
+          : state.isSelected
+          ? "#8e51ff"
+          : "#4a5565",
+      },
     }),
     control: (provided) => ({
       ...provided,
-      border: "1px solid #ccc",
-      height: "30px",
+      backgroundColor: isDarkMode ? "#1f2937" : "#fff",
+      color: isDarkMode ? "#f3f4f6" : "#1f2937",
+
+      border: isDarkMode ? "1px solid #374151" : "1px solid #e5e7eb",
       padding: 0,
       boxShadow: "none",
+      // height: 28,
+      // REMOVE fixed height
+      minHeight: "38px", // Recommended by react-select (default)
+      height: "auto", // Allow height to grow
+      borderRadius: "0.5rem",
       "&:hover": {
-        border: "1px solid #aaa",
+        border: isDarkMode ? "1px solid #4b5563" : "1px solid #aaa",
       },
     }),
     menu: (provided) => ({
       ...provided,
       zIndex: 9999, // Ensure menu appears above other elements
+      boxShadow:
+        "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // Tailwind's shadow-lg
+      borderRadius: "0.5rem", // Optional: match rounded-lg
+      border: isDarkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+      backgroundColor: isDarkMode ? "#1f2937" : "#fff",
     }),
     placeholder: (provided) => ({
       ...provided,
@@ -84,7 +131,7 @@ const InputSelect = ({
           ? "1rem"
           : "0.875rem", // Convert px to rem
       color: "#9ca3af", // Equivalent to Tailwind's text-gray-400
-    }),    
+    }),
     singleValue: (provided) => ({
       ...provided,
       fontSize:
@@ -93,6 +140,47 @@ const InputSelect = ({
           : dropdownTextSize === "large"
           ? "1rem"
           : "0.875rem", // Change font size
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      color: "#9ca3af", // Tailwind's text-gray-400
+      "&:hover": {
+        color: "#9ca3af", // maintain the same color on hover
+      },
+    }),
+    indicatorSeparator: () => ({
+      display: "none", // safety check for visual separation
+    }),
+    valueContainer: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isDisabled ? "#f3f4f6" : "", // Tailwind's bg-gray-100
+      color: state.isDisabled ? "#9ca3af" : "", // Tailwind's text-gray-900
+      display: "flex",
+      flexWrap: "wrap", // allow wrapping
+      alignItems: "center",
+      padding: "2px 8px", // optional: padding adjustment
+      overflow: "hidden", // avoid overflow issues
+    }),
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }), // Ensure dropdown is on top
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: isDarkMode ? "#374151" : "#e5e7eb",
+      borderRadius: "0.25rem",
+      padding: "2px 6px",
+      margin: "2px",
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      fontSize: "0.75rem",
+      color: isDarkMode ? "#d1d5db" : "#1f2937",
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: isDarkMode ? "#9ca3af" : "#4b5563",
+      ":hover": {
+        backgroundColor: isDarkMode ? "#4b5563" : "#e5e7eb",
+        color: "#000",
+      },
     }),
   };
 
@@ -119,11 +207,16 @@ const InputSelect = ({
   }, [inputName, dispatch]);
 
   return (
-    <div className="flex flex-col" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="flex flex-col shadow-l"
+      onClick={(e) => e.stopPropagation()}
+    >
       {labelName && (
         <label
-          className={`block text-sm font-semibold ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-700"
+          className={`block text-sm font-medium mb-1 ${
+            validationError[validationKey]
+              ? "text-red-600"
+              : "text-gray-600 dark:text-gray-400"
           } px-1`}
           htmlFor={inputName}
         >
@@ -135,9 +228,53 @@ const InputSelect = ({
         name={inputName}
         styles={customStyles} // Apply custom styles
         options={inputOptions}
+        getOptionLabel={(e) => (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {e.label}
+            {e.value === inputValue && (
+              <span
+                style={{
+                  marginLeft: "auto",
+                }}
+              >
+                <svg
+                  className="shrink-0 mr-2 fill-current text-violet-500"
+                  width="12"
+                  height="9"
+                  viewBox="0 0 12 9"
+                >
+                  <path d="M10.28.28L3.989 6.575 1.695 4.28A1 1 0 00.28 5.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28.28z" />
+                </svg>
+              </span>
+            )}
+          </div>
+        )}
+        components={{
+          SingleValue: ({ data, innerRef, innerProps }) => (
+            <div
+              ref={innerRef}
+              {...innerProps}
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                fontSize:
+                  dropdownTextSize === "small"
+                    ? "0.875rem"
+                    : dropdownTextSize === "large"
+                    ? "1rem"
+                    : "0.875rem", // Convert px to rem
+              }}
+            >
+              {data.label}
+            </div>
+          ),
+        }}
         value={
           isMulti
-            ? inputValue
+            ? inputOptions?.filter((option) =>
+                inputValue?.includes(option.value)
+              )
             : inputOptions?.find((option) => option.value === inputValue) ||
               null
         }
@@ -153,6 +290,8 @@ const InputSelect = ({
         isDisabled={disabled}
         isHidden={hidden}
         isMulti={isMulti}
+        closeMenuOnSelect={!isMulti} // improves UX with multi
+        menuPortalTarget={document.body} // Render dropdown outside of overflow
       />
     </div>
   );

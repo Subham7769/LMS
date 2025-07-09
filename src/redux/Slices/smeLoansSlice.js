@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import convertToTitleCase from "../../utils/convertToTitleCase";
-import { nanoid } from "nanoid";
 import { sanitizeUid } from "../../utils/sanitizeUid";
 
 export const getLoanApplications = createAsyncThunk(
@@ -226,14 +225,9 @@ export const uploadDocumentFile = createAsyncThunk(
   "smeLoans/uploadDocumentFile",
   async ({ formData, fileUploadParams }, { rejectWithValue }) => {
     try {
-      // const token = localStorage.getItem("authToken");
-      const {
-        loanApplicationId,
-        documentKey,
-        verified,
-        borrowerType,
-        authToken,
-      } = fileUploadParams;
+      const token = localStorage.getItem("authToken");
+      const { loanApplicationId, documentKey, verified, borrowerType } =
+        fileUploadParams;
       const response = await fetch(
         `${
           import.meta.env.VITE_LOAN_FILE_UPLOAD_COMPANY
@@ -241,7 +235,7 @@ export const uploadDocumentFile = createAsyncThunk(
         {
           method: "POST",
           headers: {
-            Authorization: `${authToken}`,
+            Authorization: `Bearer ${token}`,
           },
           body: formData,
         }
@@ -262,8 +256,8 @@ export const uploadDocumentFile = createAsyncThunk(
 export const deleteDocumentFile = createAsyncThunk(
   "smeLoans/deleteDocumentFile",
   async (fileDeleteParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken } = fileDeleteParams;
+    const token = localStorage.getItem("authToken");
+    const { docId } = fileDeleteParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_DELETE_COMPANY}${docId}`;
 
     try {
@@ -271,7 +265,7 @@ export const deleteDocumentFile = createAsyncThunk(
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -288,8 +282,8 @@ export const deleteDocumentFile = createAsyncThunk(
 export const downloadDocumentFile = createAsyncThunk(
   "smeLoans/downloadDocumentFile",
   async (fileDeleteParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken, docName } = fileDeleteParams;
+    const token = localStorage.getItem("authToken");
+    const { docId, docName } = fileDeleteParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_DOWNLOAD_COMPANY}${docId}`;
 
     try {
@@ -297,7 +291,7 @@ export const downloadDocumentFile = createAsyncThunk(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -334,8 +328,8 @@ export const downloadDocumentFile = createAsyncThunk(
 export const previewDocumentFile = createAsyncThunk(
   "smeLoans/previewDocumentFile",
   async (filePreviewParams, { rejectWithValue }) => {
-    // const token = localStorage.getItem("authToken");
-    const { docId, authToken, docName } = filePreviewParams;
+    const token = localStorage.getItem("authToken");
+    const { docId } = filePreviewParams;
     const url = `${import.meta.env.VITE_LOAN_FILE_PREVIEW_COMPANY}${docId}`;
 
     try {
@@ -343,7 +337,7 @@ export const previewDocumentFile = createAsyncThunk(
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${authToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -1144,8 +1138,11 @@ const smeLoansSlice = createSlice({
       })
       .addCase(getLoanApplications.fulfilled, (state, action) => {
         state.loading = false;
-        state.loanApplications = action.payload.content;
-        state.loanApplicationsTotalElements = action.payload.totalElements;
+        const filteredLoans = action.payload.content.filter(
+          (loan) => loan.status !== "CANCEL"
+        );
+        state.loanApplications = filteredLoans;
+        state.loanApplicationsTotalElements = filteredLoans.length;
       })
       .addCase(getLoanApplications.rejected, (state, action) => {
         state.loading = false;
@@ -1171,13 +1168,26 @@ const smeLoansSlice = createSlice({
       })
       .addCase(getDocsByIdnUsage.fulfilled, (state, action) => {
         state.loading = false;
-        state.addLoanData.documents = action.payload.map((doc) => ({
-          docName: "",
-          docId: "",
-          verified: false,
-          documentKey: doc.documentKeyName, // Assign documentKeyName to documentKey
-        }));
-      })
+      
+        // If the payload is an empty array, retain the existing documents
+        if (Array.isArray(action.payload) && action.payload.length === 0) {
+          return;
+        }
+      
+        state.addLoanData.documents = action.payload.map((doc) => {
+          // Find matching document from existing state based on documentKeyName
+          const existingDoc = state.addLoanData.documents.find(
+            (d) => d.documentKey === doc.documentKeyName
+          );
+      
+          return {
+            docName: existingDoc ? existingDoc.docName : "",
+            docId: existingDoc ? existingDoc.docId : "",
+            verified: existingDoc ? existingDoc.verified : false,
+            documentKey: doc.documentKeyName, // Use documentKeyName from the API response
+          };
+        });
+      })      
       .addCase(getDocsByIdnUsage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -1389,7 +1399,9 @@ const smeLoansSlice = createSlice({
       })
       .addCase(handleProceed.fulfilled, (state, action) => {
         state.loading = false;
-        toast.success("Loan submittted successfully");
+        toast.success(
+          "Loan submitted successfully. Awaiting approval from the next step approver."
+        );
       })
       .addCase(handleProceed.rejected, (state, action) => {
         state.loading = false;

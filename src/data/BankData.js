@@ -71,11 +71,12 @@ export const BranchNameOptions = {
     { value: "Lusaka Main Branch", label: "Lusaka Main Branch" },
     { value: "Arcades Branch", label: "Arcades Branch" },
     { value: "Manda Hill Branch", label: "Manda Hill Branch" },
+    { value: "Acacia park", label: "Acacia park" },
   ],
   "Indo-Zambia Bank": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
     { value: "Kitwe Branch", label: "Kitwe Branch" },
-    { value: "Manda Hill Branch", label: "Manda Hill Branch" },
+    { value: "Lusaka Main Branch", label: "Lusaka Main Branch" },
   ],
   "Investrust Bank": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
@@ -83,6 +84,7 @@ export const BranchNameOptions = {
   ],
   "National Credit and Saving Bank": [
     { value: "Lusaka Main", label: "Lusaka Main" },
+    { value: "Cosmopolitan", label: "Cosmopolitan" },
   ],
   "Stanbic Bank": [
     { value: "Lusaka Main Branch", label: "Lusaka Main Branch" },
@@ -93,6 +95,8 @@ export const BranchNameOptions = {
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
     { value: "Manda Hill Branch", label: "Manda Hill Branch" },
     { value: "Livingstone Branch", label: "Livingstone Branch" },
+    { value: "Northend Branch", label: "Northend Branch" },
+    { value: "Lusaka Main", label: "Lusaka Main" },
   ],
   "United Bank for Africa": [
     { value: "Cairo Road Branch", label: "Cairo Road Branch" },
@@ -108,6 +112,12 @@ export const BranchNameOptions = {
     { value: "Kitwe Branch", label: "Kitwe Branch" },
     { value: "Ndola Branch", label: "Ndola Branch" },
     { value: "Chipata Branch", label: "Chipata Branch" },
+    { value: "XAPIT Branch", label: "XAPIT Branch" },
+    { value: "Chirundu Branch", label: "Chirundu Branch" },
+    { value: "Lusaka City Market", label: "Lusaka City Market" },
+    { value: "Kabwe", label: "Kabwe" },
+    { value: "Solwezi", label: "Solwezi" },
+    { value: "Luanshya", label: "Luanshya" },
   ],
 };
 
@@ -259,8 +269,14 @@ export const bankBranches = [
   {
     bankName: "First National Bank",
     branchName: "Manda Hill Branch",
-    branchCode: "120003",
-    sortCode: "12-00-03",
+    branchCode: "260014",
+    sortCode: "26-00-14",
+  },
+  {
+    bankName: "First National Bank",
+    branchName: "Acacia park",
+    branchCode: "260001",
+    sortCode: "26-00-01",
   },
   {
     bankName: "Indo-Zambia Bank",
@@ -273,6 +289,12 @@ export const bankBranches = [
     branchName: "Kitwe Branch",
     branchCode: "130002",
     sortCode: "13-00-02",
+  },
+  {
+    bankName: "Indo-Zambia Bank",
+    branchName: "Lusaka Main Branch",
+    branchCode: "090001",
+    sortCode: "09-00-01",
   },
   {
     bankName: "Investrust Bank",
@@ -293,10 +315,16 @@ export const bankBranches = [
     sortCode: "58-00-10",
   },
   {
+    bankName: "National Credit and Saving Bank",
+    branchName: "Cosmopolitan",
+    branchCode: "580008",
+    sortCode: "58-00-08",
+  },
+  {
     bankName: "Stanbic Bank",
     branchName: "Lusaka Main Branch",
-    branchCode: "150001",
-    sortCode: "15-00-01",
+    branchCode: "040002",
+    sortCode: "04-00-02",
   },
   {
     bankName: "Stanbic Bank",
@@ -327,6 +355,18 @@ export const bankBranches = [
     branchName: "Livingstone Branch",
     branchCode: "160003",
     sortCode: "16-00-03",
+  },
+  {
+    bankName: "Standard Chartered Bank",
+    branchName: "Northend Branch",
+    branchCode: "060043",
+    sortCode: "06-00-43",
+  },
+  {
+    bankName: "Standard Chartered Bank",
+    branchName: "Lusaka Main",
+    branchCode: "060017",
+    sortCode: "06-00-17",
   },
   {
     bankName: "United Bank for Africa",
@@ -369,5 +409,41 @@ export const bankBranches = [
     branchName: "Chipata Branch",
     branchCode: "190005",
     sortCode: "19-00-05",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "XAPIT Branch",
+    branchCode: "010083",
+    sortCode: "01-00-83",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "Chirundu Branch",
+    branchCode: "013582",
+    sortCode: "01-35-82",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "Lusaka City Market",
+    branchCode: "010074",
+    sortCode: "01-00-74",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "Kabwe",
+    branchCode: "010946",
+    sortCode: "01-09-46",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "Solwezi",
+    branchCode: "012868",
+    sortCode: "01-28-68",
+  },
+  {
+    bankName: "Zambia National Commercial Bank",
+    branchName: "Luanshya",
+    branchCode: "010763",
+    sortCode: "01-07-63",
   },
 ];

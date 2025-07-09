@@ -46,7 +46,7 @@ export const ProjectList = [
     openLoans: "2367",
     totalDisbursedPrincipal: "$234M",
     status: "Active",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
   {
     name: "Buy Now Pay Later",

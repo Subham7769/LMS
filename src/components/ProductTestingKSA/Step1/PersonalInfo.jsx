@@ -2,10 +2,19 @@ import React, { useState } from "react";
 import { User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../../Common/Stepper/Stepper";
+import InputSelect from "../../Common/InputSelect/InputSelect";
+import InputText from "../../Common/InputText/InputText";
+import InputNumber from "../../Common/InputNumber/InputNumber";
+import InputDate from "../../Common/InputDate/InputDate";
+import InputCheckbox from "../../Common/InputCheckbox/InputCheckbox";
+import Button from "../../Common/Button/Button";
 import { useSelector } from "react-redux";
-import updateField, { generatePreEligibilityOtp } from "../../../redux/Slices/ProductTestingKSA";
+import updateField, {
+  generatePreEligibilityOtp,
+} from "../../../redux/Slices/ProductTestingKSA";
 import { useDispatch } from "react-redux";
 import { useActiveTab } from "../ActiveTabContext";
+import { toast } from "react-toastify";
 
 // API for OTP generation
 
@@ -18,9 +27,7 @@ const Step1PersonalInfo = ({ onNext, onBack }) => {
     mobile: "",
     nationality: "",
     nationalId: "",
-    day: "",
-    month: "",
-    year: "",
+    dob: "",
     agreed: false,
   });
 
@@ -34,180 +41,108 @@ const Step1PersonalInfo = ({ onNext, onBack }) => {
 
   const handleGetOtp = async () => {
     if (!formData.agreed) {
-      alert("Please agree to the Terms & Conditions before continuing.");
+      toast.warn("Please agree to the Terms & Conditions before continuing.");
       return;
     }
-    setUserId(formData.nationalId)
-    await dispatch(generatePreEligibilityOtp(formData)).unwrap();
-    onNext()
+    setUserId(formData.nationalId);
+    // await dispatch(generatePreEligibilityOtp(formData)).unwrap();
+    onNext();
   };
 
-  return (
-    <div className="p-6 mx-auto bg-white rounded-xl shadow-md">
+  const inputCheckLabel = () => (
+    <>
+      I agree to KSA's{" "}
+      <span className="text-violet-600 underline cursor-pointer">
+        Terms & Conditions
+      </span>{" "}
+      &{" "}
+      <span className="text-violet-600 underline cursor-pointer">
+        Privacy Policy
+      </span>
+    </>
+  );
 
+  return (
+    <>
       {/* Stepper */}
-      <Stepper title={"KSA Financing"} currentStep={2} steps={["Welcome", "Personal Info", "OTP Verification", "Completion"]} />
+      <Stepper
+        title={"KSA Financing"}
+        currentStep={2}
+        steps={["Welcome", "Personal Info", "OTP Verification", "Completion"]}
+      />
 
       {/* Form */}
       <h2 className="text-lg font-semibold mb-2">Create Your Account</h2>
-      <p className="text-sm text-gray-600 mb-6">
+      <p className="text-sm text-gray-600 dark:text-gray-500  mb-6">
         Please enter your details to register with KSA
       </p>
 
       <div className="space-y-4">
         {/* Mobile Number */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Mobile Number <span className="text-red-500">*</span>
-          </label>
-          <div className="flex items-center border rounded-md overflow-hidden bg-yellow-50">
-            <span className="px-3 py-2 text-sm bg-gray-100">+966</span>
-            <input
-              type="tel"
-              name="mobile"
-              placeholder="5XXXXXXXX"
-              value={formData.mobile}
-              onChange={handleChange}
-              className="flex-1 px-3 py-2 text-sm outline-none bg-transparent"
-            />
-          </div>
-        </div>
+        <InputNumber
+          labelName={"Mobile Number"}
+          inputName="mobile"
+          inputValue={formData.mobile}
+          onChange={handleChange}
+          isValidation={true}
+        />
 
         {/* Nationality */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Nationality <span className="text-red-500">*</span>
-          </label>
-          <select
-            name="nationality"
-            value={formData.nationality}
-            onChange={handleChange}
-            className="w-full border rounded-md px-3 py-2 text-sm bg-yellow-50"
-          >
-            <option value="">Select your nationality</option>
-            <option value="saudi">Saudi</option>
-            <option value="non-saudi">Non-Saudi</option>
-          </select>
-        </div>
+        <InputSelect
+          labelName={"Nationality"}
+          inputName="nationality"
+          inputValue={formData.nationality}
+          inputOptions={[
+            { label: "Saudi", value: "saudi" },
+            { label: "Non-Saudi", value: "non-saudi" },
+          ]}
+          onChange={handleChange}
+          isValidation={true}
+        />
 
         {/* National ID / Iqama */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            National ID / Iqama <span className="text-red-500">*</span>
-          </label>
-          <div className="relative bg-yellow-50 rounded-md">
-            <input
-              type="text"
-              name="nationalId"
-              placeholder="1XXXXXXXXX"
-              value={formData.nationalId}
-              onChange={handleChange}
-              maxLength={10}
-              className="w-full border rounded-md px-3 py-2 pr-10 text-sm bg-yellow-50 outline-none"
-            />
-            <User className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" />
-          </div>
-        </div>
+        <InputText
+          labelName={"National ID / Iqama"}
+          inputName="nationalId"
+          inputValue={formData.nationalId}
+          placeHolder="1XXXXXXXXX"
+          onChange={handleChange}
+          isValidation={true}
+        />
 
         {/* Date of Birth */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Date of Birth <span className="text-red-500">*</span>
-          </label>
-          <div className="grid grid-cols-3 gap-2 bg-yellow-50 p-2 rounded-md">
-            <select
-              name="day"
-              value={formData.day}
-              onChange={handleChange}
-              className="border rounded-md px-2 py-2 text-sm bg-yellow-50"
-            >
-              <option value="">Day</option>
-              {Array.from({ length: 31 }, (_, i) => (
-                <option key={i} value={i + 1}>
-                  {i + 1}
-                </option>
-              ))}
-            </select>
-            <select
-              name="month"
-              value={formData.month}
-              onChange={handleChange}
-              className="border rounded-md px-2 py-2 text-sm bg-yellow-50"
-            >
-              <option value="">Month</option>
-              {[
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-              ].map((m) => (
-                <option key={m} value={m}>
-                  {m}
-                </option>
-              ))}
-            </select>
-            <select
-              name="year"
-              value={formData.year}
-              onChange={handleChange}
-              className="border rounded-md px-2 py-2 text-sm bg-yellow-50"
-            >
-              <option value="">Year</option>
-              {Array.from({ length: 70 }, (_, i) => 2025 - i).map((y) => (
-                <option key={y} value={y}>
-                  {y}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        <InputDate
+          labelName={"Date of Birth"}
+          inputName="dob"
+          inputValue={formData.dob}
+          onChange={handleChange}
+          isValidation={true}
+        />
 
         {/* Agree */}
-        <div className="flex items-start mt-2">
-          <input
-            type="checkbox"
-            name="agreed"
-            checked={formData.agreed}
-            onChange={handleChange}
-            className="mt-1 mr-2"
-          />
-          <label className="text-sm text-gray-600">
-            I agree to KSA's{" "}
-            <span className="text-teal-600 underline cursor-pointer">
-              Terms & Conditions
-            </span>{" "}
-            &{" "}
-            <span className="text-teal-600 underline cursor-pointer">
-              Privacy Policy
-            </span>
-          </label>
-        </div>
-
+        <InputCheckbox
+          labelName={inputCheckLabel()}
+          inputName="agreed"
+          inputChecked={formData.agreed}
+          onChange={handleChange}
+        />
         {/* Submit */}
-        <button
-          disabled={!formData.agreed}
-          onClick={handleGetOtp}
-          className="flex items-center justify-center w-full py-2 mt-4 text-white rounded-lg bg-teal-600 hover:bg-teal-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          Get OTP
-        </button>
-
-        <p className="text-xs text-red-500">* Required fields are highlighted in yellow</p>
+        <div className="flex justify-center items-center mt-4">
+          <Button
+            buttonName="Get OTP"
+            buttonType="primary"
+            onClick={handleGetOtp}
+          />
+        </div>
       </div>
 
       <p className="text-center text-sm text-gray-500 mt-6">
         Already have an account?{" "}
-        <span className="text-teal-600 font-medium cursor-pointer">Login</span>
+        <span className="text-violet-600 font-medium cursor-pointer">
+          Login
+        </span>
       </p>
-    </div>
+    </>
   );
 };
 

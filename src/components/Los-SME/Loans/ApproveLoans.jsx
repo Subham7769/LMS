@@ -4,17 +4,18 @@ import { FiCheckCircle, FiInfo, FiXCircle } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import {
   approveLoan,
+  downloadDocumentFile,
   getFullLoanDetails,
   getLoanAgreement,
   getLoansByField,
   getPendingLoans,
+  previewDocumentFile,
+  rejectLoan,
 } from "../../../redux/Slices/smeLoansSlice";
 import ContainerTile from "../../Common/ContainerTile/ContainerTile";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import InputText from "../../Common/InputText/InputText";
 import Button from "../../Common/Button/Button";
-import { useNavigate } from "react-router-dom";
-import LoanRejectModal from "./LoanRejectModal";
 import Pagination from "../../Common/Pagination/Pagination";
 import { convertDate } from "../../../utils/convertDate";
 import convertToTitleCase from "../../../utils/convertToTitleCase";
@@ -25,16 +26,19 @@ import {
   NewspaperIcon,
   CurrencyDollarIcon,
   UserIcon,
+  BanknotesIcon,
 } from "@heroicons/react/24/outline";
 import CardInfo from "../../Common/CardInfo/CardInfo";
 import calculateAging from "../../../utils/calculateAging";
-import ViewDocumentsModal from "./ViewDocumentsModal";
+import ViewDocumentsModal from "../../Los-Personal/Loans/ViewDocumentsModal";
 import convertToReadableString from "../../../utils/convertToReadableString";
 import store from "../../../redux/store";
 import {
   clearValidationError,
+  updateValidationError,
   validateForm,
 } from "../../../redux/Slices/validationSlice";
+import RejectModal from "../../Los-Personal/RejectModal";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
@@ -50,6 +54,7 @@ const ApproveLoans = () => {
   const { approveLoans, loading, approveLoansTotalElements, fullLoanDetails } =
     useSelector((state) => state.smeLoans);
   const { userData, roleName } = useSelector((state) => state.auth);
+  const { validationError } = useSelector((state) => state.validation);
   const [filteredApproveLoansData, setFilteredApproveLoansData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showLoanModal, setShowLoanModal] = useState(false);
@@ -58,7 +63,8 @@ const ApproveLoans = () => {
   const [documentsData, setDocumentsData] = useState(null);
   const [salSearchValue, setSalSearchValue] = useState("");
   const [salSearchBy, setSalSearchBy] = useState("");
-  const navigate = useNavigate();
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
 
   // Pagination state
 
@@ -102,10 +108,11 @@ const ApproveLoans = () => {
   const handleReset = () => {
     setSalSearchBy("");
     setSalSearchValue("");
+    setCurrentPage(0);
     dispatch(
       getPendingLoans({
         page: 0,
-        size: 20,
+        size: pageSize,
         getPayload: { roleNames: [roleName] },
       })
     );
@@ -154,6 +161,38 @@ const ApproveLoans = () => {
     setShowModal(false);
   };
 
+  const handleRejection = async (rowData) => {
+    const rejectLoanPayload = {
+      amount: rowData.principalAmount,
+      applicationStatus: "REJECTED",
+      loanId: rowData.loanId,
+      uid: rowData.uid,
+      rejectionReason: rejectionReason,
+      username: userData.username,
+      roleName: [roleName],
+    };
+    console.log(rejectLoanPayload);
+    let isValid = true;
+    if (rejectionReason === "") {
+      dispatch(
+        updateValidationError({ ...validationError, rejectionReason: true })
+      );
+      isValid = false;
+    }
+    if (isValid) {
+      await dispatch(rejectLoan(rejectLoanPayload)).unwrap();
+      await dispatch(
+        getPendingLoans({
+          page: 0,
+          size: 10,
+          getPayload: { roleNames: [roleName] },
+        })
+      ).unwrap();
+      closeRejectModal();
+      setRejectionReason("");
+    }
+  };
+
   const handleViewDocuments = (verifiedDocuments) => {
     setDocumentsData(verifiedDocuments);
     setDocumentsLoanModal(true);
@@ -177,7 +216,7 @@ const ApproveLoans = () => {
   const columns = [
     { label: "Loan Product", field: "loanProduct" },
     { label: "Borrower", field: "borrowerName" },
-    { label: "Loan Id", field: "loanId" },
+    { label: "Loan Id", field: "loanId", copy: true },
     { label: "Borrower Serial No.", field: "uid" },
     { label: "Loan Release Date", field: "loanReleaseDate" },
     { label: "Principal Amount", field: "principalAmount" },
@@ -205,26 +244,28 @@ const ApproveLoans = () => {
   }, [approveLoans, roleName, userData]);
 
   const renderExpandedRow = (rowData) => (
-    <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
+    <div className="text-sm border-y-2 dark:border-gray-600 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
         <CardInfo
           cardIcon={UserIcon}
           cardTitle="Borrower Information"
-          className={"bg-white border-border-gray-primary border"}
-          colorText={"text-blue-primary"}
+          className={
+            "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
+          }
+          colorText={"text-sky-800 dark:text-sky-500"}
         >
-          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
+          <div className="grid grid-cols-2 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
             <div>
-              <div className="text-gray-500">Employment</div>
+              <div className="">Employment</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.employerName}
               </div>
-              <div className="text-gray-500 font-light text-xs">
+              <div className=" font-light text-xs">
                 {rowData?.borrowerDetails?.employmentDuration}
               </div>
             </div>
             <div>
-              <div className="text-gray-500">Monthly Income</div>
+              <div className="">Monthly Income</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.monthlyIncome}
               </div>
@@ -232,19 +273,19 @@ const ApproveLoans = () => {
           </div>
           <div className="grid grid-cols-3">
             <div>
-              <div className="text-gray-500">Credit Score</div>
+              <div className="">Credit Score</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.creditScore}
               </div>
             </div>
             <div>
-              <div className="text-gray-500">Active Loans</div>
+              <div className="">Active Loans</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.activeLoans}
               </div>
             </div>
             <div>
-              <div className="text-gray-500">Payment History</div>
+              <div className="">Payment History</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.paymentHistory}
               </div>
@@ -254,49 +295,77 @@ const ApproveLoans = () => {
         <CardInfo
           cardIcon={CurrencyDollarIcon}
           cardTitle="Loan Information"
-          className={"bg-white border-border-gray-primary border"}
-          colorText={"text-blue-primary"}
+          className={
+            "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
+          }
+          colorText={"text-sky-800 dark:text-sky-500"}
         >
-          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
+          <div className="grid grid-cols-2 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
             <div>
-              <div className="text-gray-500">Disbursed Amount</div>
+              <div className="">Disbursed Amount</div>
               <div className="font-semibold">{rowData?.disbursedAmount}</div>
             </div>
             <div>
-              <div className="text-gray-500">Interest Rate</div>
+              <div className="">Interest Rate</div>
               <div className="font-semibold">
                 {rowData.loanInterest}% {rowData.interestMethod} per{" "}
                 {rowData.perLoanInterest}
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-3 border-b border-border-gray-primary pb-3 mb-3">
+          <div className="grid grid-cols-3 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
             <div>
-              <div className="text-gray-500">Tenure</div>
+              <div className="">Tenure</div>
               <div className="font-semibold">
                 {rowData.numberOfTenure} {rowData.perLoanDuration}
               </div>
             </div>
             <div>
-              <div className="text-gray-500">Monthly EMI</div>
+              <div className="">Monthly EMI</div>
               <div className="font-semibold">{rowData.monthlyEMI}</div>
             </div>
             <div>
-              <div className="text-gray-500">First Payment</div>
+              <div className="">First Payment</div>
               <div className="font-semibold">
                 {convertDate(rowData.firstEmiPayment)}
               </div>
             </div>
           </div>
           <div
-            className="text-blue-600 font-semibold cursor-pointer flex gap-2"
+            className="text-sky-700 dark:text-sky-600 font-semibold cursor-pointer flex gap-2"
             onClick={() => handleFullLoanDetails(rowData.loanId, rowData.uid)}
           >
             <CalendarDaysIcon className="-ml-0.5 h-5 w-5" /> View EMI Schedule
           </div>
         </CardInfo>
+        <div className="col-span-2">
+          {rowData?.refinanceDetails && (
+            <CardInfo
+              cardIcon={BanknotesIcon}
+              cardTitle="Refinancing Details"
+              className={"bg-white border-gray-300 border"}
+              colorText={"text-blue-primary"}
+            >
+              {rowData?.refinanceDetails.map((refinance) => (
+                <div className="grid grid-cols-4 pb-3">
+                  <div>
+                    <div className="text-gray-500">Loan Id</div>
+                    <div className="font-semibold">{refinance.loanId}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-500">Refinance Amount</div>
+                    <div className="font-semibold">
+                      {" "}
+                      {refinance.refinanceAmount}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </CardInfo>
+          )}
+        </div>
       </div>
-      <div className="bg-white p-3 shadow border-border-gray-primary border rounded-md my-5">
+      <div className="p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md my-5">
         <div className="font-semibold text-xl mb-3">
           Verified Documents{" "}
           <span className="font-light text-xs">
@@ -316,7 +385,7 @@ const ApproveLoans = () => {
         </div>
       </div>
       {rowData?.loanActionDetailsList && (
-        <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
+        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md p-3 my-5">
           <div className="font-semibold text-xl mb-3">Loan Action History</div>
           {rowData?.loanActionDetailsList.map((action, index) => {
             const actionKeys = Object.keys(action);
@@ -344,7 +413,10 @@ const ApproveLoans = () => {
             });
 
             return (
-              <div key={index} className="border-b pb-2 mb-2">
+              <div
+                key={index}
+                className="border-b dark:border-gray-500 pb-2 mb-2"
+              >
                 <p>{sentence}</p>
               </div>
             );
@@ -382,6 +454,7 @@ const ApproveLoans = () => {
               onClick={() => handleApprove(rowData)}
               rectangle={true}
               buttonIcon={FiCheckCircle}
+              buttonType="success"
             />
           </>
         )}
@@ -391,8 +464,10 @@ const ApproveLoans = () => {
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
+      <ContainerTile
+        className={`p-5 md:flex justify-between gap-5 align-middle`}
+      >
+        <div className="w-full md:w-[45%] mb-2">
           <InputSelect
             labelName="Search By"
             inputName="salSearchBy"
@@ -403,7 +478,7 @@ const ApproveLoans = () => {
             isValidation={true}
           />
         </div>
-        <div className="w-[45%]">
+        <div className="w-full md:w-[45%]">
           <InputText
             labelName="Enter Value"
             inputName="salSearchValue"
@@ -414,18 +489,16 @@ const ApproveLoans = () => {
           />
         </div>
 
-        <div className="flex align-middle gap-5">
+        <div className="flex align-middle gap-5 justify-end">
           <Button
             buttonName={"Search"}
             onClick={handleSearch}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleReset}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="tertiary"
           />
@@ -436,16 +509,23 @@ const ApproveLoans = () => {
         data={filteredApproveLoansData}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
+        ListName="List of pending loans"
+        ListNameLength={approveLoansTotalElements}
       />
       <Pagination
         totalElements={approveLoansTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
       />
-      <LoanRejectModal
+      <RejectModal
         isOpen={showModal}
         onClose={closeRejectModal}
         userDetails={currentRowData}
+        handleRejection={handleRejection}
+        rejectionReason={rejectionReason}
+        setRejectionReason={setRejectionReason}
       />
       <FullLoanDetailModal
         isOpen={showLoanModal}
@@ -457,6 +537,8 @@ const ApproveLoans = () => {
         isOpen={showDocumentsModal}
         onClose={closeViewDocumentModal}
         documents={documentsData}
+        downloadDocumentFile={downloadDocumentFile}
+        previewDocumentFile={previewDocumentFile}
       />
     </div>
   );

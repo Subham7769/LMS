@@ -73,13 +73,41 @@ export const fetchBorrowerDataLoanHistory = createAsyncThunk(
   }
 );
 
+export const getFullLoanDetails = createAsyncThunk(
+  "borrower/getFullLoanDetails",
+  async ({ loanId, uid }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_LOAN_READ_FULL_LOAN_DETAILS_BY_ID_PERSONAL
+        }${uid}/loan-details/${loanId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message || "Failed to fetch");
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const fetchBorrowerData = createAsyncThunk(
   "borrower/fetchBorrowerData",
   async ({ subID, url }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await fetch(
-        `${import.meta.env.VITE_PAYMENY_HISTORY_READ}${subID}${url}`,
+        `${import.meta.env.VITE_PAYMENT_HISTORY_READ}${subID}${url}`,
         {
           method: "GET",
           headers: {
@@ -88,14 +116,6 @@ export const fetchBorrowerData = createAsyncThunk(
           },
         }
       );
-      if (response.status === 404) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message || "Borrower Not Found");
-      }
-      if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem("authToken");
-        return rejectWithValue({ message: "Unauthorized" });
-      }
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to get Details");
@@ -344,6 +364,7 @@ const initialState = {
       loanApplicationId: "",
     },
   ],
+  fullLoanDetails: {},
   paymentHistory: [],
   rejectionHistory: [],
   CreditBureauDetails: {},
@@ -412,6 +433,19 @@ const customerCareSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`API Error : ${action.payload}`);
+      })
+      .addCase(getFullLoanDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getFullLoanDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.fullLoanDetails = action.payload;
+      })
+      .addCase(getFullLoanDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Error: ${action.payload}`);
       })
       .addCase(downloadClearanceLetter.pending, (state) => {
         state.downloadLoading = true;

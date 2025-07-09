@@ -59,8 +59,8 @@ const CreateNewReportingConfig = () => {
           onSave={handleUpdateName}
         />
       </div>
-      <ContainerTile>
-        <div className="grid grid-cols-3 gap-2 mb-5 items-end">
+      <ContainerTile className={"p-5"}>
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-2 mb-5 items-end">
           <InputNumber
             labelName="Default Time Range Days"
             inputName="defaultTimeRangeDays"

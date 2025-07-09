@@ -234,8 +234,7 @@ export const fetchRepaymentByField = createAsyncThunk(
       const auth = localStorage.getItem("authToken");
       const response = await fetch(
         `${
-          import.meta.env
-            .VITE_REPAYMENT_READ_ALL_BY_FIELD_NAME_PERSONAL_BORROWER
+          import.meta.env.VITE_REPAYMENT_READ_ALL_BY_FIELD_NAME_COMPANY_BORROWER
         }?fieldName=${field}&value=${value}`,
         {
           method: "GET",
@@ -464,6 +463,9 @@ const smeRepaymentsSlice = createSlice({
         collectionBy: "",
         description: "",
         accounting: "",
+        userId: "",
+        repaymentType: "COMPANY",
+        payAll: false,
       };
       state.draftRepaymentDTOList.push(newRow);
     },
@@ -616,7 +618,20 @@ const smeRepaymentsSlice = createSlice({
       })
       .addCase(fetchRepaymentByField.fulfilled, (state, action) => {
         state.loading = false;
-        state.approveRepaymentData = action.payload;
+        // Check if payload is an array or a single object
+        const payload = Array.isArray(action.payload)
+          ? action.payload
+          : [action.payload];
+
+        // Check if loanId is null in each object and filter accordingly
+        state.approveRepaymentData = payload.some(
+          (item) => item.loanId === null
+        )
+          ? [] // Set to an empty array if any loanId is null
+          : payload;
+
+        // hide the pagination
+        state.approveRepaymentTotalElements = 0;
       })
       .addCase(fetchRepaymentByField.rejected, (state, action) => {
         state.loading = false;

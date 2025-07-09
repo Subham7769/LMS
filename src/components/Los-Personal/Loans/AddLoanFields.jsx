@@ -23,7 +23,7 @@ import convertToTitleCase from "../../../utils/convertToTitleCase";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
 
-const AddLoanFields = ({ addLoanData }) => {
+const AddLoanFields = ({ addLoanData, sectionRefs }) => {
   const dispatch = useDispatch();
   const { loanProductOptions, loanProductData } = useSelector(
     (state) => state.personalLoans
@@ -108,6 +108,8 @@ const AddLoanFields = ({ addLoanData }) => {
       product?.loanProductId === addLoanData?.generalLoanDetails?.loanProductId
   );
 
+  // console.log(selectedLoanProduct);
+
   // Generate unique loan tenure options combining loanTenure & loanTenureType
   const loanTenureOptions = useMemo(() => {
     if (!selectedLoanProduct) return [];
@@ -135,13 +137,13 @@ const AddLoanFields = ({ addLoanData }) => {
     )
       return [];
 
-    // dispatch(
-    //   updateLoanField({
-    //     section: "generalLoanDetails",
-    //     field: "repaymentTenureStr",
-    //     value: "",
-    //   })
-    // );
+    dispatch(
+      updateLoanField({
+        section: "generalLoanDetails",
+        field: "interestMethod",
+        value: selectedLoanProduct?.interestMethod,
+      })
+    );
 
     const uniqueRepaymentTenure = new Set();
 
@@ -254,21 +256,21 @@ const AddLoanFields = ({ addLoanData }) => {
     );
   }, [loanInterestStr]);
 
-  const interestMethod = useMemo(() => {
-    return selectedLoanProduct?.interestMethod || "";
-  }, [selectedLoanProduct]);
+  // const interestMethod = useMemo(() => {
+  //   return selectedLoanProduct?.interestMethod || "";
+  // }, [selectedLoanProduct]);
 
   useEffect(() => {
-    if (!interestMethod) return;
+    if (!selectedLoanProduct) return;
 
     dispatch(
       updateLoanField({
         section: "generalLoanDetails",
         field: "interestMethod",
-        value: interestMethod,
+        value: selectedLoanProduct?.interestMethod,
       })
     );
-  }, [interestMethod]);
+  }, [selectedLoanProduct]);
 
   const today = new Date();
   const { loanCreationDate, loanReleaseDate, loanProductId, firstEmiDate } =
@@ -399,7 +401,7 @@ const AddLoanFields = ({ addLoanData }) => {
     {
       labelName: "Principal Amount",
       inputName: "principalAmount",
-      type: "number",
+      type: "text",
       validation: true,
     },
     {
@@ -460,7 +462,7 @@ const AddLoanFields = ({ addLoanData }) => {
     return documents.map((document, index) => (
       <React.Fragment key={document.documentKey}>
         {document.documentKey === "ATM_CARD" ? (
-          <div className="flex justify-between items-center border-b border-border-gray-primary mb-3 pb-3">
+          <div className="flex justify-between items-center border-b border-gray-300 dark:border-gray-600 mb-3 pb-3">
             <div>ATM Card</div>
             <div className="flex gap-x-5 items-baseline">
               <CreditCardIcon className="h-5 w-5" aria-hidden="true" />
@@ -556,30 +558,54 @@ const AddLoanFields = ({ addLoanData }) => {
 
   return (
     <>
-      <Accordion
-        heading={"General Loan Details"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={addLoanData?.generalLoanDetails}
-            config={generalLoanDetailsConfig}
-            sectionName={"generalLoanDetails"}
-            handleInputChange={handleInputChange}
-          />
-        )}
-        isOpen={true}
-        error={isValidationFailed(validationError, generalLoanDetailsConfig)}
-      />
-      <Accordion
-        heading={"Refinance Details"}
-        renderExpandedContent={() =>
-          refinanceDetails(addLoanData?.refinanceDetails)
-        }
-      />
-      <Accordion
-        heading={"Requirement"}
-        renderExpandedContent={() => requirements(addLoanData?.documents)}
-      />
-      <div className="flex justify-between shadow bg-gray-50 border text-gray-600 rounded py-2 text-sm px-5">
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["generalLoanDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"General Loan Details"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={addLoanData?.generalLoanDetails}
+              config={generalLoanDetailsConfig}
+              sectionName={"generalLoanDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          isOpen={true}
+          error={isValidationFailed(validationError, generalLoanDetailsConfig)}
+        />
+      </div>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["refinanceDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Refinance Details"}
+          renderExpandedContent={() =>
+            refinanceDetails(addLoanData?.refinanceDetails)
+          }
+        />
+      </div>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["documents"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Requirement"}
+          renderExpandedContent={() => requirements(addLoanData?.documents)}
+        />
+      </div>
+      <div className="flex justify-between bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm py-2 text-sm px-5">
         <div>{`${uploadedCount} of ${addLoanData?.documents.length} documents uploaded`}</div>
         <div>{`${verifiedCount} documents verified`}</div>
       </div>

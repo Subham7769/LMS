@@ -11,19 +11,23 @@ import {
   setUpdateMap,
 } from "../../../redux/Slices/notificationSlice";
 import { hasViewOnlyAccess } from "../../../utils/roleUtils";
+import Tooltip from "../Tooltip/Tooltip";
 
 const InputText = ({
+  suffixIcon: SuffixIcon,
   labelName,
+  toolTipText,
   inputName,
   inputValue,
   onChange,
   placeHolder = "",
+  className = "",
   disabled,
   readOnly = false,
   isValidation = false,
   isIndex,
   isAutoFocus,
-  maxLength=null,
+  maxLength = null,
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
@@ -52,40 +56,54 @@ const InputText = ({
 
   return (
     <div className="w-full">
-      {labelName && (
-        <label
-          className={`block ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-700"
-          } px-1 text-sm font-semibold`}
-          htmlFor={inputName}
-        >
-          {validationError[validationKey] ? "Field required" : labelName}{" "}
-          {isValidation && <span className="text-red-600">*</span>}
-        </label>
-      )}
-      <input
-        type="text"
-        name={inputName}
-        value={inputValue}
-        onChange={onChange}
-        onFocus={() => {
-          dispatch(setValidationError(validationKey));
-          dispatch(setUpdateMap(inputName));
-        }}
-        placeholder={placeHolder}
-        disabled={disabled}
-        className={`block h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
-          ${
-            validationError[validationKey]
-              ? "ring-red-600 focus:ring-red-600"
-              : "ring-gray-300 focus:ring-indigo-600"
-          } 
-          sm:text-sm sm:leading-6 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200`}
-        required
-        readOnly={readOnly}
-        autoFocus={isAutoFocus}
-        maxLength={maxLength}
-      />
+      <div className="flex items-center justify-between">
+        {labelName && (
+          <label
+            className={`block ${
+              validationError[validationKey]
+                ? "text-red-600"
+                : "text-gray-600 dark:text-gray-400"
+            } px-1 text-sm font-medium mb-1`}
+            htmlFor={inputName}
+          >
+            {validationError[validationKey] ? "Field required" : labelName}{" "}
+            {isValidation && <span className="text-red-600">*</span>}
+          </label>
+        )}
+        {toolTipText && (
+          <Tooltip className="ml-2" bg="dark" size="lg" position="top left">
+            <div className="text-xs text-gray-200">{toolTipText}</div>
+          </Tooltip>
+        )}
+      </div>
+      <div className="relative">
+        <input
+          type="text"
+          name={inputName}
+          value={inputValue}
+          onChange={onChange}
+          onFocus={() => {
+            dispatch(setValidationError(validationKey));
+            dispatch(setUpdateMap(inputName));
+          }}
+          placeholder={placeHolder}
+          disabled={disabled}
+          className={`form-input w-full ${className} dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed
+          ${validationError[validationKey] ? "border-red-300" : ""} 
+          `}
+          required
+          readOnly={readOnly}
+          autoFocus={isAutoFocus}
+          maxLength={maxLength}
+        />
+        {SuffixIcon && (
+          <div className="absolute inset-0 left-auto flex items-center pointer-events-none">
+            <span className="text-sm text-gray-400 dark:text-gray-500 font-medium px-3">
+              <SuffixIcon className={"h-5 w-5"} aria-hidden="true" />
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

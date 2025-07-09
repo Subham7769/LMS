@@ -1,20 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { toast } from "react-toastify";
 
 // Async thunk for fetching user data
 export const fetchUsers = createAsyncThunk(
   "userManagement/fetchUsers",
-  async (_, { rejectWithValue }) => {
+  async ({ page, size }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch(`${import.meta.env.VITE_USER_READ}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_USER_READ}?limit=${size}&offset=${page}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!response.ok) {
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to get users");
@@ -22,7 +23,7 @@ export const fetchUsers = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -48,7 +49,7 @@ export const fetchRoles = createAsyncThunk(
         label: name,
         value: id,
       }));
-      dispatch(fetchUsers());
+      dispatch(fetchUsers({ page: 0, size: 10 }));
       return formattedRoleData;
     } catch (error) {
       console.error(error);
@@ -130,7 +131,7 @@ export const deleteUser = createAsyncThunk(
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to delete user");
       }
-      dispatch(fetchUsers()); // Fetch the updated user list after deletion
+      dispatch(fetchUsers({ page: 0, size: 10 })); // Fetch the updated user list after deletion
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -157,7 +158,7 @@ export const suspendUser = createAsyncThunk(
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to suspend user");
       }
-      dispatch(fetchUsers()); // Refresh the user list after suspension
+      dispatch(fetchUsers({ page: 0, size: 10 })); // Refresh the user list after suspension
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -168,10 +169,12 @@ export const suspendUser = createAsyncThunk(
 export const createUser = createAsyncThunk(
   "userManagement/createUser",
   async ({ formData, userRole }, { rejectWithValue, dispatch }) => {
-    const selectedRoles = userRole.map((item) => ({
-      id: item.value,
-      name: item.label,
-    }));
+    const selectedRoles = [
+      {
+        id: userRole.target.value,
+        name: userRole.target.label,
+      },
+    ];
 
     const postData = {
       active: true,
@@ -199,7 +202,7 @@ export const createUser = createAsyncThunk(
         return rejectWithValue(errorData.message || "Failed to create user");
       }
 
-      dispatch(fetchUsers()); // Refresh user list after creation
+      dispatch(fetchUsers({ page: 0, size: 10 })); // Refresh user list after creation
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -213,10 +216,12 @@ export const updateUser = createAsyncThunk(
     { userDetails, formData, userRole },
     { rejectWithValue, dispatch }
   ) => {
-    const selectedRoles = userRole.map((item) => ({
-      id: item.value,
-      name: item.label,
-    }));
+    const selectedRoles = [
+      {
+        id: userRole.target.value,
+        name: userRole.target.label,
+      },
+    ];
 
     const postData = {
       active: true,
@@ -246,7 +251,7 @@ export const updateUser = createAsyncThunk(
         const errorData = await response.json();
         return rejectWithValue(errorData.message || "Failed to update user");
       }
-      dispatch(fetchUsers());
+      dispatch(fetchUsers({ page: 0, size: 10 }));
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -258,6 +263,7 @@ const userManagementSlice = createSlice({
   initialState: {
     roleData: [],
     allUsersInfo: [],
+    allUsersInfoTotalElements: 0,
     loading: false,
     error: null,
     selectedUserData: null,
@@ -324,12 +330,13 @@ const userManagementSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.allUsersInfo = action.payload;
+        state.allUsersInfo = action.payload.content;
+        state.allUsersInfoTotalElements = action.payload.totalElements;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`API Error : ${action.payload}`);
+        toast.error(`API Error 123 : ${action.payload}`);
       })
       .addCase(deleteUser.pending, (state) => {
         state.loading = true;

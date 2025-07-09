@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
+
 // Error Handlers Imports
 const PageNotFound = lazy(() => import("./pages/PageNotFoundPage"));
 const AccessDeniedPage = lazy(() => import("./pages/AccessDeniedPage"));
@@ -28,7 +29,8 @@ const SupportPage = lazy(() => import("./pages/SupportPage"));
 
 // Misc. Imports
 const Login = lazy(() => import("./components/Login/Login"));
-const HomePage = lazy(() => import("./pages/HomePage"));
+//const HomePage = lazy(() => import("./pages/HomePage"));
+const HomePage = lazy(() => import("./components/Dashboard/Dashboard"));
 const AppLayout = lazy(() => import("./components/AppLayout/AppLayout"));
 const LoadingState = lazy(() =>
   import("./components/LoadingState/LoadingState")
@@ -49,7 +51,12 @@ const TestComponent = lazy(() =>
 const RacPage = lazy(() => import("./pages/RacPage"));
 const DynamicRacPage = lazy(() => import("./pages/DynamicRacPage"));
 const DynamicRAC = lazy(() => import("./components/DynamicRAC/DynamicRAC"));
-const NewCreatedRAC = lazy(() => import("./components/RAC/NewCreatedRAC"));
+
+// DRL Ruleset Imports
+const DrlRulesetPage = lazy(() => import("./pages/DRLRulesetPage"));
+const DRLRuleset = lazy(() => import("./components/DRLRuleset/DRLRuleset"));
+const BasicInfo = lazy(() => import("./components/DRLRuleset/BasicInfo"));
+const RuleManager = lazy(() => import("./components/DRLRuleset/RuleManager"));
 
 // Recovery Imports
 const RecoveryPage = lazy(() => import("./pages/RecoveryPage"));
@@ -65,6 +72,9 @@ const Affordability = lazy(() =>
 
 // Employer Imports
 const Employer = lazy(() => import("./components/Employer/Employer"));
+
+// Banks Imports
+const Banks = lazy(() => import("./components/Banks/Banks"));
 
 // Approval Config Imports
 const LoanApprovalPage = lazy(() => import("./pages/LoanApprovalPage"));
@@ -88,6 +98,17 @@ const ProjectPage = lazy(() => import("./pages/ProjectPage"));
 const CreateNewProject = lazy(() =>
   import("./components/Project/CreateNewProject")
 );
+const BasicDetails = lazy(() => import("./components/Project/BasicDetails"));
+const InterestCapping = lazy(() =>
+  import("./components/Project/InterestCapping")
+);
+const RollOver = lazy(() => import("./components/Project/RollOver"));
+const LatePenalty = lazy(() => import("./components/Project/LatePenalty"));
+const RecurringFees = lazy(() => import("./components/Project/RecurringFees"));
+const GracePeriod = lazy(() => import("./components/Project/GracePeriod"));
+const AdditionalSettings = lazy(() =>
+  import("./components/Project/AdditionalSettings")
+);
 
 // Product Imports
 const ProductPage = lazy(() => import("./pages/ProductPage"));
@@ -96,6 +117,15 @@ const CreateNewProduct = lazy(() =>
 );
 const LoanProductConfig = lazy(() =>
   import("./components/Product/LoanProductConfig")
+);
+const ProductConfig = lazy(() => import("./components/Product/ProductConfig"));
+const ProductEligibility = lazy(() =>
+  import("./components/Product/Eligibility")
+);
+const UpfrontFee = lazy(() => import("./components/Product/UpfrontFee"));
+const Options = lazy(() => import("./components/Product/Options"));
+const InterestTenure = lazy(() =>
+  import("./components/Product/InterestTenure")
 );
 
 // CreditScoreET Imports
@@ -108,12 +138,6 @@ const CreditScoreET = lazy(() =>
 const DebtBurdenPage = lazy(() => import("./pages/DebtBurdenPage"));
 const DebtBurdenConfig = lazy(() =>
   import("./components/DebtBurdenConfig/DebtBurdenConfig")
-);
-
-// BlockedEmployer Imports
-const BlockedEmployerPage = lazy(() => import("./pages/BlockedEmployerPage"));
-const BlockedEmployer = lazy(() =>
-  import("./components/BlockedEmployer/BlockedEmployer")
 );
 
 // CreditScore Imports
@@ -204,6 +228,37 @@ const Step4Container = lazy(() =>
   import("./components/ProductTestingKSA/Step4/Step4Container")
 );
 
+// ProductTesting2 Imports
+const ProductTesting2 = lazy(() =>
+  import("./components/ProductTesting2/ProductTesting2")
+);
+const LoanOffersPT2 = lazy(() =>
+  import("./components/ProductTesting2/LoanOffers")
+);
+const InspectionVerification = lazy(() =>
+  import("./components/ProductTesting2/InspectionVerification")
+);
+const ApproveLoansPT2 = lazy(() =>
+  import("./components/ProductTesting2/ApproveLoans")
+);
+const LoanApplicationPT2 = lazy(() =>
+  import("./components/ProductTesting2/LoanApplication")
+);
+const AddLoansPT2 = lazy(() => import("./components/ProductTesting2/AddLoans"));
+const LoanHistoryPT2 = lazy(() =>
+  import("./components/ProductTesting2/LoanHistory")
+);
+const LoanAgreementPT2 = lazy(() =>
+  import("./components/ProductTesting2/LoanAgreement")
+);
+const CollateralRegisterPT2 = lazy(() =>
+  import("./components/ProductTesting2/CollateralRegister")
+);
+
+// Bank Statement Analyser Imports
+const BankStatementAnalyzer = React.lazy(() =>
+  import("./components/BankStatementAnalyzer/BankStatementAnalyzer")
+);
 
 // GlobalConfig Imports
 const LiabilitiesMatrix = lazy(() =>
@@ -263,9 +318,7 @@ const ServerConfig = lazy(() =>
 );
 
 //App Config imports
-const AppConfig = lazy(() =>
-  import("./components/AppConfig/AppConfig")
-);
+const AppConfig = lazy(() => import("./components/AppConfig/AppConfig"));
 
 // Reporting Config imports
 const ReportingConfigPage = lazy(() => import("./pages/ReportingConfigPage"));
@@ -279,25 +332,9 @@ const CreateNewReportingConfig = lazy(() =>
 // Reports Section imports
 const ReportsPage = lazy(() => import("./pages/ReportsPage"));
 
-// Invoice Discounting Imports
-const Registration = lazy(() => import("./components/Los-SME/Registration"));
-const ProfilePage = lazy(() => import("./components/Los-SME/ProfilePage"));
-const ManagePartner = lazy(() => import("./components/Los-SME/ManagePartner"));
-const CashPayable = lazy(() => import("./components/Los-SME/CashPayable"));
-const CashReceivable = lazy(() =>
-  import("./components/Los-SME/CashReceivable")
-);
-const WorkingCapital = lazy(() =>
-  import("./components/Los-SME/WorkingCapital")
-);
-const ProjectFinance = lazy(() =>
-  import("./components/Los-SME/ProjectFinance")
-);
-
 // LOS-Personal Imports
 
 //------------Borrowers-----------------
-const Los = lazy(() => import("./components/Los-Personal/Los"));
 const Borrowers = lazy(() =>
   import("./components/Los-Personal/Borrowers/Borrowers")
 );
@@ -315,9 +352,6 @@ const UpdateBorrower = lazy(() =>
 );
 const AddBorrowersGroup = lazy(() =>
   import("./components/Los-Personal/Borrowers/AddBorrowersGroup")
-);
-const ViewBorrowersGroup = lazy(() =>
-  import("./components/Los-Personal/Borrowers/ViewBorrowersGroup")
 );
 
 //------------Loans-----------------
@@ -347,9 +381,6 @@ const OutrightSettlementPrint = lazy(() =>
 const DisbursementFilePrint = lazy(() =>
   import("./components/Los-Personal/Loans/DisbursementFilePrint")
 );
-const CollateralRegister = lazy(() =>
-  import("./components/Los-Personal/Loans/CollateralRegister")
-);
 
 //------------Repayments-----------------
 const Repayments = lazy(() =>
@@ -366,9 +397,7 @@ const UploadRepayment = lazy(() =>
 );
 
 //------------Refund-----------------
-const Refund = lazy(() =>
-  import("./components/Los-Personal/Refund/Refund")
-);
+const Refund = lazy(() => import("./components/Los-Personal/Refund/Refund"));
 const RefundApplication = lazy(() =>
   import("./components/Los-Personal/Refund/RefundApplication")
 );
@@ -385,9 +414,7 @@ const RefundHistory = lazy(() =>
   import("./components/Los-Personal/Refund/RefundHistory")
 );
 
-
 // LOS-SME Imports
-const LosSME = lazy(() => import("./components/Los-SME/LosSME"));
 const BorrowersSME = lazy(() =>
   import("./components/Los-SME/Borrowers/Borrowers")
 );
@@ -434,9 +461,6 @@ const AddLoansSME = lazy(() => import("./components/Los-SME/Loans/AddLoans"));
 const LoanHistorySME = lazy(() =>
   import("./components/Los-SME/Loans/LoanHistory")
 );
-const LoanAgreementSME = lazy(() =>
-  import("./components/Los-SME/Loans/LoanAgreement")
-);
 const LoanAgreementPrintSME = lazy(() =>
   import("./components/Los-SME/Loans/LoanAgreementPrint")
 );
@@ -448,9 +472,6 @@ const OutrightSettlementPrintSME = lazy(() =>
 );
 const DisbursementFilePrintSME = lazy(() =>
   import("./components/Los-SME/Loans/DisbursementFilePrint")
-);
-const CollateralRegisterSME = lazy(() =>
-  import("./components/Los-SME/Loans/CollateralRegister")
 );
 //------------Repayments-----------------
 const RepaymentsSME = lazy(() =>
@@ -466,10 +487,16 @@ const UploadRepaymentSME = lazy(() =>
   import("./components/Los-SME/Repayments/UploadRepayment")
 );
 
+// ---------------------- Workflow Management Imports ----------------------------
+const WorkflowsPage = lazy(() => import("./pages/WorkflowsPage"));
+const InstancesPage = lazy(() => import("./pages/InstancesPage"));
+const IncidentsPage = lazy(() => import("./pages/IncidentsPage"));
+const MyTasksPage = lazy(() => import("./pages/MyTasksPage"));
+
 // ------------------------ Deposit Section Imports -----------------------------------
 
-const DepositAppLayout = React.lazy(() =>
-  import("./components/Deposit/DepositAppLayout/DepositAppLayout")
+const AppLayoutDeposit = React.lazy(() =>
+  import("./components/Deposit/AppLayoutDeposit/AppLayoutDeposit")
 );
 const CreateAccount = React.lazy(() =>
   import("./components/Deposit/Savings/CreateAccount")
@@ -500,6 +527,47 @@ const Self = React.lazy(() => import("./components/Deposit/Savings/Self"));
 const Internal = React.lazy(() =>
   import("./components/Deposit/Savings/Internal")
 );
+
+
+// ------------------------ Customer Loan B2C Section Imports -----------------------------------
+
+import { ActiveTabProvider } from "./components/B2CCustomer/ActiveTabContext";  // Import the conte
+
+const AppLayoutB2C = lazy(() => import("./components/B2CCustomer/B2CAppLayout/B2CAppLayout"));
+
+const B2CLandingPage = React.lazy(() =>
+  import("./components/B2CCustomer/B2CLandingPage")
+);
+const PreOfferOnBoarding = React.lazy(() =>
+  import("./components/B2CCustomer/PreOfferOnboarding/PreOfferOnBoarding")
+);
+const PostOfferOnboarding = React.lazy(() =>
+  import("./components/B2CCustomer/PostOfferOnboarding/PostOfferOnboarding")
+);
+const B2CLoanOfferLayoutScreen = React.lazy(() =>
+  import("./components/B2CCustomer/B2CAppLayout/B2CLoanOfferLayout")
+);
+const B2CLoanOffers = React.lazy(() =>
+  import("./components/B2CCustomer/B2CLoanOffers/B2CLoanOffers")
+);
+const LoanDetails = React.lazy(() =>
+  import("./components/B2CCustomer/PostOfferOnboarding/LoanDetails")
+);
+
+const ThankYouPage = React.lazy(() =>
+  import("./components/B2CCustomer/ThankYouPage")
+);
+
+
+// -------------------------------- WORKFLOW MANAGEMENT ----------------------------------------
+const WorkflowList = lazy(() => import("./components/Workflow/WorkflowList"));
+const WorkflowIncidents = lazy(() => import("./components/Workflow/Incidents"));
+const WorkflowInstances = lazy(() => import("./components/Workflow/Instances"));
+const WorkflowMyTasks = lazy(() => import("./components/Workflow/MyTasks"));
+const WorkflowNotifications = lazy(() => import("./components/Workflow/Notifications"));
+
+
+const Messages = React.lazy(() => import("./components/Messages/Messages"));
 
 const routes = [
   // Accessing All Main Components
@@ -538,6 +606,11 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
+        path: "drl-ruleset",
+        element: <DrlRulesetPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
         path: "recovery",
         element: <RecoveryPage />,
         errorElement: <RouteErrorBoundary />,
@@ -573,18 +646,13 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
-        path: "credit-score-eligible-tenure",
+        path: "eligible-tenure",
         element: <CreditScoreETPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
         path: "dbr-config",
         element: <DebtBurdenPage />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "blocked-employer",
-        element: <BlockedEmployerPage />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -637,6 +705,31 @@ const routes = [
         element: <ReportsPage />,
         errorElement: <RouteErrorBoundary />,
       },
+      {
+        path: "workflows",
+        element: <WorkflowsPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "instances",
+        element: <InstancesPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "incidents",
+        element: <IncidentsPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "my-tasks",
+        element: <MyTasksPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "AI-agent",
+        element: <Messages />,
+        errorElement: <RouteErrorBoundary />,
+      },
 
       // Accessing All Misc. Page Components
       {
@@ -657,11 +750,6 @@ const routes = [
 
       // Accessing All Child Components
       {
-        path: "rac/:racID",
-        element: <NewCreatedRAC />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
         path: "recovery/:recoveryEquationTempId",
         element: <RecoveryConfig />,
         errorElement: <RouteErrorBoundary />,
@@ -675,25 +763,84 @@ const routes = [
         path: "project/:projectId",
         element: <Project />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "basic-details",
+            element: <BasicDetails />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-capping",
+            element: <InterestCapping />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "roll-over",
+            element: <RollOver />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "late-penalty",
+            element: <LatePenalty />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "recurring-fees",
+            element: <RecurringFees />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "grace-period",
+            element: <GracePeriod />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "additional-settings",
+            element: <AdditionalSettings />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
-        path: "loan-product/:productType/loan-product-config/:projectId/:loanProId",
+        path: "loan-product/:productType/:projectId/:loanProId",
         element: <LoanProductConfig />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "product-config",
+            element: <ProductConfig />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "eligibility",
+            element: <ProductEligibility />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "upfront-fee",
+            element: <UpfrontFee />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "options",
+            element: <Options />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-tenure",
+            element: <InterestTenure />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
-        path: "credit-score-eligible-tenure/:creditScoreETId",
+        path: "eligible-tenure/:creditScoreETId",
         element: <CreditScoreET />,
         errorElement: <RouteErrorBoundary />,
       },
       {
         path: "dbr-config/:dbcTempId",
         element: <DebtBurdenConfig />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "blocked-employer/:blockEmployersTempId",
-        element: <BlockedEmployer />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -714,6 +861,11 @@ const routes = [
       {
         path: "employer",
         element: <Employer />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "banks",
+        element: <Banks />,
         errorElement: <RouteErrorBoundary />,
       },
       {
@@ -777,6 +929,23 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       {
+        path: "drl-ruleset/:droolsRuleSetId",
+        element: <DRLRuleset />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "basic-info",
+            element: <BasicInfo />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "rule-manager",
+            element: <RuleManager />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
+      {
         path: "reporting-config/:RCName",
         element: <ReportingConfig />,
         errorElement: <RouteErrorBoundary />,
@@ -795,11 +964,75 @@ const routes = [
         path: "project/newProject/:projectName",
         element: <CreateNewProject />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "basic-details",
+            element: <BasicDetails />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-capping",
+            element: <InterestCapping />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "roll-over",
+            element: <RollOver />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "late-penalty",
+            element: <LatePenalty />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "recurring-fees",
+            element: <RecurringFees />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "grace-period",
+            element: <GracePeriod />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "additional-settings",
+            element: <AdditionalSettings />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "loan-product/newProduct/:productName",
         element: <CreateNewProduct />,
         errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "product-config",
+            element: <ProductConfig />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "eligibility",
+            element: <ProductEligibility />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "upfront-fee",
+            element: <UpfrontFee />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "options",
+            element: <Options />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "interest-tenure",
+            element: <InterestTenure />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
       },
       {
         path: "reporting-config/newConfig/:RCName",
@@ -807,11 +1040,6 @@ const routes = [
         errorElement: <RouteErrorBoundary />,
       },
       // Accessing All New Created Child Components
-      {
-        path: "loan-origination-system/sme",
-        element: <LosSME />,
-        errorElement: <RouteErrorBoundary />,
-      },
       {
         path: "loan-origination-system/sme/borrowers",
         element: <BorrowersSME />,
@@ -905,11 +1133,6 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
           {
-            path: "loan-agreement/:loanApplicationId/:userId",
-            element: <LoanAgreementSME />,
-            errorElement: <RouteErrorBoundary />,
-          },
-          {
             path: "loan-history",
             element: <LoanHistorySME />,
             errorElement: <RouteErrorBoundary />,
@@ -917,11 +1140,6 @@ const routes = [
           {
             path: "loan-history/:uniqueID",
             element: <LoanHistorySME />,
-            errorElement: <RouteErrorBoundary />,
-          },
-          {
-            path: "collateral-register",
-            element: <CollateralRegisterSME />,
             errorElement: <RouteErrorBoundary />,
           },
         ],
@@ -947,46 +1165,6 @@ const routes = [
             errorElement: <RouteErrorBoundary />,
           },
         ],
-      },
-      {
-        path: "loan-origination-system/sme/borrowers",
-        element: <Registration />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/profile",
-        element: <ProfilePage />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/manage-partner",
-        element: <ManagePartner />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/cash-payable",
-        element: <CashPayable />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/cash-receivable",
-        element: <CashReceivable />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/working-capital",
-        element: <WorkingCapital />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/sme/project-finance",
-        element: <ProjectFinance />,
-        errorElement: <RouteErrorBoundary />,
-      },
-      {
-        path: "loan-origination-system/personal",
-        element: <Los />,
-        errorElement: <RouteErrorBoundary />,
       },
       {
         path: "loan-origination-system/personal/borrowers",
@@ -1026,11 +1204,6 @@ const routes = [
           {
             path: "add-borrower-group",
             element: <AddBorrowersGroup />,
-            errorElement: <RouteErrorBoundary />,
-          },
-          {
-            path: "view-borrower-group",
-            element: <ViewBorrowersGroup />,
             errorElement: <RouteErrorBoundary />,
           },
         ],
@@ -1078,11 +1251,6 @@ const routes = [
           {
             path: "loan-history/:uniqueID",
             element: <LoanHistory />,
-            errorElement: <RouteErrorBoundary />,
-          },
-          {
-            path: "collateral-register",
-            element: <CollateralRegister />,
             errorElement: <RouteErrorBoundary />,
           },
         ],
@@ -1286,7 +1454,79 @@ const routes = [
           },
         ],
       },
-      
+      {
+        path: "product-testing2",
+        element: <ProductTesting2 />,
+        errorElement: <RouteErrorBoundary />,
+        children: [
+          {
+            path: "loan-application",
+            element: <LoanApplicationPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan/add-loan/new/:loanApplicationId",
+            element: <AddLoansPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan/add-loan/:loanApplicationId",
+            element: <AddLoansPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan/add-loan/new/:loanApplicationId/:BorrowerId",
+            element: <AddLoansPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-offers",
+            element: <LoanOffersPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "inspection-verification",
+            element: <InspectionVerification />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "inspection-verification/:loanApplicationId",
+            element: <InspectionVerification />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "approve-loans",
+            element: <ApproveLoansPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-agreement/:loanApplicationId/:userId",
+            element: <LoanAgreementPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-history",
+            element: <LoanHistoryPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "loan-history/:uniqueID",
+            element: <LoanHistoryPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+          {
+            path: "collateral-register",
+            element: <CollateralRegisterPT2 />,
+            errorElement: <RouteErrorBoundary />,
+          },
+        ],
+      },
+      {
+        path: "bank-statement-analyzer",
+        element: <BankStatementAnalyzer />,
+        errorElement: <RouteErrorBoundary />,
+      },
+
     ],
   },
 
@@ -1295,7 +1535,7 @@ const routes = [
     element: (
       <PageErrorBoundary>
         <ProtectedRoute>
-          <DepositAppLayout />
+          <AppLayoutDeposit />
         </ProtectedRoute>
       </PageErrorBoundary>
     ),
@@ -1426,6 +1666,104 @@ const routes = [
     element: <SupportPage />,
     errorElement: <RouteErrorBoundary />,
   },
+
+  // Camunda Workflows Routes
+    {
+    path: "/workflow",
+    element: (
+      <PageErrorBoundary>
+        <ProtectedRoute>
+          <AppLayout />
+        </ProtectedRoute>
+      </PageErrorBoundary>
+    ),
+    children: [
+      // Accessing All Page Components
+      
+  {
+    path: "workflow-list",
+    element: <WorkflowList />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "instances",
+    element: <WorkflowInstances />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "incidents",
+    element: <WorkflowIncidents />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "my-task-list",
+    element: <WorkflowMyTasks />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "notifications",
+    element: <WorkflowNotifications />,
+    errorElement: <RouteErrorBoundary />,
+  },      
+    ],
+  },
+  // Catch-All Route for 404 Page Not Found
+  { path: "*", element: <PageNotFound /> },
+
+  //Lead Capture, Customer loan application Route
+  {
+    path: "/customer",
+    element: (
+      <PageErrorBoundary>
+        <ProtectedRoute>
+          <ActiveTabProvider>
+            <AppLayoutB2C />
+          </ActiveTabProvider>
+        </ProtectedRoute>
+      </PageErrorBoundary>
+    ),
+
+    children: [
+      {
+        path: "loan-application",
+        element: <PreOfferOnBoarding />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "loan-offers",
+        element: <B2CLoanOfferLayoutScreen />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "loan-finalization",
+        element: <PostOfferOnboarding />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "final-offers",
+        element: <B2CLoanOffers />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "final-loan",
+        element: <LoanDetails />,
+        errorElement: <RouteErrorBoundary />,
+      },
+      {
+        path: "thank-you",
+        element: <ThankYouPage />,
+        errorElement: <RouteErrorBoundary />,
+      },
+    ],
+  },
+  {
+    path: "/customer/home",
+    element: <B2CLandingPage />,
+    errorElement: <RouteErrorBoundary />,
+  },
+
+
+
 
   // Catch-All Route for 404 Page Not Found
   { path: "*", element: <PageNotFound /> },

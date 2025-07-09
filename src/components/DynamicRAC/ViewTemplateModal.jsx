@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import generateNumberSentence from "./generateNumberSentence";
 import generateStringSentence from "./generateStringSentence";
@@ -11,6 +11,7 @@ import {
 } from "../../redux/Slices/dynamicRacSlice";
 import { useDispatch } from "react-redux";
 import convertToReadableString from "../../utils/convertToReadableString";
+import Modal from "../Common/Modal/Modal";
 
 const ViewTemplateModal = ({
   isOpen = true,
@@ -609,28 +610,27 @@ const ViewTemplateModal = ({
   console.log(selectedTemplate);
 
   return (
-    <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-500/10 backdrop-blur-sm">
-      <div className="relative w-[75%] max-h-[80vh] bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
-        {/* Header */}
-        <div className="sticky top-0 z-50 bg-white flex justify-between items-center p-5 border-b">
-          <p className="font-semibold text-2xl">Use Template</p>
-          <XMarkIcon
-            onClick={handleClose}
-            className="h-8 w-8 text-gray-500 cursor-pointer"
-          />
-        </div>
-
-        {/* Content Section */}
-        <div className="flex h-[70vh]">
+    <>
+      <Modal
+        title={"Use Template"}
+        primaryButtonName="Use This Template"
+        primaryOnClick={() =>
+          handleAddRule(sectionId, sectionName, selectedTemplate)
+        }
+        primaryDisabled={!selectedTemplate}
+        secondaryOnClick={handleClose}
+        modalWidth={"lg:w-3/4"}
+      >
+        <div className="lg:flex h-[60vh] gap-4">
           {/* Left Section - Template Types */}
-          <div className="w-[20%] border-r p-4 flex flex-col gap-3">
+          <div className="flex overflow-auto lg:w-[20%] border-r dark:border-gray-600 lg:flex-col gap-3 mb-4 lg:mb-0 pb-3 lg:pr-4">
             {templateTypes.map((type) => (
               <div
                 key={type.id}
-                className={`py-3 px-2 border rounded-lg cursor-pointer text-center ${
+                className={`min-w-36 p-2 border dark:border-gray-600 rounded-lg cursor-pointer text-center ${
                   selectedTemplateType.id === type.id
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-100"
+                    ? "bg-sky-500/20 text-sky-700"
+                    : "bg-white dark:bg-gray-800"
                 }`}
                 onClick={() => setSelectedTemplateType(type)}
               >
@@ -640,32 +640,36 @@ const ViewTemplateModal = ({
           </div>
 
           {/* Right Section - Templates List */}
-          <div className="w-[80%] p-4 overflow-y-auto">
-            <h2 className="text-xl font-semibold mb-3">Available Templates</h2>
-            <div className="grid grid-cols-2 gap-3">
+          <div className="lg:w-[80%] overflow-y-auto">
+            <h2 className="text-xl font-semibold mb-3 dark:text-gray-200">
+              Available Templates
+            </h2>
+            <div className="grid lg:grid-cols-2 gap-3">
               {templates[selectedTemplateType.id].map((template, index) => (
                 <div
                   key={index}
-                  className={`flex flex-col gap-2 p-4 border-2 bg-white rounded-lg ${
+                  className={`flex flex-col gap-2 p-4 border-2 bg-white dark:bg-gray-800 rounded-lg dark:border-gray-600 ${
                     selectedTemplate?.dynamicRacRuleId ===
                       template.dynamicRacRuleId && "border-blue-500"
                   }`}
                   onClick={() => setSelectedTemplate(template)}
                 >
                   <p className="flex justify-between items-center">
-                    <span className="font-semibold">{convertToReadableString(template.name)}</span>
+                    <span className="font-semibold text-gray-800 dark:text-gray-200 ">
+                      {convertToReadableString(template.name)}
+                    </span>
                     {selectedTemplateType.name !== "All templates" && (
-                      <span className="bg-gray-100 text-gray-500 text-[10px] font-semibold px-2 py-1 rounded ">
+                      <span className="text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-500 text-[10px] font-semibold px-2 py-1 rounded ">
                         {selectedTemplateType.name}
                       </span>
                     )}
                   </p>
                   {template.fieldType === "STRING" ? (
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-gray-600 dark:text-gray-200">
                       {generateStringSentence(template)}
                     </p>
                   ) : (
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-gray-600 dark:text-gray-200">
                       {generateNumberSentence(template)}
                     </p>
                   )}
@@ -674,7 +678,7 @@ const ViewTemplateModal = ({
                     {template.usageList.map((templateUsage) => {
                       if (templateUsage.used) {
                         return (
-                          <p className="bg-blue-100 w-fit rounded-xl px-2 text-blue-500 text-[10px] py-1">
+                          <p className="bg-sky-500/20 w-fit rounded-xl px-2 text-sky-700 text-[10px] py-1">
                             {templateUsage.ruleUsage}
                           </p>
                         );
@@ -686,26 +690,8 @@ const ViewTemplateModal = ({
             </div>
           </div>
         </div>
-        {/* Footer */}
-        <div className="sticky bottom-0 z-50 bg-white flex justify-end items-center gap-5  p-3 border-t">
-          <Button
-            buttonName="Cancel"
-            rectangle={true}
-            buttonType={"tertiary"}
-            onClick={handleClose}
-          />
-
-          <Button
-            buttonName="Use This Template"
-            rectangle={true}
-            disabled={!selectedTemplate}
-            onClick={() =>
-              handleAddRule(sectionId, sectionName, selectedTemplate)
-            }
-          />
-        </div>
-      </div>
-    </div>
+      </Modal>
+    </>
   );
 };
 

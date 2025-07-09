@@ -81,14 +81,14 @@ const DynamicName = ({ initialName, onSave, editable }) => {
           </button>
         </div>
       ) : (
-        <h2 onClick={editable ? handleEdit : undefined}>
+        <h1 onClick={editable ? handleEdit : undefined}>
           <b
             title="Edit Name"
-            className="mb-4 text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
+            className="mb-4 text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
           >
             {initialName}
           </b>
-        </h2>
+        </h1>
       )}
     </div>
   );

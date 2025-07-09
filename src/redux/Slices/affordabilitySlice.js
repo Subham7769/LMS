@@ -69,7 +69,7 @@ export const deleteAffordability = createAsyncThunk(
     const response = await fetch(
       `${
         import.meta.env.VITE_AFFORDABILITY_DELETE
-      }/${affordabilityCriteriaTempId}`,
+      }${affordabilityCriteriaTempId}`,
       {
         method: "DELETE",
         headers: {

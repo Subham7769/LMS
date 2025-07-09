@@ -43,6 +43,23 @@ export const MenusInitial = [
     current: false,
   },
   {
+    title: "DRL Ruleset",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/drl-ruleset",
+    icon: "ClipboardDocumentCheckIcon",
+    submenu: true,
+    createButton: true,
+    editable: true,
+    createFunction: "createNewDrlRuleset",
+    buttonName: "Create DRL Ruleset",
+    placeholder: "Enter Name",
+    navigateSuccess: "/loan/drl-ruleset/",
+    navigateFail: "/login",
+    submenuItems: [],
+    isOpen: false,
+    current: false,
+  },
+  {
     title: "Loan Schema",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/project", //previous -> "/project/loan-form"
@@ -174,7 +191,7 @@ export const MenusInitial = [
   {
     title: "Eligible Tenure",
     sectionName: "LOAN MANAGEMENT",
-    href: "/loan/credit-score-eligible-tenure",
+    href: "/loan/eligible-tenure",
     icon: "CalculatorIcon",
     current: false,
     submenu: true,
@@ -183,7 +200,7 @@ export const MenusInitial = [
     createFunction: "createNewCreditScoreET", //Create function
     buttonName: "Create New Tenure", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
-    navigateSuccess: "/loan/credit-score-eligible-tenure/", // navigation
+    navigateSuccess: "/loan/eligible-tenure/", // navigation
     navigateFail: "/login", // navigation
     submenuItems: [],
     isOpen: false,
@@ -232,6 +249,13 @@ export const MenusInitial = [
     current: false,
   },
   {
+    title: "Banks",
+    sectionName: "LOAN MANAGEMENT",
+    href: "/loan/banks",
+    icon: "BanknotesIcon",
+    current: false,
+  },
+  {
     title: "Approval Config",
     sectionName: "LOAN MANAGEMENT",
     href: "/loan/loan-approval",
@@ -241,7 +265,7 @@ export const MenusInitial = [
     createButton: true, //if create recovery from Side bar Using input box
     editable: true, //if Button takes input string
     createFunction: "createNewLoanApproval",
-    buttonName: "Create Approval Config", //Create button text
+    buttonName: "Create New Config", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/loan/loan-approval/", // navigation
     navigateFail: "/login", // navigation
@@ -259,7 +283,7 @@ export const MenusInitial = [
     createButton: true, //if create recovery from Side bar Using input box
     editable: true, //if Button takes input string
     createFunction: "createNewDocumentConfig",
-    buttonName: "Create Document Config", //Create button text
+    buttonName: "Create New Config", //Create button text
     placeholder: "Enter Name", //required placeholder for input box
     navigateSuccess: "/loan/document-config/", // navigation
     navigateFail: "/login", // navigation
@@ -308,6 +332,22 @@ export const MenusInitial = [
     submenu: false,
     submenuItems: [],
     isOpen: false,
+  },
+  {
+    title: "Asset Financing",
+    sectionName: "TESTING",
+    href: "/loan/product-testing2/loan-application",
+    icon: "DocumentCurrencyRupeeIcon",
+    current: false,
+    submenu: false,
+    isOpen: false,
+  },
+  {
+    title: "Bank Statement Analyzer",
+    sectionName: "TESTING",
+    href: "/loan/bank-statement-analyzer",
+    icon: "DocumentMagnifyingGlassIcon",
+    current: false,
   },
   // {
   //   title: "Test Component",
@@ -388,36 +428,6 @@ export const MenusInitial = [
         href: "/loan/loan-origination-system/sme/repayments/add-bulk-repayment",
         current: false,
       },
-      // {
-      //   name: "Profile",
-      //   href: "/loan/loan-origination-system/sme/profile",
-      //   current: false,
-      // },
-      // {
-      //   name: "Manage Partner",
-      //   href: "/loan/loan-origination-system/sme/manage-partner",
-      //   current: false,
-      // },
-      // {
-      //   name: "Cash Payable",
-      //   href: "/loan/loan-origination-system/sme/cash-payable",
-      //   current: false,
-      // },
-      // {
-      //   name: "Cash Receivable",
-      //   href: "/loan/loan-origination-system/sme/cash-receivable",
-      //   current: false,
-      // },
-      // {
-      //   name: "Working Capital",
-      //   href: "/loan/loan-origination-system/sme/working-capital",
-      //   current: false,
-      // },
-      // {
-      //   name: "Project Finance",
-      //   href: "/loan/loan-origination-system/sme/project-finance",
-      //   current: false,
-      // },
     ],
     isOpen: false,
   },
@@ -463,7 +473,7 @@ export const MenusInitial = [
     createButton: true,
     editable: true,
     createFunction: "createNewReportingConfig",
-    buttonName: "Create Report",
+    buttonName: "Create New Config",
     placeholder: "Enter Name",
     navigateSuccess: "/loan/reporting-config/newConfig/",
     navigateFail: "/login",
@@ -485,7 +495,7 @@ export const MenusInitial = [
     icon: "CubeTransparentIcon",
     current: false,
     isOpen: false,
-    openInNewTab:true,
+    openInNewTab: true,
   },
   // USER TOOLS
   {
@@ -502,6 +512,60 @@ export const MenusInitial = [
     icon: "UserGroupIcon",
     current: false,
   },
+  {
+    title: "B2C Customer",
+    sectionName: "USER TOOLS",
+    href: "/customer/home",
+    icon: "CheckBadgeIcon",
+    current: false,
+  },
+  //WORKFLOW MANAGEMENT
+  {
+    title: "My Tasks",
+    sectionName: "WORKFLOW MANAGEMENT",
+    href: "/workflow/my-task-list",
+    icon: "RectangleStackIcon",
+    current: false,
+  },  
+  {
+    title: "Workflows",
+    sectionName: "WORKFLOW MANAGEMENT",
+    href: "/workflow/workflow-list",
+    icon: "AdjustmentsHorizontalIcon",
+    current: false,
+  },
+  {
+    title: "Instances",
+    sectionName: "WORKFLOW MANAGEMENT",
+    href: "/workflow/instances",
+    icon: "PlayCircleIcon",
+    current: false,
+  },
+  {
+    title: "Incidents",
+    sectionName: "WORKFLOW MANAGEMENT",
+    href: "/workflow/incidents",
+    icon: "ExclamationCircleIcon",
+    current: false,
+  },
+  {
+    title: "Notifications",
+    sectionName: "WORKFLOW MANAGEMENT",
+    href: "/workflow/notifications",
+    icon: "BellAlertIcon",
+    current: false,
+  },      
+  {
+    title: "AI Agent",
+    sectionName: "CONNECT",
+    href: "/loan/AI-agent",
+    icon: "ChatBubbleLeftRightIcon",
+    current: false,
+    submenu: false,
+    createButton: false, //if create product from Side bar Using input box
+    submenuItems: [],
+    isOpen: false,
+  },
 ];
 export const allSectionName = [
   "LOAN MANAGEMENT",
@@ -511,4 +575,6 @@ export const allSectionName = [
   "LOAN ORIGINATION",
   "REPORTS & ANALYSIS",
   "USER TOOLS",
+  "WORKFLOW MANAGEMENT",
+  "CONNECT",
 ];

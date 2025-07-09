@@ -1,14 +1,8 @@
 import { useEffect } from "react";
-import {
-  PlusIcon,
-  TrashIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/20/solid";
 import Button from "../Common/Button/Button";
 import { typeOptions, options } from "../../data/OptionsData";
 import InputText from "../Common/InputText/InputText";
 import InputNumber from "../Common/InputNumber/InputNumber";
-import InputSelectNew from "../Common/InputSelectMulti/InputSelect";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +21,9 @@ import {
 } from "../../redux/Slices/validationSlice";
 import store from "../../redux/store";
 import { hasViewOnlyAccessGroup2 } from "../../utils/roleUtils";
+import ListTableClassic from "../Common/ListTable/ListTableClassic";
+import { hasViewOnlyAccess } from "../../utils/roleUtils";
+import { AddIcon, CheckIcon, DeleteIcon } from "../../assets/icons";
 
 const MinimumExpense = () => {
   const dispatch = useDispatch();
@@ -35,6 +32,13 @@ const MinimumExpense = () => {
   );
   const { userData } = useSelector((state) => state.auth);
   const roleName = userData?.roles[0]?.name;
+
+  let ListHeader = [
+    { name: "Expenses", sortKey: null },
+    { name: "Type", sortKey: null },
+    { name: "Expenses Frequency", sortKey: null },
+    { name: "Bare Min Expense Per Person", sortKey: null },
+  ];
 
   useEffect(() => {
     dispatch(fetchExpenseData());
@@ -60,12 +64,14 @@ const MinimumExpense = () => {
 
   const handleChange = (e, id, propName = null, selectedOption = null) => {
     let name, value;
-
+    console.log(e);
     if (e) {
       // Handling input change
+      console.log(e);
       ({ name, value } = e.target);
     } else if (propName && selectedOption) {
       // Handling dropdown change
+      console.log("here")
       name = propName;
       value = selectedOption.value;
     }
@@ -86,12 +92,17 @@ const MinimumExpense = () => {
     dispatch(deleteExpenseField(id));
   };
 
+  // Conditionally add the "Actions" column if roleName has view only access
+  if (!hasViewOnlyAccess(roleName)) {
+    ListHeader.push({ name: "Actions", sortKey: null });
+  }
+
   return (
     <>
       <h2 className="mb-6">
         <b
           title="Bare Minimum Expenses"
-          className="text-xl font-semibold hover:bg-gray-200 transition duration-500 hover:p-2 p-2 hover:rounded-md cursor-pointer"
+          className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-500 hover:p-2 p-2 hover:rounded-md"
         >
           Bare Minimum Expenses
         </b>
@@ -101,8 +112,9 @@ const MinimumExpense = () => {
           <ContainerTile
             loading={loading}
             // error={error}
+            className={"p-5 mb-5"}
           >
-            <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end ">
+            <div className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] max-sm:grid-cols-1 gap-4">
               <InputText
                 labelName="Expenses"
                 inputName="expensesName"
@@ -135,98 +147,101 @@ const MinimumExpense = () => {
                 placeHolder="200"
                 isValidation={true}
               />
-              <Button
-                buttonIcon={PlusIcon}
-                onClick={handleAddFields}
-                circle={true}
-              />
+              <div className="flex items-end justify-end md:justify-start">
+                <Button
+                  buttonIcon={AddIcon}
+                  onClick={handleAddFields}
+                  circle={true}
+                />
+              </div>
             </div>
           </ContainerTile>
         ) : (
           ""
         )}
 
-        {allExpenseData?.map((expenseData, index) => (
-          <ContainerTile
-            loading={loading}
-            error={error}
-            key={"Expense" + index}
-          >
-            <div
-              key={expenseData.id}
-              className="grid grid-cols-[repeat(4,_minmax(0,_1fr))_120px] gap-4 items-end "
-            >
-              <InputText
-                labelName="Expenses"
-                inputName="expensesName"
-                id={`expense_${expenseData?.id}`}
-                inputValue={expenseData?.expensesName}
-                onChange={(e) => handleChange(e, expenseData?.id)}
-                placeHolder="Food and Living"
-                isValidation={true}
-                isIndex={expenseData.dataIndex}
-              />
-              <InputSelectNew
-                labelName="Type"
-                inputOptions={typeOptions}
-                id={`type_${expenseData?.id}`}
-                inputName="dependantType"
-                inputValue={expenseData?.dependantType}
-                onChange={(selectedOption) =>
-                  handleChange(
-                    null,
-                    expenseData?.id,
-                    "dependantType",
-                    selectedOption
-                  )
-                }
-              />
-              <InputSelectNew
-                labelName="Expenses Frequency"
-                inputOptions={options}
-                id={`frequency_${expenseData?.id}`}
-                inputName="expensesFrequency"
-                inputValue={expenseData?.expensesFrequency}
-                onChange={(selectedOption) =>
-                  handleChange(
-                    null,
-                    expenseData?.id,
-                    "expensesFrequency",
-                    selectedOption
-                  )
-                }
-              />
-              <InputNumber
-                labelName="Bare Min Expense Per Person"
-                inputName="bareMinimum"
-                inputId={`minExpense_${expenseData?.id}`}
-                inputValue={expenseData?.bareMinimum}
-                onChange={(e) => handleChange(e, expenseData?.id)}
-                placeHolder="200"
-                isValidation={true}
-                isIndex={expenseData.dataIndex}
-              />
+        <ListTableClassic
+          ListName="List of Expenses"
+          ListNameLength={allExpenseData?.length}
+          ListHeader={ListHeader}
+        >
+          {allExpenseData?.map((expenseData, index) => (
+            <tr key={"Expense" + index} className="align-top">
+              {/* Expenses Name */}
+              <td className="px-4 py-4 whitespace-nowrap min-w-60">
+                <InputText
+                  labelName=""
+                  inputName="expensesName"
+                  id={`expense_${expenseData?.id}`}
+                  inputValue={expenseData?.expensesName}
+                  onChange={(e) => handleChange(e, expenseData?.id)}
+                  placeHolder="Food and Living"
+                  isValidation={true}
+                  isIndex={expenseData.dataIndex}
+                />
+              </td>
+
+              {/* Type */}
+              <td className="px-4 py-4 whitespace-nowrap min-w-48">
+                <InputSelect
+                  labelName=""
+                  inputOptions={typeOptions}
+                  id={`type_${expenseData?.id}`}
+                  inputName="dependantType"
+                  inputValue={expenseData?.dependantType}
+                  onChange={(e) => handleChange(e, expenseData?.id)}
+                  searchable={true}
+                />
+              </td>
+
+              {/* Expenses Frequency */}
+              <td className="px-4 py-4 whitespace-nowrap min-w-60">
+                <InputSelect
+                  labelName=""
+                  inputName="expensesFrequency"
+                  inputOptions={options}
+                  inputValue={expenseData?.expensesFrequency}
+                  id={`frequency_${expenseData?.id}`}
+                  onChange={(e) => handleChange(e, expenseData?.id)}
+                />
+              </td>
+
+              {/* Bare Min Expense Per Person */}
+              <td className="px-4 py-4 whitespace-nowrap min-w-56">
+                <InputNumber
+                  labelName=""
+                  inputName="bareMinimum"
+                  inputId={`minExpense_${expenseData?.id}`}
+                  inputValue={expenseData?.bareMinimum}
+                  onChange={(e) => handleChange(e, expenseData?.id)}
+                  placeHolder="200"
+                  isValidation={true}
+                  isIndex={expenseData.dataIndex}
+                />
+              </td>
+
+              {/* Actions */}
               {!hasViewOnlyAccessGroup2(roleName) ? (
-                <div className="flex items-center gap-4">
-                  <Button
-                    buttonIcon={CheckCircleIcon}
-                    onClick={() => handleSave(expenseData?.id, index)}
-                    circle={true}
-                    buttonType="secondary"
-                  />
-                  <Button
-                    buttonIcon={TrashIcon}
-                    onClick={() => handleDelete(expenseData?.id, index)}
-                    circle={true}
-                    buttonType="destructive"
-                  />
-                </div>
+                <td className="px-4 py-4 whitespace-nowrap min-w-32">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      buttonIcon={CheckIcon}
+                      onClick={() => handleSave(expenseData?.id, index)}
+                      buttonType="success"
+                    />
+                    <Button
+                      buttonIcon={DeleteIcon}
+                      onClick={() => handleDelete(expenseData?.id, index)}
+                      buttonType="destructive"
+                    />
+                  </div>
+                </td>
               ) : (
-                ""
+                <td className="px-4 py-4 text-gray-400">View Only</td>
               )}
-            </div>
-          </ContainerTile>
-        ))}
+            </tr>
+          ))}
+        </ListTableClassic>
       </div>
     </>
   );

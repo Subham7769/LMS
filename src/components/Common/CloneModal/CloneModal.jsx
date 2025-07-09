@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Button from "../Button/Button";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
+import Modal from "../Modal/Modal";
 
 const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
   const [cloneName, setCloneName] = useState("");
@@ -33,18 +33,27 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="bg-white flex flex-col p-5 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-xl font-semibold">
-          Create Clone of {initialName}{" "}
-        </h2>
+    <>
+      <Modal
+        primaryButtonName={"Create Clone"}
+        primaryOnClick={handleCreateClone}
+        secondaryOnClick={() => {
+          onClose();
+          setCloneName("");
+        }}
+        title={`Clone ${initialName}`}
+      >
         <div>
           <label
             className={`${
-              isValidationError ? "text-red-600" : "text-gray-700"
-            } px-1 text-[14px]`}
+              isValidationError
+                ? "text-red-600"
+                : "text-gray-600 dark:text-gray-400"
+            } px-1 text-sm font-medium mb-1`}
           >
-            {isValidationError ? "Field required" : ""}
+            {isValidationError
+              ? "Field required"
+              : `Enter name for the cloned version`}
           </label>
           <input
             type="text"
@@ -53,37 +62,15 @@ const CloneModal = ({ isOpen, onClose, onCreateClone, initialName }) => {
             value={cloneName}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            className={`block w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
-          ${
-            isValidationError
-              ? "ring-red-600 focus:ring-red-600"
-              : "ring-gray-300 focus:ring-indigo-600"
-          } 
-          sm:text-sm sm:leading-6 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200`}
-            placeholder={"Enter Cloned Name"}
+            className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed 
+          ${isValidationError ? "border-red-300" : ""} 
+          `}
             onFocus={() => setIsValidationError(false)}
             autoFocus
           />
         </div>
-        <div className="flex gap-3 mt-5 justify-center md:justify-end">
-          <Button
-            buttonName={"Cancel"}
-            onClick={() => {
-              onClose();
-              setCloneName("");
-            }}
-            rectangle={true}
-            buttonType="secondary"
-          />
-          <Button
-            buttonName={"Create Clone"}
-            onClick={handleCreateClone}
-            rectangle={true}
-            className={"self-end"}
-          />
-        </div>
-      </div>
-    </div>
+      </Modal>
+    </>
   );
 };
 

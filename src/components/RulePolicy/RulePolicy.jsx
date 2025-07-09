@@ -102,7 +102,7 @@ const RulePolicy = () => {
         <RiskBasedPricingEquation loading={loading} error={error} />
         <RiskBasedPricing loading={loading} error={error} />
         <LengthofService loading={loading} error={error} />
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-4 lg:gap-8">
           <CityCard cityData={cityData} loading={loading} error={error} />
           <OccupationCard
             occupationData={occupationData}

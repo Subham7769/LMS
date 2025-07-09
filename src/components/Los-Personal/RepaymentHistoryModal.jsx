@@ -1,16 +1,15 @@
-import { XCircleIcon, CalendarIcon } from "@heroicons/react/24/outline";
+import { CalendarIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import ListTable from "../Common/ListTable/ListTable";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import Modal from "../Common/Modal/Modal";
 
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
     </div>
   );
 };
@@ -60,8 +59,8 @@ const RepaymentHistoryModal = ({ isOpen, onClose, paymentHistory, loading }) => 
 
   if (loading) {
     return (
-      <div className="fixed z-20 inset-0 bg-stone-200/10 backdrop-blur-sm flex justify-center items-center">
-        <div className="bg-white border  p-8 rounded-xl w-3/4 h-[500px] relative shadow-lg transition-all duration-500 ease-in-out">
+      <div className="fixed z-50 inset-0 bg-gray-900/30 backdrop-blur-sm flex justify-center items-center">
+        <div className="bg-white dark:bg-gray-800 p-5 rounded-xl w-3/4 h-[500px] relative shadow-lg transition-all duration-500 ease-in-out">
           <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
             <ShimmerTable />
             <ShimmerTable />
@@ -73,27 +72,20 @@ const RepaymentHistoryModal = ({ isOpen, onClose, paymentHistory, loading }) => 
   }
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50 backdrop-blur-sm">
-        <div className="relative bg-white flex flex-col w-3/4 rounded-lg shadow-lg p-4">
-          <div
-            onClick={onClose}
-            className="h-9 w-9 z-20 cursor-pointer rounded-full text-white absolute -top-3 -right-3 self-end"
-          >
-            <XCircleIcon className="w-9 h-9" fill="rgb(220 38 38)" />
-          </div>
-          <div className="text-xl font-semibold flex gap-x-2 items-center">
-            <CalendarIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-            Repayment History
-          </div>
-
-          <ListTable
-            ListHeader={listHeader}
-            ListItem={listItems}
-            Divider={true}
-            loading={loading}
-          />
-        </div>
-      </div>
+      <Modal
+        title={"Repayment History"}
+        isFooter={false}
+        secondaryOnClick={onClose}
+        modalWidth="lg:w-3/4"
+      >
+        <ListTable
+          ListHeader={listHeader}
+          ListItem={listItems}
+          Divider={true}
+          loading={loading}
+          Paginated={false}
+        />
+      </Modal>
     </>
   );
 };

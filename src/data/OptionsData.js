@@ -27,23 +27,23 @@ export const interestPeriodOptions = [
 ];
 
 export const tenureOptions = [
-  { value: "CORPORATE", label: "CORPORATE" },
-  { value: "E_COMMERCE", label: "E_COMMERCE" },
-  { value: "CONSUMER", label: "CONSUMER" },
+  { value: "CORPORATE", label: "Corporate" },
+  { value: "E_COMMERCE", label: "E Commerce" },
+  { value: "CONSUMER", label: "Consumer" },
 ];
 
 export const tenureTypeOptions = [
-  { value: "DAY", label: "DAY" },
-  { value: "WEEK", label: "WEEK" },
-  { value: "MONTH", label: "MONTH" },
-  { value: "YEAR", label: "YEAR" },
+  { value: "DAY", label: "Day" },
+  { value: "WEEK", label: "Week" },
+  { value: "MONTH", label: "Month" },
+  { value: "YEAR", label: "Year" },
 ];
 
 export const options = [
-  { value: "DAILY", label: "DAILY" },
-  { value: "WEEKLY", label: "WEEKLY" },
-  { value: "MONTHLY", label: "MONTHLY" },
-  { value: "YEARLY", label: "YEARLY" },
+  { value: "DAILY", label: "Daily" },
+  { value: "WEEKLY", label: "Weekly" },
+  { value: "MONTHLY", label: "Monthly" },
+  { value: "YEARLY", label: "Yearly" },
 ];
 
 export const empOptions = [
@@ -281,4 +281,14 @@ export const upcomingMonths = [
   { label: "Next Month", value: 1 },
   { label: "After 2 Months", value: 2 },
   { label: "After 3 Months", value: 3 },
+];
+
+export const categoryOptions = [
+  { value: "riskBasedPricing", label: "Risk Based Pricing" },
+  { value: "creditScore", label: "Credit Score" },
+  { value: "eligibleTenure", label: "Eligible Tenure" },
+  { value: "dbrConfig", label: "DBR Config" },
+  { value: "approvalConfig", label: "Approval Config" },
+  { value: "dealerCommissions", label: "Dealer Commissions" },
+  { value: "loanProcessing", label: "Loan Processing" },
 ];

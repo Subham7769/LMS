@@ -32,11 +32,13 @@ import {
   getPendingRefundsByField,
 } from "../../../redux/Slices/personalRefundSlice";
 import RejectModal from "../RejectModal";
+import { downloadDocumentFile, previewDocumentFile } from "../../../redux/Slices/personalLoansSlice";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     aging: calculateAging(item?.creationDate),
+    status: convertToTitleCase(item?.status),
   }));
 }
 
@@ -58,8 +60,8 @@ const ApproveRefunds = () => {
   const [selectedBorrowerData, setSelectedBorrowerData] = useState(null);
   const [rejectionReason, setRejectionReason] = useState("");
   // Pagination state
-
   const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     return () => {
@@ -100,6 +102,7 @@ const ApproveRefunds = () => {
   const handleReset = () => {
     setPalSearchBy("");
     setPalSearchValue("");
+    setCurrentPage(0);
     dispatch(
       getPendingRefunds({
         page: 0,
@@ -195,43 +198,43 @@ const ApproveRefunds = () => {
   ];
 
   const columns = [
-    { label: "Refund Application ID", field: "refundApplicationId" },
+    { label: "Refund App. ID", field: "refundApplicationId" },
     { label: "Borrower Name", field: "borrowerName" },
-    { label: "Unique ID", field: "uniqueID" },
-    { label: "Loan ID", field: "loanId" },
+    { label: "Unique ID", field: "uniqueID", copy: true },
+    { label: "Loan ID", field: "loanId", copy: true },
     { label: "Amount", field: "refundAmount" },
     { label: "Status", field: "status" },
     { label: "Aging", field: "aging" },
   ];
 
   const renderExpandedRow = (rowData) => (
-    <div className="text-sm text-gray-600 border-y-2 py-5 px-2">
+    <div className="border-y-2 dark:border-gray-500 py-5 px-2">
       <div className="grid grid-cols-2 gap-4">
-        <div className="shadow-md p-3 rounded-md bg-white border-border-gray-primary border">
-          <div className="flex  justify-between items-baseline mb-3 text-blue-primary">
+        <div className="shadow-md p-3 rounded-md bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60">
+          <div className="flex justify-between items-baseline mb-3 text-sky-800 dark:text-sky-500">
             <div className="text-xl font-semibold flex gap-2 items-center">
               <UserCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
               Borrower Information{" "}
               <p
-                className="text-[10px] text-gray-600 -mb-2 cursor-pointer underline"
+                className="text-[10px] text-gray-600 dark:text-gray-300 -mb-2 cursor-pointer underline"
                 onClick={(e) => handleViewProfile(e, rowData.borrowerId)}
               >
                 View Borrower Profile
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
+          <div className="grid grid-cols-2 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
             <div>
-              <div className="text-gray-500">Employment</div>
+              <div className="">Employment</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.employerName}
               </div>
-              <div className="text-gray-500 font-light text-xs">
+              <div className=" font-light text-xs">
                 {rowData?.borrowerDetails?.employmentDuration}
               </div>
             </div>
             <div>
-              <div className="text-gray-500">Monthly Income</div>
+              <div className="">Monthly Income</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.monthlyIncome}
               </div>
@@ -239,19 +242,19 @@ const ApproveRefunds = () => {
           </div>
           <div className="grid grid-cols-3">
             <div>
-              <div className="text-gray-500">Credit Score</div>
+              <div className="">Credit Score</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.creditScore}
               </div>
             </div>
             <div>
-              <div className="text-gray-500">Active Loans</div>
+              <div className="">Active Loans</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.activeLoans}
               </div>
             </div>
             <div>
-              <div className="text-gray-500">Payment History</div>
+              <div className="">Payment History</div>
               <div className="font-semibold">
                 {rowData?.borrowerDetails?.paymentHistory}
               </div>
@@ -261,22 +264,24 @@ const ApproveRefunds = () => {
         <CardInfo
           cardIcon={CurrencyDollarIcon}
           cardTitle="Refund Information"
-          className={"bg-white border-border-gray-primary border"}
-          colorText={"text-blue-primary"}
+          className={
+            "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
+          }
+          colorText={"text-sky-800 dark:text-sky-500"}
         >
-          <div className="grid grid-cols-2 border-b border-border-gray-primary pb-3 mb-3">
+          <div className="grid grid-cols-2 border-b border-gray-300 dark:border-gray-500 pb-3 mb-3">
             <div>
-              <div className="text-gray-500">Cause of Refund</div>
+              <div className="">Cause of Refund</div>
               <div className="font-semibold">{rowData?.causeOfRefund}</div>
             </div>
             <div>
-              <div className="text-gray-500">Related PaySlip Month</div>
+              <div className="">Related PaySlip Month</div>
               <div className="font-semibold">{rowData.relatedPaySlipMonth}</div>
             </div>
           </div>
         </CardInfo>
       </div>
-      <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
+      <div className="p-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md my-5">
         <div className="font-semibold text-xl mb-3">
           Verified Documents{" "}
           <span className="font-light text-xs">
@@ -295,8 +300,10 @@ const ApproveRefunds = () => {
         </div>
       </div>
       {rowData?.refundActionDetailsList && (
-        <div className="bg-white p-3 shadow rounded-md my-5 border-border-gray-primary border">
-          <div className="font-semibold text-xl mb-3">Loan Action History</div>
+        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60 text-gray-800 dark:text-gray-100 rounded-lg shadow-md p-3 my-5">
+          <div className="font-semibold text-xl mb-3">
+            Refund Action History
+          </div>
           {rowData?.refundActionDetailsList.map((action, index) => {
             const actionKeys = Object.keys(action);
             let sentence = "";
@@ -316,14 +323,17 @@ const ApproveRefunds = () => {
                 const formattedDate = dateKey
                   ? `on ${convertDate(new Date(action[dateKey]))}`
                   : "";
-                sentence = `Loan has been ${convertToReadableString(
+                sentence = `Refund has been ${convertToReadableString(
                   key.replace("By", "")
                 )} By ${role} ${formattedDate}`;
               }
             });
 
             return (
-              <div key={index} className="border-b pb-2 mb-2">
+              <div
+                key={index}
+                className="border-b dark:border-gray-500 pb-2 mb-2"
+              >
                 <p>{sentence}</p>
               </div>
             );
@@ -334,14 +344,12 @@ const ApproveRefunds = () => {
         <Button
           buttonName={"Download Refund Form"}
           onClick={() => handleRefundForm(rowData.refundProcessId)}
-          rectangle={true}
           buttonIcon={NewspaperIcon}
           buttonType="tertiary"
         />
         <Button
           buttonName={"View Documents"}
           onClick={() => handleViewDocuments(rowData.documents)}
-          rectangle={true}
           buttonIcon={FiInfo}
           buttonType="tertiary"
         />
@@ -350,14 +358,13 @@ const ApproveRefunds = () => {
             <Button
               buttonName={"Reject"}
               onClick={() => handleReject(rowData)}
-              rectangle={true}
               buttonIcon={FiXCircle}
               buttonType="destructive"
             />
             <Button
               buttonName={"Approve"}
               onClick={() => handleApprove(rowData)}
-              rectangle={true}
+              buttonType="success"
               buttonIcon={FiCheckCircle}
             />
           </>
@@ -388,8 +395,10 @@ const ApproveRefunds = () => {
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
+      <ContainerTile
+        className={`p-5 md:flex justify-between gap-5 align-middle`}
+      >
+        <div className="w-full md:w-[45%] mb-2">
           <InputSelect
             labelName="Search By"
             inputName="palSearchBy"
@@ -400,7 +409,7 @@ const ApproveRefunds = () => {
             isValidation={true}
           />
         </div>
-        <div className="w-[45%]">
+        <div className="w-full md:w-[45%]">
           <InputText
             labelName="Enter Value"
             inputName="palSearchValue"
@@ -411,18 +420,16 @@ const ApproveRefunds = () => {
           />
         </div>
 
-        <div className="flex align-middle gap-5">
+        <div className="flex align-middle gap-5 justify-end">
           <Button
             buttonName={"Search"}
             onClick={handleSearch}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="secondary"
           />
           <Button
             buttonName={"Reset"}
             onClick={handleReset}
-            rectangle={true}
             className={`mt-4 h-fit self-center`}
             buttonType="tertiary"
           />
@@ -433,11 +440,15 @@ const ApproveRefunds = () => {
         data={filteredApproveLoansData}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
+        ListName="List of pending refunds"
+        ListNameLength={approveRefundTotalElements}
       />
       <Pagination
         totalElements={approveRefundTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
       />
       <RejectModal
         isOpen={showModal}
@@ -451,6 +462,8 @@ const ApproveRefunds = () => {
         isOpen={showDocumentsModal}
         onClose={closeViewDocumentModal}
         documents={documentsData}
+        downloadDocumentFile={downloadDocumentFile}
+        previewDocumentFile={previewDocumentFile}
       />
       {isViewPopupOpen && selectedBorrowerData && (
         <ViewBorrowerDetailsModal

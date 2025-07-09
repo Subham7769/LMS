@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "../../Common/Button/Button";
 import {
   updateBorrowerUpdateField,
@@ -20,17 +20,19 @@ import { nanoid } from "nanoid";
 import { draftBorrowerInfo } from "../../../redux/Slices/personalBorrowersSlice";
 import { toast } from "react-toastify";
 import flattenToSimpleObject from "../../../utils/flattenToSimpleObject";
+import { fieldToSectionMapPersonalBorrowers } from "../../../data/fieldSectionMapData";
 
 const UpdateBorrower = () => {
-  const { updateBorrowerData, error, loading } = useSelector(
+  const { updateBorrowerData, loading } = useSelector(
     (state) => state.personalBorrowers
   );
   const dispatch = useDispatch();
   const { uid, borrowerProfileDraftId } = useParams();
   const navigate = useNavigate();
+  const sectionRefs = useRef({});
 
-  console.log(uid)
-  console.log(Object.keys(updateBorrowerData).length === 0)
+  // console.log(uid);
+  // console.log(Object.keys(updateBorrowerData).length === 0);
 
   useEffect(() => {
     if (uid && Object.keys(updateBorrowerData).length === 0) {
@@ -38,16 +40,19 @@ const UpdateBorrower = () => {
     }
   }, [dispatch, uid]);
 
-
   const handleDraftUpdate = async () => {
     try {
       const addDraftBorrowerData = {
         borrowerType: "PERSONAL_BORROWER",
-        borrowerProfileDraftId: (borrowerProfileDraftId ? borrowerProfileDraftId : nanoid()),
+        borrowerProfileDraftId: borrowerProfileDraftId
+          ? borrowerProfileDraftId
+          : nanoid(),
         personalBorrowerProfileDraft: { ...updateBorrowerData },
       };
-      if (addDraftBorrowerData.personalBorrowerProfileDraft.personalDetails.firstName !== "") {
-
+      if (
+        addDraftBorrowerData.personalBorrowerProfileDraft.personalDetails
+          .firstName !== ""
+      ) {
         // Wait for draftBorrowerInfo to complete successfully
         await dispatch(draftBorrowerInfo(addDraftBorrowerData)).unwrap();
 
@@ -61,7 +66,9 @@ const UpdateBorrower = () => {
         );
 
         // Navigate to the new borrower page
-        navigate(`/loan/loan-origination-system/personal/borrowers/add-borrower`);
+        navigate(
+          `/loan/loan-origination-system/personal/borrowers/add-borrower`
+        );
 
         // Reset borrower data
         dispatch(resetUpdateBorrowerData());
@@ -81,17 +88,23 @@ const UpdateBorrower = () => {
     // Access the updated state directly using getState
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
+
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapPersonalBorrowers[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      console.log(sectionRefs);
+      console.log(ref);
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
     if (isValid) {
       await dispatch(
         updateBorrowerInfo({ borrowerData: restUpdateBorrowerData, uid })
       ).unwrap();
-      dispatch(
-        fetchAllBorrowersByType({
-          page: 0,
-          size: 20,
-          borrowerType: "PERSONAL_BORROWER",
-        })
-      );
       navigate(
         `/loan/loan-origination-system/personal/borrowers/view-borrower`
       );
@@ -107,13 +120,25 @@ const UpdateBorrower = () => {
     // Access the updated state directly using getState
     const state = store.getState(); // Ensure 'store' is imported from your Redux setup
     const isValid = state.validation.isValid; // Adjust based on your state structure
+    const firstInvalidKey = Object.keys(state.validation.validationError).find(
+      (key) => state.validation.validationError[key]
+    );
 
+    if (firstInvalidKey) {
+      const sectionName = fieldToSectionMapPersonalBorrowers[firstInvalidKey];
+      const ref = sectionRefs.current[sectionName];
+      console.log(sectionRefs);
+      console.log(ref);
+      if (ref?.scrollIntoView) {
+        ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
     if (isValid) {
       let addBorrowerData = {};
       if (borrowerProfileDraftId) {
-        addBorrowerData = { ...updateBorrowerData, borrowerProfileDraftId }
+        addBorrowerData = { ...updateBorrowerData, borrowerProfileDraftId };
       } else {
-        addBorrowerData = updateBorrowerData
+        addBorrowerData = updateBorrowerData;
       }
       dispatch(registerBorrower(addBorrowerData))
         .unwrap()
@@ -141,21 +166,22 @@ const UpdateBorrower = () => {
         handleChangeReducer={updateBorrowerUpdateField}
         handleFileReset={resetBorrowerFile}
         handleFileUpload={uploadBorrowerPhotoFile}
+        sectionRefs={sectionRefs}
       />
-      <div className="flex justify-end gap-5 col-span-4 mx-10">
+      <div className="flex justify-end gap-5 col-span-4">
         <Button
           buttonName="Cancel"
           onClick={handleCancel}
-          rectangle={true}
-          className={"bg-red-500 hover:bg-red-600"}
+          buttonType={"destructive"}
           loading={loading}
         />
-        {uid && <Button
-          buttonName="Update"
-          onClick={() => handleUpdateBorrower(uid)}
-          rectangle={true}
-          loading={loading}
-        />}
+        {uid && (
+          <Button
+            buttonName="Update"
+            onClick={() => handleUpdateBorrower(uid)}
+            loading={loading}
+          />
+        )}
         {borrowerProfileDraftId && (
           <>
             <Button
@@ -172,8 +198,7 @@ const UpdateBorrower = () => {
               loading={loading}
             />
           </>
-        )
-        }
+        )}
       </div>
     </>
   );

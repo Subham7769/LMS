@@ -16,7 +16,7 @@ import {
 // Read-only DisplayField component with styling
 const DisplayField = ({ label, value }) => (
   <div className="flex flex-col p-3">
-    <div className="text-gray-500">{label}</div>
+    <div className="">{label}</div>
     <div className="font-semibold">{value || "-"}</div>
   </div>
 );
@@ -25,7 +25,7 @@ const DisplayField = ({ label, value }) => (
 const renderDisplayDetails = (
   details,
   config,
-  className = "grid grid-cols-3 gap-4 text-sm"
+  className = "grid md:grid-cols-3 gap-4 text-sm"
 ) => (
   <div className={className}>
     {config.map((field, index) => (
@@ -41,28 +41,17 @@ const renderDisplayDetails = (
 );
 
 const BorrowerModal = ({ children, onClose }) => (
-  <div className="fixed inset-0 flex items-center justify-center z-50">
-    {/* Backdrop */}
-    <div
-      className="fixed inset-0 bg-gray-600 opacity-75"
-      onClick={onClose}
-    ></div>
-
+  <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-gray-900/30 backdrop-blur-sm">
     {/* Modal Container */}
-    <div
-      className="bg-white rounded-lg shadow-lg z-50 pr-10 pt-4 pb-4 pl-4 max-w-4xl w-full 
-                    relative h-[90vh] flex flex-col"
-    >
+    <div className="relative bg-white dark:bg-gray-800 flex flex-col w-3/4 rounded-lg shadow-lg p-4">
       {/* The "X" close button */}
-      <button
+      <XMarkIcon
         onClick={onClose}
-        className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-      >
-        <XMarkIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-      </button>
-
+        className="absolute top-1 right-1 h-6 w-6 cursor-pointer text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400"
+      />
+      <h2 className="text-xl font-bold mb-4">Borrower Details</h2>
       {/* Scrollable Content */}
-      <div className="overflow-y-auto flex-grow p-4">{children}</div>
+      <div className="overflow-auto h-[400px]">{children}</div>
     </div>
   </div>
 );
@@ -404,7 +393,7 @@ const ViewBorrowerDetailsModal = ({ onClose, uid }) => {
       labelName: "NRC No.",
       inputName: "kinNrcNo",
     },
-    { labelName: "Address", inputName: "address", className: "col-span-3" },
+    { labelName: "Address", inputName: "address", className: "md:col-span-3" },
     {
       labelName: "Gender",
       inputName: "kinGender",
@@ -412,7 +401,7 @@ const ViewBorrowerDetailsModal = ({ onClose, uid }) => {
     {
       labelName: "Relationship",
       inputName: "kinRelationship",
-      className: "col-span-2",
+      className: "md:col-span-2",
     },
     {
       labelName: "Mobile 1",
@@ -482,7 +471,6 @@ const ViewBorrowerDetailsModal = ({ onClose, uid }) => {
 
   return (
     <BorrowerModal onClose={onClose}>
-      <h2 className="text-xl font-bold mb-4">Borrower Details</h2>
       <div className="grid grid-cols-1 pb-3 mb-3">
         <Accordion
           heading="Personal Details"
@@ -501,7 +489,7 @@ const ViewBorrowerDetailsModal = ({ onClose, uid }) => {
             renderDisplayDetails(
               BorrowerData.contactDetails,
               contactDetailsConfig,
-              "grid grid-cols-2 gap-4 text-sm"
+              "grid md:grid-cols-2 gap-4 text-sm"
             )
           }
         />

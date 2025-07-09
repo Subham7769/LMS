@@ -2,9 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../../Common/Stepper/Stepper";
+import Button from "../../Common/Button/Button";
 import { useActiveTab } from "../ActiveTabContext";
 import { useDispatch } from "react-redux";
 import { validatePreEligibilityOtp } from "../../../redux/Slices/ProductTestingKSA";
+import { toast } from "react-toastify";
 
 // API for OTP validation
 
@@ -56,26 +58,29 @@ const Step1OtpVerification = ({ onNext, onBack }) => {
 
   const handleContinue = async () => {
     if (otpValues.some((d) => d === "")) {
-      alert("Please enter the full 6-digit code.");
+      toast.warn("Please enter the full 6-digit code.");
       return;
     }
     const code = otpValues.join("");
     // TODO: verify OTP via API
-    await dispatch(validatePreEligibilityOtp({ userId, otp: otpValues.join("") }))
+    // await dispatch(validatePreEligibilityOtp({ userId, otp: otpValues.join("") }))
     onNext()
   };
 
   return (
-    <div className="p-6 mx-auto bg-white rounded-xl shadow-md">
-
+    <>
       {/* Stepper */}
-      <Stepper title={"KSA Financing"} currentStep={3} steps={["Welcome", "Personal Info", "OTP Verification", "Completion"]} />
+      <Stepper
+        title={"KSA Financing"}
+        currentStep={3}
+        steps={["Welcome", "Personal Info", "OTP Verification", "Completion"]}
+      />
 
       {/* OTP Box */}
       <div className="text-center mb-6">
-        <Lock className="w-8 h-8 text-teal-600 mx-auto mb-3" />
+        <Lock className="w-8 h-8 text-violet-500 mx-auto mb-3" />
         <h2 className="text-lg font-semibold mb-1">Verify OTP</h2>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           Enter the code we sent to +966 5XXXXXXXX
         </p>
 
@@ -91,45 +96,42 @@ const Step1OtpVerification = ({ onNext, onBack }) => {
               onChange={(e) => handleChange(e, idx)}
               onKeyDown={(e) => handleKeyDown(e, idx)}
               ref={(el) => (inputsRef.current[idx] = el)}
-              className="w-10 h-10 border rounded-md text-center text-lg font-medium focus:outline-none"
+              className="w-10 h-10 dark:bg-gray-600 border rounded-md text-center text-lg font-medium focus:outline-none"
             />
           ))}
         </div>
 
         {/* Timer & Resend */}
-        <div className="flex justify-center items-center text-sm text-gray-500 mb-4">
-          <span>Code expires in {minutes}:{seconds}</span>
+        <div className="flex justify-center items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <span>
+            Code expires in {minutes}:{seconds}
+          </span>
           <button
             onClick={handleResend}
             disabled={secondsLeft === 180}
-            className="ml-2 text-teal-600 font-medium disabled:text-gray-300"
+            className="ml-2 text-violet-500 font-medium disabled:text-gray-300"
           >
             Resend Code
           </button>
         </div>
 
         {/* Info box */}
-        <div className="bg-blue-50 border-l-4 border-teal-300 p-4 text-sm text-gray-700">
-          The one-time password (OTP) has been sent to your mobile number for verification. If you didn’t receive it, check your number and click “Resend Code”.
+        <div className="bg-violet-700/20 border-l-4 border-violet-300 p-4 text-sm">
+          The one-time password (OTP) has been sent to your mobile number for
+          verification. If you didn’t receive it, check your number and click
+          “Resend Code”.
         </div>
       </div>
 
       {/* Navigation Buttons */}
       <div className="flex justify-between items-center">
-        <button
-          onClick={handleBack}
-          className="text-gray-500 text-sm"
-        >
-          Back
-        </button>
-        <button
+        <Button buttonName="Back" buttonType="secondary" onClick={handleBack} />
+        <Button
+          buttonName="Continue"
           onClick={handleContinue}
-          className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition"
-        >
-          Continue
-        </button>
+        />
       </div>
-    </div>
+    </>
   );
 };
 

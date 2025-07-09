@@ -5,7 +5,7 @@ export async function createNewProduct(
   navigateFail
 ) {
   try {
-    navigate(navigateSuccess + Name);
+    navigate(`${navigateSuccess}${Name}/product-config`);
   } catch (error) {
     console.error(error);
   }

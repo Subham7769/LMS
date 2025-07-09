@@ -11,10 +11,10 @@ import formatNumber from "../../../utils/formatNumber";
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
     </div>
   );
 };
@@ -68,32 +68,32 @@ const LoanAgreementPrint = () => {
 
   return (
     <>
-      <div className={"flex flex-col justify-center align-middle gap-2"}>
+      <div className={"flex flex-col justify-center align-middle gap-1"}>
         <div className="flex w-full items-center relative">
           <div className="absolute left-0 top-0">
             <img src={longHornLogo} className="w-32" />
           </div>
           <div className="font-semibold text-center flex-1">
-            <div className="text-center mb-1">LOAN AGREEMENT - PART A</div>
+            <div className="text-center mb-1 text-sm">LOAN AGREEMENT - PART A</div>
             <div className="text-xs">
               Borrower ID: {personalDetails?.customerId} &nbsp;&nbsp; Loan ID:{" "}
               {loanDetails?.loanId}
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 border-2 border-gray-500 text-xs">
+        <div className="grid grid-cols-2 border-2 border-gray-500 text-[11px]">
           <div className="border-r border-gray-500">
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-600">
               PERSONAL DETAILS
             </div>
             <div className="grid grid-cols-2">
-              <div className="border-r border-border-gray-primary">
+              <div className="border-r border-gray-300">
                 {Object.keys(personalDetails)
                   .filter((key) => key !== "customerId")
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pl-1 pt-1"
+                      className="border-b border-gray-300 pl-1 pt-1"
                     >
                       {convertToReadableString(key)}
                     </div>
@@ -105,24 +105,24 @@ const LoanAgreementPrint = () => {
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                      className="border-b border-gray-300 pr-1 pt-1 text-right"
                     >
                       &nbsp;{personalDetails[key]}
                     </div>
                   ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-600">
               BANK DETAILS
             </div>
             <div className="grid grid-cols-2">
-              <div className="border-r border-border-gray-primary">
+              <div className="border-r border-gray-300">
                 {Object.keys(bankDetails)
                   .filter((key) => key !== "swift" && key !== "tpin")
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pl-1 pt-1"
+                      className="border-b border-gray-300 pl-1 pt-1"
                     >
                       {convertToReadableString(key)}
                     </div>
@@ -134,30 +134,30 @@ const LoanAgreementPrint = () => {
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                      className="border-b border-gray-300 pr-1 pt-1 text-right"
                     >
                       &nbsp;{bankDetails[key]}
                     </div>
                   ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-600">
               REASON FOR BORROWING
             </div>
-            <div className="border-b border-border-gray-primary pl-1">
+            <div className="border-b border-gray-300 pl-1">
               &nbsp;{reasonForBorrowing}
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-600">
               LOAN DETAILS
             </div>
             <div className="grid grid-cols-2">
-              <div className="border-r border-border-gray-primary">
+              <div className="border-r border-gray-300">
                 {Object.keys(loanDetails)
                   .filter((key) => key !== "loanId")
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pl-1 pt-1"
+                      className="border-b border-gray-300 pl-1 pt-1"
                     >
                       {convertToReadableString(key)}
                     </div>
@@ -169,7 +169,7 @@ const LoanAgreementPrint = () => {
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                      className="border-b border-gray-300 pr-1 pt-1 text-right"
                     >
                       &nbsp;
                       {typeof loanDetails[key] === "number"
@@ -179,17 +179,17 @@ const LoanAgreementPrint = () => {
                   ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-600">
               LOAN OFFICER <br></br> DETAILS
             </div>
             <div className="grid grid-cols-2">
-              <div className="border-r border-border-gray-primary">
+              <div className="border-r border-gray-300">
                 {Object.keys(loanOfficerDetails)
                   .filter((key) => key !== "agentName" && key !== "agentCode")
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pl-1 pt-1"
+                      className="border-b border-gray-300 pl-1 pt-1"
                     >
                       {convertToReadableString(key)}
                     </div>
@@ -201,48 +201,48 @@ const LoanAgreementPrint = () => {
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                      className="border-b border-gray-300 pr-1 pt-1 text-right"
                     >
                       &nbsp;{loanOfficerDetails[key]}
                     </div>
                   ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500"></div>
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-600"></div>
             <div className="grid grid-cols-2 mb-5">
-              <div className="border-r border-border-gray-primary">
-                <div className="border-b border-border-gray-primary pl-1 pt-1">
+              <div className="border-r border-gray-300">
+                <div className="border-b border-gray-300 pl-1 pt-1">
                   Agent's Full Name
                 </div>
-                <div className="border-b border-border-gray-primary pl-1 pt-1">
+                <div className="border-b border-gray-300 pl-1 pt-1">
                   Agent Code
                 </div>
               </div>
               <div>
-                <div className="border-b border-border-gray-primary pr-1 pt-1 text-right">
+                <div className="border-b border-gray-300 pr-1 pt-1 text-right">
                   &nbsp;{loanOfficerDetails?.agentName}
                 </div>
-                <div className="border-b border-border-gray-primary pr-1 pt-1 text-right">
+                <div className="border-b border-gray-300 pr-1 pt-1 text-right">
                   &nbsp;{loanOfficerDetails?.agentCode}
                 </div>
               </div>
             </div>
           </div>
           <div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-600">
               CONTACT DETAILS
             </div>
-            <div className="grid grid-cols-[45%,55%] ">
-              <div className="border-r border-border-gray-primary">
+            <div className="grid grid-cols-[45%_55%]">
+              <div className="border-r border-gray-300">
                 {Object.keys(contactDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-border-gray-primary pl-1 pt-1"
+                    className="border-b border-gray-300 pl-1 pt-1"
                   >
                     {convertToReadableString(key)}
                   </div>
                 ))}
-                <div className="border-b border-border-gray-primary pl-1 pt-1">
+                <div className="border-b border-gray-300 pl-1 pt-1">
                   &nbsp;
                 </div>
               </div>
@@ -250,22 +250,22 @@ const LoanAgreementPrint = () => {
                 {Object.keys(contactDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                    className="border-b border-gray-300 pr-1 pt-1 text-right"
                   >
                     &nbsp;{contactDetails[key]}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-600">
               EMPLOYMENT DETAILS
             </div>
-            <div className="grid grid-cols-[45%,55%]">
-              <div className="border-r border-border-gray-primary">
+            <div className="grid grid-cols-[45%_55%]">
+              <div className="border-r border-gray-300">
                 {Object.keys(employmentDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-border-gray-primary pl-1 pt-1"
+                    className="border-b border-gray-300 pl-1 pt-1"
                   >
                     {convertToReadableString(key)}
                   </div>
@@ -275,30 +275,30 @@ const LoanAgreementPrint = () => {
                 {Object.keys(employmentDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                    className="border-b border-gray-300 pr-1 pt-1 text-right"
                   >
                     &nbsp;{employmentDetails[key]}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-600">
               NEXT OF KIN DETAILS
             </div>
-            <div className="grid grid-cols-[45%,55%]">
-              <div className="border-r border-border-gray-primary">
+            <div className="grid grid-cols-[45%_55%]">
+              <div className="border-r border-gray-300">
                 {Object.keys(nextOfKinDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-border-gray-primary pl-1 pt-1"
+                    className="border-b border-gray-300 pl-1 pt-1"
                   >
                     {convertToReadableString(key)}
                   </div>
                 ))}
-                <div className="border-b border-border-gray-primary pl-1 pt-1">
+                <div className="border-b border-gray-300 pl-1 pt-1">
                   &nbsp;
                 </div>
-                <div className="border-b border-border-gray-primary pl-1 pt-1">
+                <div className="border-b border-gray-300 pl-1 pt-1">
                   &nbsp;
                 </div>
               </div>
@@ -306,34 +306,34 @@ const LoanAgreementPrint = () => {
                 {Object.keys(nextOfKinDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                    className="border-b border-gray-300 pr-1 pt-1 text-right"
                   >
                     &nbsp;{nextOfKinDetails[key]}
                   </div>
                 ))}
-                <div className="border-b border-border-gray-primary pl-1 pt-1">
+                <div className="border-b border-gray-300 pl-1 pt-1">
                   &nbsp;
                 </div>
-                <div className="border-b border-border-gray-primary pl-1 pt-1">
+                <div className="border-b border-gray-300 pl-1 pt-1">
                   &nbsp;
                 </div>
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-600">
               LOAN AGREEMENT AND DISBURSEMENT ACKNOWLEDGEMENT BY BORROWER
             </div>
             <div className="grid grid-cols-2">
-              <div className="border-r border-border-gray-primary">
+              <div className="border-r border-gray-300">
                 {Object.keys(customerDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-border-gray-primary pl-1 pt-1"
+                    className="border-b border-gray-300 pl-1 pt-1"
                   >
                     {convertToReadableString(key)}
                   </div>
                 ))}
                 <div className="border-b border-white pl-1 pt-1">Signature</div>
-                <div className="border-b border-border-gray-primary pl-1 pt-1">
+                <div className="border-b border-gray-300 pl-1 pt-1">
                   &nbsp;
                 </div>
               </div>
@@ -341,14 +341,14 @@ const LoanAgreementPrint = () => {
                 {Object.keys(customerDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                    className="border-b border-gray-300 pr-1 pt-1 text-right"
                   >
                     &nbsp;{customerDetails[key]}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-red-500"></div>
+            <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-red-600"></div>
             <div className="text-gray-400 pt-5 px-2 font-light">
               Official Stamp
             </div>

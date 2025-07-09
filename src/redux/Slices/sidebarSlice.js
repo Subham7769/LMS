@@ -92,7 +92,7 @@ export const fetchAffordibilityData = createAsyncThunk(
       return data.map(({ name, affordabilityCriteriaTempId }) => ({
         name: name.replace(/-/g, " "),
         href: "/loan/affordability/" + affordabilityCriteriaTempId,
-        default: name === "CRITERIA_DEFAULT_TEMP"
+        default: name === "CRITERIA_DEFAULT_TEMP",
       }));
     };
     try {
@@ -111,6 +111,25 @@ export const fetchLoanApprovalData = createAsyncThunk(
       return data.map(({ name, approvalsConfigurationsTempId }) => ({
         name: name.replace(/-/g, " "),
         href: "/loan/loan-approval/" + approvalsConfigurationsTempId,
+      }));
+    };
+    try {
+      return await useFetchData(url, transformData);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchDrlRulesetData = createAsyncThunk(
+  "fetchDrlRulesetData",
+  async (_, { rejectWithValue }) => {
+    const url = `${import.meta.env.VITE_DRULES_READ_ALL_RULESET}`;
+    const transformData = (data) => {
+      return data.map(({ name, droolsRuleSetId, description }) => ({
+        name: name?.replace(/-/g, " ") || "No Name",
+        href: "/loan/drl-ruleset/" + droolsRuleSetId + "/basic-info",
+        description: description || "No description available",
       }));
     };
     try {
@@ -165,7 +184,7 @@ export const fetchProjectData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, projectId }) => ({
         name,
-        href: "/loan/project/" + projectId,
+        href: "/loan/project/" + projectId + "/basic-details",
       }));
     };
     try {
@@ -190,7 +209,7 @@ export const fetchProductData = createAsyncThunk(
           interestEligibleTenure,
         }) => ({
           name: convertToTitleCase(productType),
-          href: `/loan/loan-product/${productType}/loan-product-config/${projectId}/${loanProductId}`,
+          href: `/loan/loan-product/${productType}/${projectId}/${loanProductId}/product-config`,
           customerType: convertToTitleCase(eligibleCustomerType),
           loanSchema: projectId,
           eligbleTenure: interestEligibleTenure.length,
@@ -214,7 +233,7 @@ export const fetchCreditScoreEligibleTenureData = createAsyncThunk(
     const transformData = (data) => {
       return data.map(({ name, creditScoreEtTempId }) => ({
         name: name.replace(/-/g, " "),
-        href: "/loan/credit-score-eligible-tenure/" + creditScoreEtTempId,
+        href: "/loan/eligible-tenure/" + creditScoreEtTempId,
       }));
     };
     try {
@@ -400,6 +419,11 @@ const ROLE_MAKER_ADMIN = [
   "Business Rule",
   "Global Config",
   "Decision Engine",
+  "DRL Ruleset",
+  "Employer",
+  "Banks",
+  "Approval Config",
+  "Document Config",
 ];
 const ROLE_CHECKER_ADMIN = [
   "Home",
@@ -417,6 +441,7 @@ const ROLE_CHECKER_ADMIN = [
   "Business Rule",
   "Global Config",
   "Decision Engine",
+  "DRL Ruleset",
 ];
 const ROLE_TECHNICAL = ["Customer Care", "Product Testing", "General Ledger"];
 const ROLE_VIEWER = [
@@ -440,6 +465,7 @@ const ROLE_VIEWER = [
   "Customer Care",
   "General Ledger",
   "Decision Engine",
+  "DRL Ruleset",
   "Reporting Config",
   "Reports",
 ];
@@ -449,6 +475,7 @@ const ROLE_LOAN_OFFICER = [
   "Recovery",
   "Affordability",
   "Employer",
+  "Banks",
   "Approval Config",
   "Document Config",
   "TCL",
@@ -461,10 +488,12 @@ const ROLE_LOAN_OFFICER = [
   "Product Group",
   "Customer Care",
   "Decision Engine",
+  "DRL Ruleset",
   "Reporting Config",
   "Reports",
   "SME Loans",
   "Personal Loans",
+  "Banks",
 ];
 
 const initialState = {
@@ -835,6 +864,27 @@ const sidebarSlice = createSlice({
         state.menus = updatedMenus;
       })
       .addCase(fetchLoanApprovalData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        toast.error(`API Error : ${action.error.message}`);
+      })
+
+      .addCase(fetchDrlRulesetData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDrlRulesetData.fulfilled, (state, action) => {
+        state.loading = false;
+        const submenuItems = action.payload;
+        const updatedMenus = state.menus.map((menu) => {
+          if (menu.title === "DRL Ruleset") {
+            return { ...menu, submenuItems };
+          }
+          return menu;
+        });
+        state.menus = updatedMenus;
+      })
+      .addCase(fetchDrlRulesetData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
         toast.error(`API Error : ${action.error.message}`);

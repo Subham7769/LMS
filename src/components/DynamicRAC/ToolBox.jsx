@@ -1,18 +1,19 @@
 import { useDispatch } from "react-redux";
-import { addRule } from "../../redux/Slices/dynamicRacSlice";
-import { useState, useEffect } from "react";
+import { removeTag } from "../../redux/Slices/dynamicRacSlice";
+import {useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import InputSelect from "../Common/InputSelect/InputSelect";
 import InputTextMulti from "../Common/InputTextMulti/InputTextMulti";
 import InputCheckbox from "../Common/InputCheckbox/InputCheckbox";
 import Button from "../Common/Button/Button";
-import HoverButton from "../Common/HoverButton/HoverButton";
 import InputNumber from "../Common/InputNumber/InputNumber";
-import { operatorOptions, conditionsOptions, trueFalseOptions } from "../../data/OptionsData";
+import {
+  conditionsOptions,
+  trueFalseOptions,
+} from "../../data/OptionsData";
 import {
   XMarkIcon,
   PlusIcon,
-  ArchiveBoxArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
 import store from "../../redux/store";
@@ -29,14 +30,16 @@ import {
   fetchDynamicRacDetails,
 } from "../../redux/Slices/dynamicRacSlice";
 import getConditionForOperators from "./getConditionForOperators";
+import Modal from "../Common/Modal/Modal";
+import convertToReadableString from "../../utils/convertToReadableString";
 
-const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
+const Toolbox = ({ isOpen, sectionId, sectionName, onClose, isEditMode }) => {
   const { racId } = useParams();
   const dispatch = useDispatch();
-  const { racConfig, optionsList } = useSelector((state) => state.dynamicRac);
-  const { sections } = racConfig;
+  const { currentRule, optionsList } = useSelector((state) => state.dynamicRac);
   const userName = localStorage.getItem("username");
-  const { firstOperator, secondOperator, numberCriteriaRangeList } = rule || {};
+  const { firstOperator, secondOperator, numberCriteriaRangeList } =
+    currentRule || {};
 
   const initialState = {
     fieldType: "",
@@ -83,25 +86,35 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
   const initialMaxValue = Number(import.meta.env.VITE_MIN_MAX_LIMIT);
 
   const [equalValue, setEqualValue] = useState(0);
-  const [minValue, setMinValue] = useState(rule ? minimum : initialMinValue);
-  const [maxValue, setMaxValue] = useState(rule ? maximum : initialMaxValue);
+  const [minValue, setMinValue] = useState(
+    currentRule ? minimum : initialMinValue
+  );
+  const [maxValue, setMaxValue] = useState(
+    currentRule ? maximum : initialMaxValue
+  );
   const [condition, setCondition] = useState(
-    rule
+    currentRule
       ? getConditionForOperators(
-        firstOperator,
-        secondOperator,
-        minimum,
-        maximum
-      )
+          firstOperator,
+          secondOperator,
+          minimum,
+          maximum
+        )
       : ""
   );
-  const [ruleConfig, setRuleConfig] = useState(
-    isEditMode ? rule : initialState
-  );
+  const [ruleConfig, setRuleConfig] = useState(initialState);
+
+  useEffect(() => {
+    if (isEditMode && currentRule) {
+      setRuleConfig(currentRule);
+    } else {
+      setRuleConfig(initialState);
+    }
+  }, [currentRule, isEditMode]);
 
   useEffect(() => {
     // Update condition whenever any of the values change
-    if (rule) {
+    if (currentRule) {
       const newCondition = getConditionForOperators(
         firstOperator,
         secondOperator,
@@ -114,16 +127,16 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
 
   useEffect(() => {
     if (condition === "Less than" || condition === "Less than or equal to") {
-      setMaxValue(rule ? maximum : 0); // Reset maxValue when condition is set
+      setMaxValue(currentRule ? maximum : 0); // Reset maxValue when condition is set
       setMinValue(initialMinValue);
     } else if (
       condition === "Greater than" ||
       condition === "Greater than or equal to"
     ) {
-      setMinValue(rule ? minimum : 0); // Reset minValue when condition is set
+      setMinValue(currentRule ? minimum : 0); // Reset minValue when condition is set
       setMaxValue(initialMaxValue);
     } else if (condition === "Equal to") {
-      setEqualValue(rule ? minimum : 0);
+      setEqualValue(currentRule ? minimum : 0);
     }
   }, [condition]);
 
@@ -279,13 +292,13 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
     }
   };
 
-  const handleSave = async (rule, ruleConfig) => {
+  const handleSave = async (currentRule, ruleConfig) => {
     if (ruleConfig.fieldType == "NUMBER") {
       if (condition === "Equal to") {
         // Add Rule
         await dispatch(
           updateRuleById({
-            dynamicRacRuleId: rule.dynamicRacRuleId,
+            dynamicRacRuleId: currentRule.dynamicRacRuleId,
             ruleConfig: {
               ...ruleConfig,
               numberCriteriaRangeList: [
@@ -301,7 +314,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
       } else if (condition === "Between") {
         await dispatch(
           updateRuleById({
-            dynamicRacRuleId: rule.dynamicRacRuleId,
+            dynamicRacRuleId: currentRule.dynamicRacRuleId,
             ruleConfig,
           })
         ).unwrap();
@@ -309,7 +322,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
         // update Rule
         await dispatch(
           updateRuleById({
-            dynamicRacRuleId: rule.dynamicRacRuleId,
+            dynamicRacRuleId: currentRule.dynamicRacRuleId,
             ruleConfig: {
               ...ruleConfig,
               numberCriteriaRangeList: [
@@ -326,7 +339,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
     } else {
       await dispatch(
         updateRuleById({
-          dynamicRacRuleId: rule.dynamicRacRuleId,
+          dynamicRacRuleId: currentRule.dynamicRacRuleId,
           ruleConfig,
         })
       ).unwrap();
@@ -337,6 +350,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
 
     // After fetching the option list, fetch the Decision Engine details
     await dispatch(fetchDynamicRacDetails(racId));
+    onClose();
   };
 
   const handleStringInputChange = (newValues) => {
@@ -366,10 +380,18 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
     }));
   };
 
+  if (!(isOpen === sectionId)) return null;
+
   return (
-    <div className="grid grid-cols-1 gap-1 flex-1 p-5">
+    <Modal
+      title={convertToReadableString(
+        isEditMode ? `Edit ${currentRule.name} Rule` : "Add New Rule"
+      )}
+      secondaryOnClick={onClose}
+      isFooter={false}
+    >
       <div className={`flex flex-col gap-2`}>
-        <div className="grid gap-2 grid-cols-2">
+        <div className="grid gap-2 md:grid-cols-2">
           <InputSelect
             labelName="Criteria Type"
             inputOptions={[
@@ -386,12 +408,14 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
 
           <InputSelect
             labelName="Field Type"
-            inputOptions={ruleConfig.criteriaType === "DOCUMENT" ? [
-              { label: "STRING", value: "STRING" },
-            ] : [
-              { label: "STRING", value: "STRING" },
-              { label: "NUMBER", value: "NUMBER" },
-            ]}
+            inputOptions={
+              ruleConfig.criteriaType === "DOCUMENT"
+                ? [{ label: "STRING", value: "STRING" }]
+                : [
+                    { label: "STRING", value: "STRING" },
+                    { label: "NUMBER", value: "NUMBER" },
+                  ]
+            }
             inputName="fieldType"
             inputValue={ruleConfig.fieldType}
             onChange={handleChange}
@@ -402,13 +426,15 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
         {!isEditMode && (
           <InputSelect
             labelName="Parameter"
-            inputOptions={ruleConfig.criteriaType === "BORROWER_PROFILE"
-              ? optionsList.borrowerProfileAvailableNames
-              : ruleConfig.criteriaType === "CALCULATED"
+            inputOptions={
+              ruleConfig.criteriaType === "BORROWER_PROFILE"
+                ? optionsList.borrowerProfileAvailableNames
+                : ruleConfig.criteriaType === "CALCULATED"
                 ? optionsList.calculatedAvailableNames
                 : ruleConfig.criteriaType === "DOCUMENT"
-                  ? optionsList.documentsAvailableNames
-                  : []}
+                ? optionsList.documentsAvailableNames
+                : []
+            }
             inputName="name"
             inputValue={ruleConfig.name}
             onChange={handleChange}
@@ -420,16 +446,19 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
         {/* STRING Rule Criteria Values*/}
         {ruleConfig.fieldType === "STRING" && (
           <div className={"flex justify-between align-middle gap-2"}>
-            {ruleConfig.criteriaType !== "DOCUMENT" && <InputTextMulti
-              label={"Value"}
-              inputName={ruleConfig.name}
-              tag={ruleConfig?.criteriaValues}
-              setTag={(newValues) => handleStringInputChange(newValues)}
-              sectionId={sectionId}
-              dynamicRacRuleId={"123"}
-              isValidation={true}
-              required={true}
-            />}
+            {ruleConfig.criteriaType !== "DOCUMENT" && (
+              <InputTextMulti
+                label={"Value"}
+                inputName={ruleConfig.name}
+                tag={ruleConfig?.criteriaValues}
+                setTag={(newValues) => handleStringInputChange(newValues)}
+                sectionId={sectionId}
+                dynamicRacRuleId={"123"}
+                isValidation={true}
+                required={true}
+                removeTag={removeTag}
+              />
+            )}
             {ruleConfig.criteriaType === "DOCUMENT" && (
               <div className="flex-1">
                 <InputSelect
@@ -445,7 +474,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
               </div>
             )}
             {/* Blocked Checkbox */}
-            <div className="mt-5">
+            <div className="mt-8">
               <InputCheckbox
                 labelName="Block"
                 inputChecked={ruleConfig?.blocked}
@@ -472,27 +501,27 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
 
             {(condition === "Less than" ||
               condition === "Less than or equal to") && (
-                <InputNumber
-                  labelName="Value"
-                  inputName="maxValue"
-                  inputValue={maxValue}
-                  onChange={(e) => setMaxValue(e.target.value)}
-                  placeHolder="0"
-                />
-              )}
+              <InputNumber
+                labelName="Value"
+                inputName="maxValue"
+                inputValue={maxValue}
+                onChange={(e) => setMaxValue(e.target.value)}
+                placeHolder="0"
+              />
+            )}
 
             {(condition === "Greater than" ||
               condition === "Greater than or equal to") && (
-                <>
-                  <InputNumber
-                    labelName="Value"
-                    inputName="minValue"
-                    inputValue={minValue}
-                    onChange={(e) => setMinValue(e.target.value)}
-                    placeHolder="0"
-                  />
-                </>
-              )}
+              <>
+                <InputNumber
+                  labelName="Value"
+                  inputName="minValue"
+                  inputValue={minValue}
+                  onChange={(e) => setMinValue(e.target.value)}
+                  placeHolder="0"
+                />
+              </>
+            )}
 
             {condition === "Equal to" && (
               <>
@@ -559,7 +588,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
         )}
 
         {/* Checkboxes */}
-        <div className={`flex flex-col gap-2 px-5 text-[12px]`}>
+        <div className={`flex flex-col gap-2 text-[12px]`}>
           <p className="font-bold">
             Apply To Features{" "}
             <span className="text-red-700 text-xl ml-1">*</span>
@@ -567,7 +596,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
           <InputCheckbox
             labelName="REGISTRATION"
             inputChecked={
-              ruleConfig.usageList.find(
+              ruleConfig?.usageList?.find(
                 (item) => item.ruleUsage === "REGISTRATION"
               )?.used || false
             }
@@ -579,7 +608,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
           <InputCheckbox
             labelName="ELIGIBILITY"
             inputChecked={
-              ruleConfig.usageList.find(
+              ruleConfig?.usageList?.find(
                 (item) => item.ruleUsage === "ELIGIBILITY"
               )?.used || false
             }
@@ -591,7 +620,7 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
           <InputCheckbox
             labelName="BORROWER_OFFERS"
             inputChecked={
-              ruleConfig.usageList.find(
+              ruleConfig?.usageList?.find(
                 (item) => item.ruleUsage === "BORROWER_OFFERS"
               )?.used || false
             }
@@ -603,23 +632,40 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
 
         {/* Buttons */}
         {isEditMode ? (
-          <div className={`flex justify-end gap-3`}>
-            <HoverButton text="Cancel" onClick={onClose} />
+          <div
+            className={`px-5 pt-4 border-t border-gray-200 dark:border-gray-700/60 flex gap-3 justify-end`}
+          >
             <Button
-              buttonIcon={ArchiveBoxArrowDownIcon}
+              buttonName={"Cancel"}
+              onClick={onClose}
+              buttonType="secondary"
+              buttonSize="btn-sm"
+              className="min-w-[120px]"
+            />
+            <Button
               buttonName="Save"
-              onClick={() => handleSave(rule, ruleConfig)}
-              rectangle={true}
+              onClick={() => handleSave(currentRule, ruleConfig)}
+              buttonType="primary"
+              buttonSize="btn-sm"
+              className="min-w-[120px]"
             />
           </div>
         ) : (
-          <div className={`flex justify-end gap-3`}>
-            <HoverButton text="Cancel" onClick={onClose} />
+          <div
+            className={`px-5 pt-4 border-t border-gray-200 dark:border-gray-700/60 flex gap-3 justify-end`}
+          >
             <Button
-              buttonIcon={PlusIcon}
+              buttonName={"Cancel"}
+              onClick={onClose}
+              buttonType="secondary"
+              buttonSize="btn-sm"
+              className="min-w-[120px]"
+            />
+            <Button
               buttonName="Create Rule"
               onClick={() => handleAddRule(sectionId, ruleConfig)}
-              rectangle={true}
+              buttonSize="btn-sm"
+              className="min-w-[120px]"
               disabled={
                 !ruleConfig.criteriaType ||
                 !ruleConfig.fieldType ||
@@ -633,13 +679,14 @@ const Toolbox = ({ sectionId, sectionName, onClose, rule, isEditMode }) => {
                 ((condition === "Greater than" ||
                   condition === "Greater than or equal to") &&
                   maxValue === undefined) ||
-                (condition === "Equal to" && (equalValue === 0 || equalValue === ""))
+                (condition === "Equal to" &&
+                  (equalValue === 0 || equalValue === ""))
               }
             />
           </div>
         )}
       </div>
-    </div>
+    </Modal>
   );
 };
 

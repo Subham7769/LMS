@@ -6,9 +6,11 @@ import {
   setValidationError,
 } from "../../../redux/Slices/validationSlice";
 import { useSelector } from "react-redux";
+import Tooltip from "../Tooltip/Tooltip";
 
 const InputTextArea = ({
   labelName,
+  toolTipText,
   inputName,
   inputValue,
   inputId,
@@ -16,6 +18,7 @@ const InputTextArea = ({
   placeHolder,
   rowCount,
   disabled = false,
+  readOnly = false,
   isValidation = false,
   isIndex,
 }) => {
@@ -54,17 +57,26 @@ const InputTextArea = ({
 
   return (
     <div className="w-full">
-      {labelName && (
-        <label
-          className={`block ${
-            validationError[validationKey] ? "text-red-600" : "text-gray-700"
-          } px-1 text-sm font-semibold`}
-          htmlFor={inputName}
-        >
-          {validationError[validationKey] ? "Field required" : labelName}{" "}
-          {isValidation && <span className="text-red-600">*</span>}
-        </label>
-      )}
+      <div className="flex items-center justify-between">
+        {labelName && (
+          <label
+            className={`block ${
+              validationError[validationKey]
+                ? "text-red-600"
+                : "text-gray-700 dark:text-gray-400"
+            } px-1 text-sm font-medium mb-1`}
+            htmlFor={inputName}
+          >
+            {validationError[validationKey] ? "Field required" : labelName}{" "}
+            {isValidation && <span className="text-red-600">*</span>}
+          </label>
+        )}
+        {toolTipText && (
+          <Tooltip className="ml-2" bg="dark" size="lg" position="top left">
+            <div className="text-xs text-gray-200">{toolTipText}</div>
+          </Tooltip>
+        )}
+      </div>
       <textarea
         name={inputName}
         rows={rowCount}
@@ -74,13 +86,10 @@ const InputTextArea = ({
         placeholder={placeHolder}
         id={inputId}
         disabled={disabled}
-        className={`block min-h-10 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset 
-          ${
-            validationError[validationKey]
-              ? "ring-red-600 focus:ring-red-600"
-              : "ring-gray-300 focus:ring-indigo-600"
-          } 
-          sm:text-sm sm:leading-6 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200`}
+        readOnly={readOnly}
+        className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed
+          ${validationError[validationKey] ? "border-red-300" : ""} 
+          `}
       />
     </div>
   );

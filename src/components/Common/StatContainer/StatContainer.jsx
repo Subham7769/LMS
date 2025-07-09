@@ -13,7 +13,7 @@ const StatContainer = ({ stats }) => {
     </>
   );
   return (
-    <div className="shadow-md bg-background-light-secondary border-border-gray-primary rounded-xl border mx-auto px-4 py-6 sm:px-6 lg:px-8">
+    <div className="shadow-md bg-background-light-secondary border-gray-300 rounded-xl border mx-auto px-4 py-6 sm:px-6 lg:px-8">
       <h3 className="text-base -mt-4 font-semibold leading-6 text-gray-900">
         Last 30 days
       </h3>

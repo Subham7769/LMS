@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import ElementErrorBoundary from "../../ErrorBoundary/ElementErrorBoundary";
 import { useDispatch } from "react-redux";
@@ -22,6 +22,7 @@ const SelectAndNumber = ({
   onChangeNumber,
   placeHolderNumber,
   isValidation = false,
+  dropdownTextSize = "small", // New prop to control dropdown text size
   isIndex,
   isValidation1 = false,
   isIndex1,
@@ -42,6 +43,22 @@ const SelectAndNumber = ({
 }) => {
   const dispatch = useDispatch();
   const { fields, validationError } = useSelector((state) => state.validation);
+  const [isDarkMode, setIsDarkMode] = useState(
+    document.documentElement.classList.contains("dark")
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   if (inputSelectValue === null || inputSelectValue === undefined) {
     throw new Error(`Invalid inputValue for ${labelName}`);
@@ -86,6 +103,93 @@ const SelectAndNumber = ({
       },
     });
   };
+
+  // Define custom styles based on dropdownTextSize prop
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      fontSize:
+        dropdownTextSize === "small"
+          ? "0.875rem"
+          : dropdownTextSize === "large"
+          ? "1rem"
+          : "0.875rem", // Change font size
+      fontFamily: "inherit", // Set font to inherit
+      padding: "8px 12px",
+      backgroundColor: isDarkMode
+        ? "#1f2937" // Tailwind's gray-800
+        : "#fff",
+      color: isDarkMode ? "#bfc4cd" : state.isSelected ? "#8e51ff" : "#4a5565",
+      fontWeight: 500,
+      borderBottom: isDarkMode ? "1px solid #374151" : "1px solid #e2e8f0",
+      "&:hover": {
+        backgroundColor: isDarkMode ? "#242e3c" : "#f9fafb",
+        color: isDarkMode
+          ? "#bfc4cd"
+          : state.isSelected
+          ? "#8e51ff"
+          : "#4a5565",
+      },
+    }),
+    control: (provided) => ({
+      ...provided,
+      backgroundColor: isDarkMode ? "#1f2937" : "#fff",
+      border: isDarkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+      padding: 0,
+      boxShadow: "none",
+      height: 28,
+      borderRadius: "0.5rem",
+      "&:hover": {
+        border: isDarkMode ? "1px solid #4b5563" : "1px solid #aaa",
+      },
+    }),
+    menu: (provided) => ({
+      ...provided,
+      zIndex: 9999, // Ensure menu appears above other elements
+      boxShadow:
+        "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // Tailwind's shadow-lg
+      borderRadius: "0.5rem", // Optional: match rounded-lg
+      border: isDarkMode ? "1px solid #374151" : "1px solid #e5e7eb",
+      backgroundColor: isDarkMode ? "#1f2937" : "#fff",
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      fontFamily: "inherit",
+      fontSize:
+        dropdownTextSize === "small"
+          ? "0.875rem"
+          : dropdownTextSize === "large"
+          ? "1rem"
+          : "0.875rem", // Convert px to rem
+      color: "#9ca3af", // Equivalent to Tailwind's text-gray-400
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      fontSize:
+        dropdownTextSize === "small"
+          ? "0.875rem"
+          : dropdownTextSize === "large"
+          ? "1rem"
+          : "0.875rem", // Change font size
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      color: "#9ca3af", // Tailwind's text-gray-400
+      "&:hover": {
+        color: "#9ca3af", // maintain the same color on hover
+      },
+    }),
+    indicatorSeparator: () => ({
+      display: "none", // safety check for visual separation
+    }),
+    valueContainer: (provided, state) => ({
+      ...provided,
+      display: "flex",
+      backgroundColor: state.isDisabled ? "#f3f4f6" : "", // Tailwind's bg-gray-100
+      color: state.isDisabled ? "#9ca3af" : "", // Tailwind's text-gray-900
+    }),
+  };
+
   // console.log(validationError);
   const validationKey = isIndex
     ? `${inputNumberName}_${isIndex}`
@@ -124,13 +228,13 @@ const SelectAndNumber = ({
     <div>
       {labelName && (
         <label
-          className={`block ${
+          className={`block text-sm font-medium mb-1 ${
             validationError[validationKey] ||
             validationError[validationKey1] ||
             validationError[validationKey2]
               ? "text-red-600"
-              : "text-gray-700"
-          } px-1 text-sm font-semibold`}
+              : "text-gray-600 dark:text-gray-400"
+          } px-1`}
           htmlFor={inputSelectName}
         >
           {validationError[validationKey] ||
@@ -143,9 +247,52 @@ const SelectAndNumber = ({
       <div className="flex items-center space-x-2">
         <Select
           name={inputSelectName}
+          styles={customStyles}
           defaultValue={inputSelectValue}
           options={inputSelectOptions}
-          className="block w-full max-w-30 rounded-md leading-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm "
+          className="block w-full max-w-30"
+          getOptionLabel={(e) => (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {e.label}
+              {e.value === inputSelectValue && (
+                <span
+                  style={{
+                    marginLeft: "auto",
+                  }}
+                >
+                  <svg
+                    className="shrink-0 mr-2 fill-current text-violet-500"
+                    width="12"
+                    height="9"
+                    viewBox="0 0 12 9"
+                  >
+                    <path d="M10.28.28L3.989 6.575 1.695 4.28A1 1 0 00.28 5.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28.28z" />
+                  </svg>
+                </span>
+              )}
+            </div>
+          )}
+          components={{
+            SingleValue: ({ data, innerRef, innerProps }) => (
+              <div
+                ref={innerRef}
+                {...innerProps}
+                style={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  fontSize:
+                    dropdownTextSize === "small"
+                      ? "0.875rem"
+                      : dropdownTextSize === "large"
+                      ? "1rem"
+                      : "0.875rem", // Convert px to rem
+                }}
+              >
+                {data.label}
+              </div>
+            ),
+          }}
           value={
             inputSelectOptions.find(
               (option) => option.value === inputSelectValue
@@ -165,13 +312,9 @@ const SelectAndNumber = ({
           onChange={handleNumberChange}
           onFocus={() => dispatch(setValidationError(validationKey))}
           placeholder={placeHolderNumber}
-          className={`block h-10 w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
-          ${
-            validationError[validationKey]
-              ? "ring-red-600 focus:ring-red-600"
-              : "ring-gray-300 focus:ring-indigo-600"
-          } 
-          focus:ring-2 focus:ring-inset  placeholder:text-gray-400 sm:text-sm sm:leading-6 py-1`}
+          className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed
+            ${validationError[validationKey] ? "border-red-300" : ""} 
+          `}
         />
         {inputSelect2Name && (
           <>
@@ -179,7 +322,49 @@ const SelectAndNumber = ({
               name={inputSelect2Name}
               defaultValue={inputSelect2Value}
               options={inputSelect2Options}
-              className="block w-full max-w-30 rounded-md leading-normal text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
+              className="block w-full max-w-30 "
+              getOptionLabel={(e) => (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  {e.label}
+                  {e.value === inputSelect2Value && (
+                    <span
+                      style={{
+                        marginLeft: "auto",
+                      }}
+                    >
+                      <svg
+                        className="shrink-0 mr-2 fill-current text-violet-500"
+                        width="12"
+                        height="9"
+                        viewBox="0 0 12 9"
+                      >
+                        <path d="M10.28.28L3.989 6.575 1.695 4.28A1 1 0 00.28 5.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28.28z" />
+                      </svg>
+                    </span>
+                  )}
+                </div>
+              )}
+              components={{
+                SingleValue: ({ data, innerRef, innerProps }) => (
+                  <div
+                    ref={innerRef}
+                    {...innerProps}
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      fontSize:
+                        dropdownTextSize === "small"
+                          ? "0.875rem"
+                          : dropdownTextSize === "large"
+                          ? "1rem"
+                          : "0.875rem", // Convert px to rem
+                    }}
+                  >
+                    {data.label}
+                  </div>
+                ),
+              }}
               value={
                 inputSelect2Options.find(
                   (option) => option.value === inputSelect2Value
@@ -198,13 +383,9 @@ const SelectAndNumber = ({
               onChange={handleNumber2Change}
               onFocus={() => dispatch(setValidationError(validationKey2))}
               placeholder={placeHolderNumber2}
-              className={`block h-9 w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset 
-          ${
-            validationError[validationKey2]
-              ? "ring-red-600 focus:ring-red-600"
-              : "ring-gray-300 focus:ring-indigo-600"
-          } 
-          focus:ring-2 focus:ring-inset  placeholder:text-gray-400 sm:text-sm sm:leading-6 py-1`}
+              className={`form-input w-full dark:disabled:placeholder:text-gray-600 disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600 disabled:cursor-not-allowed 
+                ${validationError[validationKey2] ? "border-red-300" : ""} 
+                `}
             />
           </>
         )}

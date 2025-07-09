@@ -84,7 +84,7 @@ export const BorrowersList = [
     totalPaid: "$5000",
     openLoans: "$10000",
     status: "Active",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
   {
     fullName: "Jack",
@@ -95,7 +95,7 @@ export const BorrowersList = [
     totalPaid: "$3000",
     openLoans: "$7000",
     status: "Active",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
   {
     fullName: "Julie",
@@ -106,7 +106,7 @@ export const BorrowersList = [
     totalPaid: "$4000",
     openLoans: "$8000",
     status: "Inactive",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
 ];
 
@@ -117,7 +117,7 @@ export const BorrowersGroupList = [
     groupLeader: "Tahseen",
     collector: "A",
     Meeting: "2",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
   {
     groupName: "BNPL Group",
@@ -125,7 +125,7 @@ export const BorrowersGroupList = [
     groupLeader: "Tahseen",
     collector: "B",
     Meeting: "3",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
   {
     groupName: "Overdraft Group",
@@ -133,7 +133,7 @@ export const BorrowersGroupList = [
     groupLeader: "Tahseen",
     collector: "C",
     Meeting: "4",
-    href: "/product/cash-loan/loan-product-config",
+    href: "/product/cash-loan",
   },
 ];
 
@@ -190,8 +190,8 @@ export const loanOfficer = [
 export const ApproveRepaymentColumns = [
   { label: "Amount", field: "amount" },
   { label: "Collection Date", field: "collectionDate" },
-  { label: "User Id", field: "userId" },
-  { label: "Loan Id", field: "loan" },
+  { label: "User Id", field: "userId", copy: true },
+  { label: "Loan Id", field: "loan", copy: true },
   { label: "Collected By", field: "collectionBy" },
   { label: "Method", field: "method" },
   { label: "Accounting", field: "accounting" },
@@ -203,6 +203,39 @@ export const yesNoOptions = [
   { label: "No", value: "no" }
 ];
 
+export const inspectionTypeOptions = [
+  { label: "Pre-Funding", value: "Pre-Funding" },
+  { label: "Delivery", value: "Delivery" },
+  { label: "Post-Installation", value: "Post-Installation" },
+];
+
+export const overallStatusOptions = [
+  { label: "Pending", value: "Pending" },
+  { label: "In Progress", value: "In Progress" },
+  { label: "Completed", value: "Completed" },
+  { label: "Failed", value: "Failed" },
+];
+
+export const verificationStatus = [
+  { value: "PENDING", label: "PENDING" },
+  { value: "SCHEDULED", label: "SCHEDULED" },
+  { value: "COMPLETED", label: "COMPLETED" },
+  { value: "DECLINED", label: "DECLINED" },
+];
+
+export const overallConditionOptions = [
+  { value: "Excellent", label: "Excellent" },
+  { value: "Good", label: "Good" },
+  { value: "Fair", label: "Fair" },
+  { value: "Poor", label: "Poor" },
+];
+
+export const usageLevelOptions = [
+  { value: "Low", label: "Low" },
+  { value: "Medium", label: "Medium" },
+  { value: "High", label: "High" },
+  { value: "Excessive", label: "Excessive" },
+];
 
 export const repaymentOptions = [
   { label: "Ignore", value: "ignore" },
@@ -258,6 +291,7 @@ export const accountType = [
 export const uniqueIDType = [
   { value: "PASSPORT", label: "PASSPORT" },
   { value: "NRC", label: "NRC" },
+  { value: "EMAIL", label: "EMAIL" },
   // { value: "DRIVER'S LICENSE", label: "DRIVER'S LICENSE" },
   // { value: "NATIONAL ID", label: "NATIONAL ID" },
   // { value: "VOTER ID", label: "VOTER ID" },

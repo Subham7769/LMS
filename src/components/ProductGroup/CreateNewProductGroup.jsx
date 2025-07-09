@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import React, { useCallback, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Button from "../Common/Button/Button";
 import TagInput from "../TagInput/TagInput";
@@ -9,6 +8,7 @@ import InputNumber from "../Common/InputNumber/InputNumber";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
 import { fetchInList } from "../../redux/Slices/productGroupSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { CheckIcon } from "../../assets/icons";
 
 const CreateNewProductGroup = () => {
   const { configId, groupName } = useParams();
@@ -52,8 +52,8 @@ const CreateNewProductGroup = () => {
       <div className="flex items-center justify-between">
         <DynamicName initialName={configId} onSave={handleSave} />
       </div>
-      <ContainerTile>
-        <div className="mt-5 grid grid-cols-3 gap-4 pb-2">
+      <ContainerTile className={"pt-5"}>
+        <div className="mt-5 grid grid-cols-3 gap-4 mb-2 px-5">
           <InputNumber
             labelName="Percentage from EMI"
             inputName="overduePercentage"
@@ -65,7 +65,7 @@ const CreateNewProductGroup = () => {
             inputValue={formData.hardLimit}
           />
         </div>
-        <div className="border-b pb-4 mb-2">
+        <div className="border-b pb-5 px-5">
           <TagInput
             formData={formData}
             handleChange={handleChange}
@@ -79,11 +79,10 @@ const CreateNewProductGroup = () => {
             inputNumberLabel={"Max Product Limit"}
           />
         </div>
-        <div className="text-center md:text-right mt-5">
+        <div className="text-center md:text-right p-5">
           <Button
-            buttonIcon={CheckCircleIcon}
+            buttonIcon={CheckIcon}
             buttonName="Save"
-            rectangle={true}
           />
         </div>
       </ContainerTile>

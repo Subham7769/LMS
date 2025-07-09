@@ -12,10 +12,10 @@ import isDateString from "../../../utils/isDateString";
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
     </div>
   );
 };
@@ -54,8 +54,6 @@ const LoanAgreementPrint = () => {
     ccoFoComments = {},
   } = loanAgreementData || {};
 
-  
-
   if (loading) {
     return (
       <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
@@ -78,16 +76,13 @@ const LoanAgreementPrint = () => {
           </div>
         </div>
         <div className="border-2 border-gray-500 text-sm">
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             BUSINESS DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
-            <div className="border-r border-border-gray-primary">
+          <div className="grid grid-cols-[40%_60%] mb-5">
+            <div className="border-r border-gray-300">
               {Object.keys(businessDetails).map((key) => (
-                <div
-                  key={key}
-                  className="border-b border-border-gray-primary pl-1 pt-1"
-                >
+                <div key={key} className="border-b border-gray-300 pl-1 pt-1">
                   {convertToReadableString(key)}
                 </div>
               ))}
@@ -96,7 +91,7 @@ const LoanAgreementPrint = () => {
               {Object.keys(businessDetails).map((key) => (
                 <div
                   key={key}
-                  className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                  className="border-b border-gray-300 pr-1 pt-1 text-right"
                 >
                   &nbsp;
                   {businessDetails[key] ?? "-"}
@@ -104,16 +99,13 @@ const LoanAgreementPrint = () => {
               ))}
             </div>
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             CONTACT DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
-            <div className="border-r border-border-gray-primary">
+          <div className="grid grid-cols-[40%_60%] mb-5">
+            <div className="border-r border-gray-300">
               {Object.keys(contactDetails).map((key) => (
-                <div
-                  key={key}
-                  className="border-b border-border-gray-primary pl-1 pt-1"
-                >
+                <div key={key} className="border-b border-gray-300 pl-1 pt-1">
                   {convertToReadableString(key)}
                 </div>
               ))}
@@ -122,7 +114,7 @@ const LoanAgreementPrint = () => {
               {Object.keys(contactDetails).map((key) => (
                 <div
                   key={key}
-                  className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                  className="border-b border-gray-300 pr-1 pt-1 text-right"
                 >
                   &nbsp;
                   {contactDetails[key] ?? "-"}
@@ -130,16 +122,13 @@ const LoanAgreementPrint = () => {
               ))}
             </div>
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             PROFOMA DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
-            <div className="border-r border-border-gray-primary">
+          <div className="grid grid-cols-[40%_60%] mb-5">
+            <div className="border-r border-gray-300">
               {Object.keys(profomaDetails).map((key) => (
-                <div
-                  key={key}
-                  className="border-b border-border-gray-primary pl-1 pt-1"
-                >
+                <div key={key} className="border-b border-gray-300 pl-1 pt-1">
                   {convertToReadableString(key)}
                 </div>
               ))}
@@ -148,7 +137,7 @@ const LoanAgreementPrint = () => {
               {Object.keys(profomaDetails).map((key) => (
                 <div
                   key={key}
-                  className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                  className="border-b border-gray-300 pr-1 pt-1 text-right"
                 >
                   &nbsp;
                   {typeof profomaDetails[key] === "number"
@@ -160,16 +149,13 @@ const LoanAgreementPrint = () => {
               ))}
             </div>
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             OFF-TAKER DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
-            <div className="border-r border-border-gray-primary">
+          <div className="grid grid-cols-[40%_60%] mb-5">
+            <div className="border-r border-gray-300">
               {Object.keys(offTakerDetails).map((key) => (
-                <div
-                  key={key}
-                  className="border-b border-border-gray-primary pl-1 pt-1"
-                >
+                <div key={key} className="border-b border-gray-300 pl-1 pt-1">
                   {convertToReadableString(key)}
                 </div>
               ))}
@@ -178,23 +164,20 @@ const LoanAgreementPrint = () => {
               {Object.keys(offTakerDetails).map((key) => (
                 <div
                   key={key}
-                  className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                  className="border-b border-gray-300 pr-1 pt-1 text-right"
                 >
                   &nbsp;{offTakerDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             SUPPLIER DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
-            <div className="border-r border-border-gray-primary">
+          <div className="grid grid-cols-[40%_60%] mb-5">
+            <div className="border-r border-gray-300">
               {Object.keys(supplierDetails).map((key) => (
-                <div
-                  key={key}
-                  className="border-b border-border-gray-primary pl-1 pt-1"
-                >
+                <div key={key} className="border-b border-gray-300 pl-1 pt-1">
                   {convertToReadableString(key)}
                 </div>
               ))}
@@ -203,23 +186,20 @@ const LoanAgreementPrint = () => {
               {Object.keys(supplierDetails).map((key) => (
                 <div
                   key={key}
-                  className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                  className="border-b border-gray-300 pr-1 pt-1 text-right"
                 >
                   &nbsp;{supplierDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             GENERAL DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
-            <div className="border-r border-border-gray-primary">
+          <div className="grid grid-cols-[40%_60%] mb-5">
+            <div className="border-r border-gray-300">
               {Object.keys(generalLoanDetails).map((key) => (
-                <div
-                  key={key}
-                  className="border-b border-border-gray-primary pl-1 pt-1"
-                >
+                <div key={key} className="border-b border-gray-300 pl-1 pt-1">
                   {convertToReadableString(key)}
                 </div>
               ))}
@@ -228,7 +208,7 @@ const LoanAgreementPrint = () => {
               {Object.keys(generalLoanDetails).map((key) => (
                 <div
                   key={key}
-                  className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                  className="border-b border-gray-300 pr-1 pt-1 text-right"
                 >
                   &nbsp;
                   {typeof generalLoanDetails[key] === "number"
@@ -240,16 +220,13 @@ const LoanAgreementPrint = () => {
               ))}
             </div>
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             COLLATERAL DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
-            <div className="border-r border-border-gray-primary">
+          <div className="grid grid-cols-[40%_60%] mb-5">
+            <div className="border-r border-gray-300">
               {Object.keys(collateralDetails).map((key) => (
-                <div
-                  key={key}
-                  className="border-b border-border-gray-primary pl-1 pt-1"
-                >
+                <div key={key} className="border-b border-gray-300 pl-1 pt-1">
                   {convertToReadableString(key)}
                 </div>
               ))}
@@ -258,23 +235,20 @@ const LoanAgreementPrint = () => {
               {Object.keys(collateralDetails).map((key) => (
                 <div
                   key={key}
-                  className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                  className="border-b border-gray-300 pr-1 pt-1 text-right"
                 >
                   &nbsp;{collateralDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             BANKING DETAILS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
-            <div className="border-r border-border-gray-primary">
+          <div className="grid grid-cols-[40%_60%] mb-5">
+            <div className="border-r border-gray-300">
               {Object.keys(bankingDetails).map((key) => (
-                <div
-                  key={key}
-                  className="border-b border-border-gray-primary pl-1 pt-1"
-                >
+                <div key={key} className="border-b border-gray-300 pl-1 pt-1">
                   {convertToReadableString(key)}
                 </div>
               ))}
@@ -283,23 +257,20 @@ const LoanAgreementPrint = () => {
               {Object.keys(bankingDetails).map((key) => (
                 <div
                   key={key}
-                  className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                  className="border-b border-gray-300 pr-1 pt-1 text-right"
                 >
                   &nbsp;{bankingDetails[key] ?? "-"}
                 </div>
               ))}
             </div>
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             LOAN OFFICER’S FINDINGS
           </div>
-          <div className="grid grid-cols-[40%,60%] mb-5">
-            <div className="border-r border-border-gray-primary">
+          <div className="grid grid-cols-[40%_60%] mb-5">
+            <div className="border-r border-gray-300">
               {Object.keys(loanOfficerFinding).map((key) => (
-                <div
-                  key={key}
-                  className="border-b border-border-gray-primary pl-1 pt-1"
-                >
+                <div key={key} className="border-b border-gray-300 pl-1 pt-1">
                   {convertToReadableString(key)}
                 </div>
               ))}
@@ -308,28 +279,28 @@ const LoanAgreementPrint = () => {
               {Object.keys(loanOfficerFinding).map((key) => (
                 <div
                   key={key}
-                  className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                  className="border-b border-gray-300 pr-1 pt-1 text-right"
                 >
                   &nbsp;{loanOfficerFinding[key] ?? "-"}
                 </div>
               ))}
             </div>
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             DIRECTORS’ DETAILS
           </div>
           <div className="overflow-x-auto mb-5 no-scroll">
             {directorDetails?.length > 0 ? (
-              <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table">
+              <table className="min-w-full table-auto border-collapse border border-gray-300 print-table">
                 <thead>
                   <tr className="bg-background-light-secondary">
-                    <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                    <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                       No.
                     </th>
                     {Object.keys(directorDetails[0]).map((key) => (
                       <th
                         key={key}
-                        className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
+                        className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold"
                       >
                         {convertToReadableString(key)}
                       </th>
@@ -339,13 +310,13 @@ const LoanAgreementPrint = () => {
                 <tbody>
                   {directorDetails.map((director, index) => (
                     <tr key={index} className="even:bg-gray-50">
-                      <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                      <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                         {index + 1}
                       </td>
                       {Object.values(director).map((value, valueIndex) => (
                         <td
                           key={valueIndex}
-                          className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                          className="border border-gray-300 px-4 py-2 text-gray-600 text-center"
                         >
                           {value || "-"}
                         </td>
@@ -360,21 +331,21 @@ const LoanAgreementPrint = () => {
               </div>
             )}
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             SHAREHOLDER DETAILS
           </div>
           <div className="overflow-x-auto mb-5 no-scroll">
             {shareHolderDetails?.length > 0 ? (
-              <table className="min-w-full table-auto border-collapse border border-border-gray-primary print-table">
+              <table className="min-w-full table-auto border-collapse border border-gray-300 print-table">
                 <thead>
                   <tr className="bg-background-light-secondary">
-                    <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                    <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                       No.
                     </th>
                     {Object.keys(shareHolderDetails[0]).map((key) => (
                       <th
                         key={key}
-                        className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
+                        className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold"
                       >
                         {convertToReadableString(key)}
                       </th>
@@ -384,13 +355,13 @@ const LoanAgreementPrint = () => {
                 <tbody>
                   {shareHolderDetails.map((shareholder, index) => (
                     <tr key={index} className="even:bg-gray-50">
-                      <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                      <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                         {index + 1}
                       </td>
                       {Object.values(shareholder).map((value, valueIndex) => (
                         <td
                           key={valueIndex}
-                          className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                          className="border border-gray-300 px-4 py-2 text-gray-600 text-center"
                         >
                           {value || "-"}
                         </td>
@@ -405,38 +376,36 @@ const LoanAgreementPrint = () => {
               </div>
             )}
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             CREDIT OFFICER COMMENTS
           </div>
           <div className="p-2 mb-5">{creditOfficerComments}</div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             CCO & FO COMMENTS
           </div>
           <div className="p-2 mb-5">{ccoFoComments}</div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             MANAGEMENT CREDIT COMMITTEE’S DECISION
           </div>
-          <div className="grid grid-cols-[40%,60%]">
-            <div className="border-r border-border-gray-primary border-b pl-1 pt-1">
+          <div className="grid grid-cols-[40%_60%]">
+            <div className="border-r border-gray-300 border-b pl-1 pt-1">
               Approved
             </div>
-            <div className="border-r border-border-gray-primary border-b pl-1 pt-1"></div>
-            <div className="border-r border-border-gray-primary pl-1 pt-1">
-              Rejected
-            </div>
+            <div className="border-r border-gray-300 border-b pl-1 pt-1"></div>
+            <div className="border-r border-gray-300 pl-1 pt-1">Rejected</div>
             <div></div>
           </div>
           <div className="overflow-x-auto mb-5">
-            <table className="min-w-full table-auto border-collapse border border-border-gray-primary">
+            <table className="min-w-full table-auto border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-background-light-secondary">
-                  <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                  <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                     No.
                   </th>
                   {Object.keys(creditCommitteDecision[0]).map((key) => (
                     <th
                       key={key}
-                      className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
+                      className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold"
                     >
                       {convertToReadableString(key)}
                     </th>
@@ -446,13 +415,13 @@ const LoanAgreementPrint = () => {
               <tbody>
                 {creditCommitteDecision.map((director, index) => (
                   <tr key={index} className="even:bg-gray-50">
-                    <td className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center">
+                    <td className="border border-gray-300 px-4 py-2 text-gray-600 text-center">
                       {index + 1}
                     </td>
                     {Object.values(director).map((value, valueIndex) => (
                       <td
                         key={valueIndex}
-                        className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                        className="border border-gray-300 px-4 py-2 text-gray-600 text-center"
                       >
                         {value || ""}
                       </td>
@@ -462,20 +431,20 @@ const LoanAgreementPrint = () => {
               </tbody>
             </table>
           </div>
-          <div className="font-semibold text-center border-b border-border-gray-primary pt-2 bg-gray-200">
+          <div className="font-semibold text-center border-b border-gray-300 pt-2 bg-gray-200">
             REQUIREMENTS
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full table-auto border-collapse border border-border-gray-primary">
+            <table className="min-w-full table-auto border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-background-light-secondary">
-                  <th className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold">
+                  <th className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold">
                     No.
                   </th>
                   {Object.keys(documentsData[0]).map((key) => (
                     <th
                       key={key}
-                      className="border border-border-gray-primary px-4 py-2 text-center text-gray-700 font-semibold"
+                      className="border border-gray-300 px-4 py-2 text-center text-gray-700 font-semibold"
                     >
                       {convertToReadableString(key)}
                     </th>
@@ -485,13 +454,13 @@ const LoanAgreementPrint = () => {
               <tbody>
                 {documentsData.map((item, index) => (
                   <tr key={index} className="even:bg-gray-50">
-                    <td className="border border-border-gray-primary px-4 py-2 text-center text-gray-600">
+                    <td className="border border-gray-300 px-4 py-2 text-center text-gray-600">
                       {index + 1}
                     </td>
                     {Object.values(item).map((value, valueIndex) => (
                       <td
                         key={valueIndex}
-                        className="border border-border-gray-primary px-4 py-2 text-gray-600 text-center"
+                        className="border border-gray-300 px-4 py-2 text-gray-600 text-center"
                       >
                         {value || ""}
                       </td>

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useParams, Outlet } from "react-router-dom";
 import Tab from "../../Common/Tab/Tab";
+import LoadingState from "../../LoadingState/LoadingState";
 
 const TermLoan = () => {
   const { userID } = useParams();
@@ -45,28 +46,13 @@ const TermLoan = () => {
   ];
 
   return (
-    <div className="mt-4">
+    <>
       {/* Tab Navigation */}
-      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
-        <ul className="flex flex-wrap -mb-px">
-          {tabs.map((tab) => (
-            <Tab
-              key={tab.id}
-              id={tab.id}
-              label={tab.label}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              to={tab.to}
-            />
-          ))}
-        </ul>
-      </div>
-
-      {/* Content Rendering */}
-      <div className="mt-4">
+      <Tab tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Suspense fallback={<LoadingState />}>
         <Outlet />
-      </div>
-    </div>
+      </Suspense>
+    </>
   );
 };
 

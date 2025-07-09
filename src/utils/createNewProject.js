@@ -5,7 +5,7 @@ export async function createNewProject(
   navigateFail
 ) {
   try {
-    navigate(navigateSuccess + Name);
+    navigate(`${navigateSuccess}${Name}/basic-details`);
   } catch (error) {
     console.error(error);
   }

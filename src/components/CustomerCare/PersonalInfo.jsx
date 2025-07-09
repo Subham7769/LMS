@@ -30,6 +30,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { viewPhoto } from "../../redux/Slices/personalBorrowersSlice";
 import ViewPhotoModal from "../Los-Personal/Borrowers/ViewPhotoModal";
+import toPascalCase from "../../utils/toPascalCase";
+import ShimmerTable from "../Common/ShimmerTable/ShimmerTable";
 
 const PersonalInfo = () => {
   const { subID } = useParams();
@@ -42,7 +44,6 @@ const PersonalInfo = () => {
     (state) => state.customerCare
   );
 
-  console.log(personalInfo);
   function flattenToSimpleObjectArray(filteredBorrowers) {
     return filteredBorrowers.map((borrower) => {
       const result = {};
@@ -96,8 +97,6 @@ const PersonalInfo = () => {
     personalInfo?.companyBorrowerProfile,
   ]);
 
-  console.log(flattenData);
-
   const transformFlattenData = transformData(flattenData);
   const transformFlattenDataCompany = transformData(flattenDataCompany);
 
@@ -126,15 +125,14 @@ const PersonalInfo = () => {
   };
 
   const renderExpandedRowPersonal = (rowData) => {
-    console.log(rowData);
     return (
-      <div className="space-y-2 text-sm text-gray-600 p-5 relative">
+      <>
         {rowData ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 break-words">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm">
               {/* Personal Details */}
-              <div className="shadow-md p-3 rounded-md bg-blue-tertiary">
-                <div className="mb-3 text-blue-primary text-xl font-semibold flex gap-2 items-center">
+              <div className="shadow-md p-3 rounded-md bg-sky-500/20">
+                <div className="mb-3 text-sky-700 text-xl font-semibold flex gap-2 items-center">
                   <div
                     onClick={() => handleViewPhoto(rowData.customerPhotoId)}
                     className="cursor-pointer"
@@ -146,8 +144,18 @@ const PersonalInfo = () => {
                     />
                   </div>
                   Personal Details
+                  {rowData.customerPhotoId && (
+                    <p
+                      className="text-xs text-gray-600 dark:text-gray-400 -mb-2 cursor-pointer underline"
+                      onClick={(e) =>
+                        handleViewPhoto(e, rowData.customerPhotoId)
+                      }
+                    >
+                      View Client Photo
+                    </p>
+                  )}
                 </div>
-                <div className="space-y-2 flex flex-col gap-5 p-3">
+                <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                   <p>
                     {[
                       rowData.title,
@@ -174,7 +182,7 @@ const PersonalInfo = () => {
                     />
                     <CardInfoRow
                       icon={WindowIcon}
-                      label={rowData.uniqueIDType}
+                      label={toPascalCase(rowData.uniqueIDType)}
                       value={rowData.uniqueID}
                     />
                   </div>
@@ -185,10 +193,10 @@ const PersonalInfo = () => {
               <CardInfo
                 cardTitle="Contact Details"
                 cardIcon={HomeIcon}
-                colorBG={"bg-green-tertiary"}
-                colorText={"text-green-primary"}
+                colorBG={"bg-green-500/20"}
+                colorText={"text-green-700"}
               >
-                <div className="space-y-2 flex flex-col gap-5 p-3">
+                <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                   <p>
                     Currently residing in{" "}
                     {[
@@ -227,10 +235,10 @@ const PersonalInfo = () => {
               <CardInfo
                 cardTitle="Professional Journey"
                 cardIcon={BriefcaseIcon}
-                colorBG={"bg-violet-tertiary"}
-                colorText={"text-violet-primary"}
+                colorBG={"bg-violet-500/20"}
+                colorText={"text-violet-700"}
               >
-                <div className="space-y-2 flex flex-col gap-5 p-3">
+                <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                   <p>
                     Working as a {rowData.occupation} at {rowData.employer}{" "}
                     since {rowData.workStartDate} in a {rowData.workType}{" "}
@@ -256,10 +264,10 @@ const PersonalInfo = () => {
               <CardInfo
                 cardTitle="Financial Profile"
                 cardIcon={BuildingOffice2Icon}
-                colorBG={"bg-orange-tertiary"}
-                colorText={"text-orange-primary"}
+                colorBG={"bg-yellow-500/20"}
+                colorText={"text-yellow-700"}
               >
-                <div className="space-y-2 flex flex-col gap-5 p-3">
+                <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                   <p>
                     Maintain a {rowData.accountType} account with{" "}
                     {rowData.bankName}.
@@ -295,7 +303,7 @@ const PersonalInfo = () => {
         ) : (
           <p>No data found</p>
         )}
-      </div>
+      </>
     );
   };
 
@@ -313,7 +321,6 @@ const PersonalInfo = () => {
       <div className="space-y-2 text-sm text-gray-600 py-2">
         <Accordion
           heading={"Company Details"}
-          isOpen={true}
           renderExpandedContent={() => (
             <div className="grid grid-cols-1 gap-1 relative">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs break-words">
@@ -321,10 +328,11 @@ const PersonalInfo = () => {
                 <CardInfo
                   cardTitle="Company Overview"
                   cardIcon={BuildingOffice2Icon}
-                  colorBG={"bg-blue-tertiary"}
-                  colorText={"text-blue-primary"}
+                  colorText={"text-sky-700 "}
+                  colorBG={"bg-sky-500/20"}
+                  coloredBG={true}
                 >
-                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                     <p>
                       {rowData.companyName} is a {rowData.natureOfCompany}{" "}
                       company operating in the {rowData.industry}.
@@ -337,13 +345,13 @@ const PersonalInfo = () => {
                       />
                       <CardInfoRow
                         icon={WindowIcon}
-                        label="Unique ID"
+                        label="Borrower Serial No"
                         value={rowData.companyUniqueId}
                       />
                       <CardInfoRow
                         icon={CalendarIcon}
                         label="Incorporated"
-                        value={rowData.dateOfIncorporation}
+                        value={convertDate(rowData.dateOfIncorporation)}
                       />
                       <CardInfoRow
                         icon={UsersIcon}
@@ -358,10 +366,10 @@ const PersonalInfo = () => {
                 <CardInfo
                   cardTitle="Contact Information"
                   cardIcon={PhoneIcon}
-                  colorBG={"bg-green-tertiary"}
-                  colorText={"text-green-primary"}
+                  colorText={"text-green-700"}
+                  colorBG={"bg-green-500/20"}
                 >
-                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                     <div className="grid grid-cols-2 gap-4">
                       <CardInfoRow
                         icon={PhoneIcon}
@@ -401,10 +409,10 @@ const PersonalInfo = () => {
                 <CardInfo
                   cardTitle="Financial Profile"
                   cardIcon={BuildingOffice2Icon}
-                  colorBG={"bg-violet-tertiary"}
-                  colorText={"text-violet-primary"}
+                  colorText={"text-violet-700"}
+                  colorBG={"bg-violet-500/20"}
                 >
-                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                     <div className="grid grid-cols-2 gap-4">
                       <CardInfoRow
                         icon={BuildingOffice2Icon}
@@ -444,10 +452,10 @@ const PersonalInfo = () => {
                 <CardInfo
                   cardTitle="Other Details"
                   cardIcon={BriefcaseIcon}
-                  colorBG={"bg-orange-tertiary"}
-                  colorText={"text-orange-primary"}
+                  colorText={"text-yellow-700"}
+                  colorBG={"bg-yellow-500/20"}
                 >
-                  <div className="space-y-2 flex flex-col gap-5 p-3">
+                  <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                     <div className="grid grid-cols-1 gap-4">
                       <CardInfoRow
                         icon={DocumentTextIcon}
@@ -500,10 +508,10 @@ const PersonalInfo = () => {
                           <CardInfo
                             cardTitle="Personal Details"
                             cardIcon={UserIcon}
-                            color={"blue"}
-                            coloredBG={true}
+                            colorText={"text-sky-700"}
+                            colorBG={"bg-sky-500/20"}
                           >
-                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                            <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                               <p>
                                 {[
                                   director.personalDetails.title,
@@ -543,10 +551,10 @@ const PersonalInfo = () => {
                           <CardInfo
                             cardTitle="Contact Details"
                             cardIcon={PhoneIcon}
-                            color={"green"}
-                            coloredBG={true}
+                            colorText={"text-green-700"}
+                            colorBG={"bg-green-500/20"}
                           >
-                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                            <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                               <p>
                                 Currently residing in{" "}
                                 {[
@@ -585,10 +593,10 @@ const PersonalInfo = () => {
                           <CardInfo
                             cardTitle="Employment Details"
                             cardIcon={BriefcaseIcon}
-                            color={"violet"}
-                            coloredBG={true}
+                            colorText={"text-violet-700"}
+                            colorBG={"bg-violet-500/20"}
                           >
-                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                            <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                               <p>
                                 Working as a{" "}
                                 {director.employmentDetails.occupation} at{" "}
@@ -621,10 +629,10 @@ const PersonalInfo = () => {
                           <CardInfo
                             cardTitle="Banking Details"
                             cardIcon={BuildingOffice2Icon}
-                            color={"red"}
-                            coloredBG={true}
+                            colorText={"text-yellow-700"}
+                            colorBG={"bg-yellow-500/20"}
                           >
-                            <div className="space-y-2 flex flex-col gap-5 p-3">
+                            <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                               <p>
                                 Maintain a {director.bankDetails.accountType}{" "}
                                 account with {director.bankDetails.bankName}.
@@ -689,10 +697,10 @@ const PersonalInfo = () => {
                             <CardInfo
                               cardTitle="Shareholder Personal Details"
                               cardIcon={UserIcon}
-                              color={"blue"}
-                              coloredBG={true}
+                              colorText={"text-sky-700"}
+                              colorBG={"bg-sky-500/20"}
                             >
-                              <div className="space-y-2 flex flex-col gap-5 p-3">
+                              <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                                 <p>
                                   <b>
                                     {shareholder.personalDetails.title}{" "}
@@ -735,10 +743,10 @@ const PersonalInfo = () => {
                             <CardInfo
                               cardTitle="Shareholder Contact Details"
                               cardIcon={PhoneIcon}
-                              color={"green"}
-                              coloredBG={true}
+                              colorText={"text-green-700"}
+                              colorBG={"bg-green-500/20"}
                             >
-                              <div className="space-y-2 flex flex-col gap-5 p-3">
+                              <div className="space-y-2 flex flex-col gap-5 p-3 text-gray-700 dark:text-gray-400">
                                 <div className="grid grid-cols-2 gap-4">
                                   <CardInfoRow
                                     icon={PhoneIcon}
@@ -786,24 +794,47 @@ const PersonalInfo = () => {
       </div>
     );
   };
+  console.log(personalInfo);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-4 pb-8 pt-6 px-5 mt-3">
+        <ShimmerTable />
+        <ShimmerTable />
+        <ShimmerTable />
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="flex flex-col gap-2">
-        <ContainerTile
-          className="flex items-center gap-2"
-          loading={loading}
-          // error={error}
-        >
-          {/* <img
+        {/* <img
             className="rounded-full w-12"
             src="https://lmscarbon.com/assets/index.png"
             alt=""
           /> */}
-          <div className="text-xl font-semibold">Borrower Id: {subID}</div>
-        </ContainerTile>
+        <div className="flex justify-between items-center text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 rounded-lg shadow-sm mb-3 p-4">
+          <div>Customer Id: {personalInfo.customerId}</div>
+          {personalInfo.borrowerProfileType === "PERSONAL_BORROWER" && (
+            <div>
+              Borrower Id:{" "}
+              {personalInfo.borrowerProfile.personalDetails.uniqueID}
+            </div>
+          )}
+          {personalInfo.borrowerProfileType === "COMPANY_BORROWER" && (
+            <div>
+              Unique Id:{" "}
+              {
+                personalInfo.companyBorrowerProfile.companyDetails
+                  .companyUniqueId
+              }
+            </div>
+          )}
+        </div>
+
         <>
-          {personalInfo.borrowerProfileType === "PERSONAL_BORROWER" ? (
+          {personalInfo?.borrowerProfileType === "PERSONAL_BORROWER" ? (
             <>{renderExpandedRowPersonal(...transformFlattenData)}</>
           ) : (
             <>{renderExpandedRowCompany(...transformFlattenDataCompany)}</>

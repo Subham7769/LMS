@@ -2,47 +2,81 @@ import React from "react";
 import Button from "../../Common/Button/Button";
 import InputSelect from "../../Common/InputSelect/InputSelect";
 import { useDispatch } from "react-redux";
-import { downloadDocumentFile } from "../../../redux/Slices/personalLoansSlice";
-import convertToTitleCase from "../../../utils/convertToTitleCase";
-import { ArrowDownTrayIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { accountStatusOptionsPersonal } from "../../../data/LosData";
+import {
+  fetchAllBorrowersByType,
+  changeBorrowerStatus,
+  setUpdateBorrower,
+} from "../../../redux/Slices/personalBorrowersSlice";
+import { useNavigate } from "react-router-dom";
+import Modal from "../../Common/Modal/Modal";
 
-const ViewEditModal = ({ isOpen, onClose }) => {
+const ViewEditModal = ({
+  isOpen,
+  onClose,
+  rowData,
+  currentStatus,
+  setCurrentStatus,
+}) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
+  const handleEdit = (uid) => {
+    dispatch(setUpdateBorrower({ uid }));
+    navigate(
+      `/loan/loan-origination-system/personal/borrowers/update-borrower/${uid}`
+    );
+    // console.log(uid);
+  };
+
+  const handleChangeStatus = async (uid, newStatus) => {
+    console.log(uid);
+    setCurrentStatus(newStatus);
+    await dispatch(changeBorrowerStatus({ uid, newStatus })).unwrap();
+    dispatch(
+      fetchAllBorrowersByType({
+        page: 0,
+        size: 10,
+        borrowerType: "PERSONAL_BORROWER",
+      })
+    );
+    navigate(`/loan/loan-origination-system/personal/borrowers/view-borrower`);
+    onClose();
+  };
+
   return (
     <>
-      <div className="fixed inset-0 z-20 flex items-center justify-center bg-stone-200/10 backdrop-blur-sm">
-        <div className="relative w-1/3 p-8 bg-white border border-red-600 rounded-xl shadow-lg transition-all duration-500 ease-in-out">
-          <XMarkIcon
-            onClick={onClose}
-            className="absolute p-1 top-1 right-1 h-6 w-6 text-white bg-red-500 rounded-full cursor-pointer"
+      <Modal
+        title={"Edit Borrower Details"}
+        isFooter={false}
+        secondaryOnClick={onClose}
+      >
+        <div className="flex justify-start gap-5 flex-col">
+          <InputSelect
+            labelName={"Account Status"}
+            inputName={"accountStatus"}
+            inputOptions={accountStatusOptionsPersonal}
+            inputValue={currentStatus}
+            onChange={(e) => setCurrentStatus(e.target.value)}
+            disabled={false}
           />
-          <div className="flex justify-start gap-5 flex-col mt-4">
-              <Button
-                buttonName={"Edit"}
-                onClick={() => handleEdit(rowData.uid)}
-                className={"text-center"}
-                rectangle={true}
-              />
-              <InputSelect
-                labelName={"Account Status"}
-                inputName={"accountStatus"}
-                inputOptions={accountStatusOptionsPersonal}
-                inputValue={currentStatus}
-                onChange={(e) => setCurrentStatus(e.target.value)}
-              />
-              <Button
-                buttonName={"Change Status"}
-                onClick={() => handleChangeStatus(rowData.uid, currentStatus)}
-                className={"bg-red-500 hover:bg-red-600"}
-                rectangle={true}
-              />
-            </div>
+          <Button
+            buttonName={"Change Status"}
+            onClick={() => handleChangeStatus(rowData.uid, currentStatus)}
+            buttonType="tertiary"
+          />
+          {/* OR Separator with horizontal line */}
+          <div className="relative flex items-center my-2">
+            <hr className="w-full border-gray-300" />
+            <span className="absolute left-1/2 -translate-x-1/2 bg-white px-2 text-gray-500 text-sm">
+              OR
+            </span>
+          </div>
+          <Button buttonName={"Edit"} onClick={() => handleEdit(rowData.uid)} />
         </div>
-      </div>
+      </Modal>
     </>
   );
 };

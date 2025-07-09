@@ -1,20 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchNotificationsHistory } from "../../redux/Slices/notificationSlice";
-import { FiChevronUp, FiChevronDown } from "react-icons/fi";
+import {
+  fetchNotificationsHistory,
+  updateNotificationRequest,
+} from "../../redux/Slices/notificationSlice";
 import InputSelect from "../Common/InputSelect/InputSelect";
+import Button from "../Common/Button/Button";
 import ContainerTile from "../Common/ContainerTile/ContainerTile";
+import DropdownFilter from "../Common/DropdownFilter/DropdownFilter";
+import DatePickerWithRange from "../Common/DatePickerWithRange/DatePickerWithRange"; // uses Calendar inside
 import { convertDate } from "../../utils/convertDate";
+import ExpandableTable from "../Common/ExpandableTable/ExpandableTable";
+import convertToReadableString from "../../utils/convertToReadableString";
+import { FiCheckCircle, FiXCircle } from "react-icons/fi";
+
+function transformData(inputArray) {
+  return inputArray.map((item) => ({
+    ...item,
+    fieldName: item?.fieldName ? convertToReadableString(item?.fieldName) : "-",
+  }));
+}
+
+const dateOptions = [
+  { label: "Last 7 Days", value: 7 },
+  { label: "Last 30 Days", value: 30 },
+  { label: "Last 2 Months", value: 60 },
+  { label: "Last 6 Months", value: 180 },
+  { label: "Last 12 Months", value: 365 },
+];
+
 const ProductNotifications = () => {
+  const today = new Date();
+  const [days, setDays] = useState(365);
+  const [toDate, setToDate] = useState(today);
+  const [fromDate, setFromDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 365);
+    return d;
+  });
+  const [range, setRange] = useState({ from: fromDate, to: toDate });
   const { notificationsHistory, error, loading } = useSelector(
     (state) => state.notification // Ensure state structure matches
   );
-  const [expandedRow, setExpandedRow] = useState(null);
   const [notificationsHistoryFiltered, setNotificationsHistoryFiltered] =
     useState(notificationsHistory);
-  const [statusFilter, setStatusFilter] = useState("APPROVED");
+  const [statusFilter, setStatusFilter] = useState("ALL");
   const dispatch = useDispatch();
   const filterOptions = [
+    {
+      label: "ALL",
+      value: "ALL",
+    },
     {
       label: "APPROVED",
       value: "APPROVED",
@@ -33,151 +69,144 @@ const ProductNotifications = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setNotificationsHistoryFiltered(
-      notificationsHistory.filter(
-        (notification) => notification.status === statusFilter
-      )
-    );
+    if (statusFilter === "ALL") {
+      setNotificationsHistoryFiltered(notificationsHistory);
+    } else {
+      setNotificationsHistoryFiltered(
+        notificationsHistory.filter(
+          (notification) => notification.status === statusFilter
+        )
+      );
+    }
   }, [statusFilter, notificationsHistory]);
 
   // Handle row expand/collapse
-  const handleExpand = (id) => {
-    setExpandedRow(expandedRow === id ? null : id);
+
+  const handleDropdownSelect = (value) => {
+    setDays(Number(value));
   };
 
-  return (
-    <ContainerTile
-      className="mx-auto space-y-8"
-      loading={loading}
-      error={error}
-    >
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <div className="flex justify-between align-middle mb-4">
-          <h2 className="text-2xl font-bold text-gray-800 mt-3">
-            Notification History
-          </h2>
-          <div className="flex gap-5 w-1/8">
-            <span className="mt-6">
-              {notificationsHistoryFiltered.length + " results"}
-            </span>
-            <InputSelect
-              labelName="Status"
-              inputOptions={filterOptions}
-              inputName="StatusFilter"
-              inputValue={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            />
+  const handleDateRangeChange = (selectedRange) => {
+    if (selectedRange?.from && selectedRange?.to) {
+      setFromDate(selectedRange.from);
+      setToDate(selectedRange.to);
+      setRange(selectedRange);
+    }
+  };
+
+  const notificationsHistoryData = transformData(notificationsHistoryFiltered);
+
+  const handleApproveRequest = (rowData) => {
+    // Clone and update the notification object
+    let updatedNotification = {
+      ...rowData,
+      status: "APPROVED",
+      productId: rowData.parentId,
+    };
+    dispatch(
+      updateNotificationRequest({ updatedNotification, decision: "APPROVED" })
+    );
+  };
+
+  const handleRejectRequest = (rowData) => {
+    // Clone and update the notification object
+    let updatedNotification = {
+      ...rowData,
+      status: "REJECTED",
+      productId: rowData.parentId,
+    };
+    dispatch(
+      updateNotificationRequest({ updatedNotification, decision: "REJECTED" })
+    );
+  };
+
+  const columns = [
+    { label: "Product Name", field: "subSectionName" },
+    { label: "Field Name", field: "fieldName" },
+    { label: "Type", field: "type" },
+    { label: "Old Value", field: "oldValue" },
+    { label: "New Value", field: "newValue" },
+    { label: "Principal Amount", field: "principalAmount" },
+    { label: "Status", field: "status" },
+  ];
+
+  const renderExpandedRow = (rowData) => {
+    return (
+      <>
+        <div className="grid grid-cols-4 gap-4 text-[12px]">
+          <div className="flex justify-between flex-col">
+            <p className="font-semibold">Maker Name:</p>
+            <p>{rowData.makerName || "N/A"}</p>
+          </div>
+          <div className="flex justify-between flex-col">
+            <p className="font-semibold">Checker Name:</p>
+            <p>{rowData.checkerName || "N/A"}</p>
+          </div>
+          <div className="flex justify-between flex-col">
+            <p className="font-semibold">Checker At:</p>
+            <p>{rowData.checkerAt || "N/A"}</p>
+          </div>
+          <div className="flex justify-between flex-col">
+            <p className="font-semibold">Rejected Note:</p>
+            <p>{rowData.rejectedNote || "N/A"}</p>
+          </div>
+          <div className="flex justify-between flex-col">
+            <p className="font-semibold">Requested At:</p>
+            <p>{convertDate(rowData.requestedAt) || "N/A"}</p>
+          </div>
+          <div className="flex justify-between flex-col">
+            <p className="font-semibold">Type:</p>
+            <p>{rowData.type || "N/A"}</p>
           </div>
         </div>
-        <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
-          <table className="min-w-full table-auto" role="table">
-            <thead>
-              <tr className="bg-background-light-secondary text-sm text-gray-600 font-semibold">
-                <th className="px-6 py-4"></th>
-                <th className="py-6 text-left">Product Name</th>
-                <th className="px-6 py-4">Field Name</th>
-                <th className="px-6 py-4">Type</th>
-                <th className="px-6 py-4">Old Value</th>
-                <th className="px-6 py-4">New Value</th>
-                <th className="px-6 py-4">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {notificationsHistoryFiltered.map((notification) => (
-                <React.Fragment key={`notification-${notification.id}`}>
-                  <tr
-                    className={`hover:bg-gray-50 cursor-pointer text-sm font-medium text-gray-800 text-center `}
-                    onClick={() => handleExpand(notification.id)}
-                  >
-                    <td className="px-6 py-4">
-                      <button
-                        onClick={() => handleExpand(notification.id)}
-                        className="text-blue-600 hover:text-blue-800 mr-2"
-                        aria-expanded={expandedRow === notification.id}
-                        aria-label={
-                          expandedRow === notification.id
-                            ? "Collapse row"
-                            : "Expand row"
-                        }
-                      >
-                        {expandedRow === notification.id ? (
-                          <FiChevronUp />
-                        ) : (
-                          <FiChevronDown />
-                        )}
-                      </button>
-                    </td>
-                    <td className="py-4 text-left">
-                      {notification.subSectionName || "N/A"}
-                    </td>
-                    <td className="px-6 py-4">
-                      {notification.fieldName || "N/A"}
-                    </td>
-                    <td className="px-6 py-4">{notification.type || "N/A"}</td>
-                    <td className="px-6 py-4">
-                      {notification?.oldValue || "N/A"}
-                    </td>
-                    <td className="px-6 py-4">
-                      {notification?.newValue || "N/A"}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-2 inline-flex leading-5 font-semibold rounded-full ${
-                          notification.status === "APPROVED"
-                            ? "bg-green-100 text-green-800"
-                            : notification.status === "REJECTED"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-yellow-100 text-yellow-800"
-                        }`}
-                      >
-                        {notification.status}
-                      </span>
-                    </td>
-                  </tr>
-                  {expandedRow === notification.id && (
-                    <tr className={`bg-gray-50 ${expandedRow && "border-2"}`}>
-                      <td
-                        colSpan="8"
-                        className="px-6 py-4 pl-16 text-sm text-gray-600"
-                      >
-                        <div className="grid grid-cols-4 gap-4 text-[12px]">
-                          <div className="flex justify-between flex-col">
-                            <p className="font-semibold">Maker Name:</p>
-                            <p>{notification.makerName || "N/A"}</p>
-                          </div>
-                          <div className="flex justify-between flex-col">
-                            <p className="font-semibold">Checker Name:</p>
-                            <p>{notification.checkerName || "N/A"}</p>
-                          </div>
-                          <div className="flex justify-between flex-col">
-                            <p className="font-semibold">Checker At:</p>
-                            <p>{notification.checkerAt || "N/A"}</p>
-                          </div>
-                          <div className="flex justify-between flex-col">
-                            <p className="font-semibold">Rejected Note:</p>
-                            <p>{notification.rejectedNote || "N/A"}</p>
-                          </div>
-                          <div className="flex justify-between flex-col">
-                            <p className="font-semibold">Requested At:</p>
-                            <p>
-                              {convertDate(notification.requestedAt) || "N/A"}
-                            </p>
-                          </div>
-                          <div className="flex justify-between flex-col">
-                            <p className="font-semibold">Type:</p>
-                            <p>{notification.type || "N/A"}</p>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
+        <div className="w-full flex justify-end gap-2 px-5">
+          {rowData?.status === "CREATED" && (
+            <>
+              <Button
+                buttonName={"Reject"}
+                onClick={() => handleRejectRequest(rowData)}
+                buttonIcon={FiXCircle}
+                buttonType="destructive"
+              />
+              <Button
+                buttonName={"Approve"}
+                onClick={() => handleApproveRequest(rowData)}
+                buttonIcon={FiCheckCircle}
+                buttonType="success"
+              />
+            </>
+          )}
+        </div>
+      </>
+    );
+  };
+  return (
+    <>
+      <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2 mb-4">
+        <div className="flex flex-row sm:flex-row gap-3 w-full sm:w-auto justify-start sm:justify-end">
+          <DropdownFilter
+            options={filterOptions}
+            value={statusFilter}
+            onChange={(value) => setStatusFilter(value)}
+          />
+          <DatePickerWithRange
+            className="w-full sm:w-auto"
+            range={range}
+            setRange={handleDateRangeChange}
+          />
         </div>
       </div>
-    </ContainerTile>
+      <ContainerTile loading={loading} error={error}>
+        <ExpandableTable
+          columns={columns}
+          data={notificationsHistoryData}
+          renderExpandedRow={renderExpandedRow}
+          loading={loading}
+          ListName="List of notifications"
+          ListNameLength={notificationsHistoryFiltered.length}
+        />
+      </ContainerTile>
+    </>
   );
 };
 

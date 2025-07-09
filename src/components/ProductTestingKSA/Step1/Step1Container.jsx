@@ -25,7 +25,7 @@ const Step1Container = () => {
     }
   };
 
-  return <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow border-2">{renderSubStep()}</div>;
+  return <div className="max-w-4xl mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded-xl shadow">{renderSubStep()}</div>;
 };
 
 export default Step1Container;

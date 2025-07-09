@@ -6,17 +6,16 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useLocation, useParams } from "react-router-dom";
 import longHornLogo from "../../../assets/image/longhorn-logo.png";
-import formatNumber from "../../../utils/formatNumber";
 import { getRefundForm } from "../../../redux/Slices/personalRefundSlice";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
 const ShimmerTable = () => {
   return (
     <div className="grid grid-cols-4 gap-4 animate-pulse">
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
-      <div className="h-4 bg-background-light-primary rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded"></div>
     </div>
   );
 };
@@ -35,7 +34,7 @@ const RefundFormPrint = () => {
     if (!location.pathname.includes("loan-origination-system")) {
       const timeoutId = setTimeout(() => {
         window.print();
-      }, 1500);
+      }, 2000);
 
       // Cleanup to avoid potential memory leaks
       return () => clearTimeout(timeoutId);
@@ -85,17 +84,17 @@ const RefundFormPrint = () => {
         </div>
         <div className="grid grid-cols-2 border-2 border-gray-500 text-xs">
           <div className="border-r border-gray-500">
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-1 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-1 bg-red-500">
               CUSTOMER DETAILS
             </div>
             <div className="grid grid-cols-2">
-              <div className="border-r border-border-gray-primary">
+              <div className="border-r border-gray-300">
                 {Object.keys(customerDetails)
                   .filter((key) => key !== "customerId")
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pl-1 pt-1"
+                      className="border-b border-gray-300 pl-1 pt-1"
                     >
                       {convertToReadableString(key)}
                     </div>
@@ -107,24 +106,24 @@ const RefundFormPrint = () => {
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                      className="border-b border-gray-300 pr-1 pt-1 text-right"
                     >
                       &nbsp;{customerDetails[key]}
                     </div>
                   ))}
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-1 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-1 bg-red-500">
               CUSTOMER BANK DETAILS
             </div>
             <div className="grid grid-cols-2">
-              <div className="border-r border-border-gray-primary">
+              <div className="border-r border-gray-300">
                 {Object.keys(customerBankDetails)
                   .filter((key) => key !== "swift" && key !== "tpin")
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pl-1 pt-1"
+                      className="border-b border-gray-300 pl-1 pt-1"
                     >
                       {convertToReadableString(key)}
                     </div>
@@ -136,7 +135,7 @@ const RefundFormPrint = () => {
                   .map((key) => (
                     <div
                       key={key}
-                      className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                      className="border-b border-gray-300 pr-1 pt-1 text-right"
                     >
                       &nbsp;{customerBankDetails[key]}
                     </div>
@@ -145,28 +144,23 @@ const RefundFormPrint = () => {
             </div>
           </div>
           <div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-1 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-1 bg-red-500">
               CUSTOMER CONTACT DETAILS
             </div>
-            <div className="grid grid-cols-[45%,55%] ">
-              <div className="border-r border-border-gray-primary">
+            <div className="grid grid-cols-[45%_55%] ">
+              <div className="border-r border-gray-300">
                 {Object.keys(customerContactDetails).map((key) => (
-                  <div
-                    key={key}
-                    className="border-b border-border-gray-primary pl-1 pt-1"
-                  >
+                  <div key={key} className="border-b border-gray-300 pl-1 pt-1">
                     {convertToReadableString(key)}
                   </div>
                 ))}
-                <div className="border-b border-border-gray-primary pl-1 pt-1">
-                  &nbsp;
-                </div>
+                <div className="border-b border-gray-300 pl-1 pt-1">&nbsp;</div>
               </div>
               <div>
                 {Object.keys(customerContactDetails).map((key) => (
                   <div
                     key={key}
-                    className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                    className="border-b border-gray-300 pr-1 pt-1 text-right"
                   >
                     &nbsp;{customerContactDetails[key]}
                   </div>
@@ -175,12 +169,12 @@ const RefundFormPrint = () => {
             </div>
           </div>
           <div className="col-span-2">
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-1 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-1 bg-red-500">
               REFUND REQUEST DETAILS
             </div>
             <div className="grid grid-cols-2">
               <div className="grid grid-cols-2 border-r border-gray-500">
-                <div className="border-r border-border-gray-primary">
+                <div className="border-r border-gray-300">
                   {Object.keys(refundRequestDetails)
                     .filter(
                       (key) =>
@@ -191,7 +185,7 @@ const RefundFormPrint = () => {
                     .map((key) => (
                       <div
                         key={key}
-                        className="border-b border-border-gray-primary pl-1 pt-1"
+                        className="border-b border-gray-300 pl-1 pt-1"
                       >
                         {convertToReadableString(key)}
                       </div>
@@ -209,12 +203,12 @@ const RefundFormPrint = () => {
                     .map((key) => (
                       <div
                         key={key}
-                        className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                        className="border-b border-gray-300 pr-1 pt-1 text-right"
                       >
                         &nbsp;{convertToTitleCase(refundRequestDetails[key])}
                       </div>
                     ))}
-                  <div className="border-b border-border-gray-primary pl-1 pt-1 grid grid-cols-2 gap-y-1">
+                  <div className="border-b border-gray-300 pl-1 pt-1 grid grid-cols-2 gap-y-1">
                     {Object.keys(attachmentDocuments)
                       .filter((key) => key !== "otherDocumentDescription")
                       .map((key) => {
@@ -238,7 +232,7 @@ const RefundFormPrint = () => {
                 </div>
               </div>
               <div className="grid grid-cols-2">
-                <div className="border-r border-border-gray-primary">
+                <div className="border-r border-gray-300">
                   {Object.keys(refundRequestDetails)
                     .filter(
                       (key) =>
@@ -249,7 +243,7 @@ const RefundFormPrint = () => {
                     .map((key) => (
                       <div
                         key={key}
-                        className="border-b border-border-gray-primary pl-1 pt-1"
+                        className="border-b border-gray-300 pl-1 pt-1"
                       >
                         {convertToReadableString(key)}
                       </div>
@@ -267,7 +261,7 @@ const RefundFormPrint = () => {
                     .map((key) => (
                       <div
                         key={key}
-                        className="border-b border-border-gray-primary pr-1 pt-1 text-right"
+                        className="border-b border-gray-300 pr-1 pt-1 text-right"
                       >
                         &nbsp;{refundRequestDetails[key]}
                       </div>
@@ -278,7 +272,7 @@ const RefundFormPrint = () => {
                 </div>
               </div>
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-1 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-1 bg-red-500">
               CUSTOMER ACKNOWLEDGMENT
             </div>
             <div className="px-1 pt-1">
@@ -290,7 +284,7 @@ const RefundFormPrint = () => {
               <br /> Customer Signature:
               _______________________________________________
             </div>
-            <div className="font-semibold text-center border-b border-border-gray-primary pt-1 bg-red-500">
+            <div className="font-semibold text-center border-b border-gray-300 pt-1 bg-red-500">
               CREDIT OFFICER REFUND REQUEST ASSESSEMENT
             </div>
             <div className="grid grid-cols-2 p-1">
@@ -307,7 +301,7 @@ const RefundFormPrint = () => {
             </div>
             <div className="grid grid-cols-[60%_40%] border-t border-gray-500 text-xs">
               <div className="border-r border-gray-500">
-                <div className="font-semibold text-center border-b border-border-gray-primary pt-1 bg-red-500">
+                <div className="font-semibold text-center border-b border-gray-300 pt-1 bg-red-500">
                   CREDIT OFFICER REFUND APPROVAL
                 </div>
                 <div className="grid grid-cols-2 p-1">
@@ -333,7 +327,7 @@ const RefundFormPrint = () => {
                     <div className="border-b border-gray-800"></div>
                   </div>
                 </div>
-                <div className="font-semibold text-center border-b border-border-gray-primary pt-1 bg-red-500">
+                <div className="font-semibold text-center border-b border-gray-300 pt-1 bg-red-500">
                   FINANCE / ACCOUNTS DEPARTMENT (DISBURSEMENT)
                 </div>
                 <div className="grid grid-cols-2 p-1">

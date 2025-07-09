@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useState } from "react";
-import { Outlet, Link, useLocation, useParams } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import LoadingState from "../../LoadingState/LoadingState";
 import Tab from "../../Common/Tab/Tab";
 
@@ -19,9 +19,6 @@ const Borrowers = () => {
       path: "/loan/loan-origination-system/personal/borrowers/view-borrower",
       label: "View Borrower",
     },
-    // { id: "update-borrower", path: "/loan/loan-origination-system/personal/borrowers/update-borrower/:uid", label: "Update Borrower" },
-    // { id: "add-borrower-group", path: "/borrowers/add-borrower-group", label: "Add Borrower Group" },
-    // { id: "view-borrower-group", path: "/borrowers/view-borrower-group", label: "View Borrower Group" },
   ];
 
   // Update activeTab based on the current route
@@ -33,30 +30,12 @@ const Borrowers = () => {
   }, [location, tabs]);
 
   return (
-    <div className="mt-4">
-      {/* Tab Navigation */}
-      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 mb-4">
-        <ul className="flex flex-wrap -mb-px">
-          {tabs.map((tab) => (
-            <Tab
-              key={tab.id}
-              id={tab.id}
-              label={tab.label}
-              to={tab.path}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
-          ))}
-        </ul>
-      </div>
-
-      {/* Content Rendering */}
-      <div className="mt-4">
-        <Suspense fallback={<LoadingState />}>
-          <Outlet />
-        </Suspense>
-      </div>
-    </div>
+    <>
+      <Tab tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Suspense fallback={<LoadingState />}>
+        <Outlet />
+      </Suspense>
+    </>
   );
 };
 

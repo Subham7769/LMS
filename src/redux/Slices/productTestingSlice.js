@@ -165,7 +165,7 @@ export const submitLoanConfiguration = createAsyncThunk(
       const response = await fetch(
         `${
           import.meta.env.VITE_USER_PRODUCT_TESTING_OFFERS
-        }${userID}/loans/configurations`,
+        }${userID}/loan/offers/trial`,
         {
           method: "POST",
           headers: {

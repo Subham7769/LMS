@@ -5,7 +5,6 @@ import recoverySlice from "./Slices/recoverySlice";
 import tclSlice from "./Slices/tclSlice";
 import projectSlice from "./Slices/projectSlice";
 import productSlice from "./Slices/productSlice";
-import blockedEmployerSlice from "./Slices/blockedEmployerSlice";
 import dbrConfigSlice from "./Slices/dbrConfigSlice";
 import creditScoreSlice from "./Slices/creditScoreSlice";
 import customerCareSlice from "./Slices/customerCareSlice";
@@ -35,10 +34,15 @@ import smeLoansSlice from "./Slices/smeLoansSlice";
 import smeRepaymentsSlice from "./Slices/smeRepaymentsSlice";
 import affordabilitySlice from "./Slices/affordabilitySlice.js";
 import employerSlice from "./Slices/employerSlice.js";
+import bankSlice from "./Slices/bankSlice.js";
 import loanApprovalSlice from "./Slices/loanApprovalSlice.js";
 import documentConfigSlice from "./Slices/documentConfigSlice.js";
 import personalRefundSlice from "./Slices/personalRefundSlice.js";
-import productTestingKSASlice from "./Slices/ProductTestingKSA.js";
+import drlRulesetSlice from "./Slices/drlRulesetSlice";
+import B2CLoansSlice from "./Slices/B2CLoansSlice.js";
+import southAfricaSmeLoansSlice from "./Slices/southAfricaSmeLoansSlice";
+import workflowManagementSlice from "./Slices/workflowManagementSlice";
+import agenticAiSlice from "./Slices/agenticAiSlice";
 
 import checkTokenMiddleware from "./Middlewares/checkTokenMiddleware.js";
 import AutoLogoutMiddleware from "./Middlewares/AutoLogoutMiddleware";
@@ -51,7 +55,6 @@ const store = configureStore({
     tcl: tclSlice,
     project: projectSlice,
     product: productSlice,
-    blockedEmployer: blockedEmployerSlice,
     dbrConfig: dbrConfigSlice,
     creditScore: creditScoreSlice,
     customerCare: customerCareSlice,
@@ -80,10 +83,15 @@ const store = configureStore({
     smeRepayments: smeRepaymentsSlice,
     affordability: affordabilitySlice,
     employer: employerSlice,
+    bank: bankSlice,
     loanApproval: loanApprovalSlice,
     documentConfig: documentConfigSlice,
     personalRefund: personalRefundSlice,
-    productTestingKSA:productTestingKSASlice,
+    drlRuleset: drlRulesetSlice,
+    B2CLoans: B2CLoansSlice,
+    southAfricaSmeLoans: southAfricaSmeLoansSlice,
+    workflowManagement: workflowManagementSlice,
+    agenticAi: agenticAiSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(AutoLogoutMiddleware, checkTokenMiddleware),

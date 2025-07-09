@@ -201,7 +201,37 @@ const validationSlice = createSlice({
           }
         });
       }
+      console.log(errors);
+      state.validationError = {
+        ...state.validationError,
+        ...errors,
+      };
+    },
+    validateFormNullCheck: (state, action) => {
+      const errors = {};
+      const formData = action.payload;
+      state.isValid = true;
 
+      if (formData.dataIndex) {
+        state.fields.forEach((field) => {
+          if (formData[field] === "") {
+            errors[`${field}_${formData.dataIndex}`] = true;
+            state.isValid = false;
+          } else {
+            errors[`${field}_${formData.dataIndex}`] = false;
+          }
+        });
+      } else {
+        state.fields.forEach((field) => {
+          if (formData[field] === "" || formData[field] === null) {
+            errors[field] = true;
+            state.isValid = false;
+          } else {
+            errors[field] = false;
+          }
+        });
+      }
+      console.log(errors);
       state.validationError = {
         ...state.validationError,
         ...errors,
@@ -218,5 +248,6 @@ export const {
   updateValidationError,
   clearValidationError,
   validateForm,
+  validateFormNullCheck,
 } = validationSlice.actions;
 export default validationSlice.reducer;

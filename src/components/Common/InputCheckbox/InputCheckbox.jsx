@@ -13,18 +13,28 @@ const InputCheckbox = ({ labelName, inputName, inputChecked, onChange, disabled 
     };
 
     return (
-        <label className={`flex ${upperLabel ? 'flex-col' : 'items-center'} mt-3 w-full ${className} gap-3`}>
-            {upperLabel && <span className={`text-xs ${className} -mb-2 text-center`}>{labelName}</span>}
-            <input
-                type="checkbox"
-                name={inputName}
-                checked={inputChecked || false}
-                onChange={handleChange}
-                className="form-checkbox rounded-md p-2"
-                disabled={disabled}
-            />
-            {!upperLabel && <span className={`text-xs ${className}`}>{labelName}</span>}
-        </label>
+      <label
+        className={`flex ${
+          upperLabel ? "flex-col" : "items-center"
+        }  w-full ${className} gap-2`}
+      >
+        {upperLabel && (
+          <span className={`text-xs ${className} -mb-2 text-center`}>
+            {labelName}
+          </span>
+        )}
+        <input
+          type="checkbox"
+          name={inputName}
+          checked={inputChecked || false}
+          onChange={handleChange}
+          className="form-checkbox"
+          disabled={disabled}
+        />
+        {!upperLabel && (
+          <span className={`text-sm ${className}`}>{labelName}</span>
+        )}
+      </label>
     );
 };
 

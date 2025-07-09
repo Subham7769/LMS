@@ -208,10 +208,11 @@ export const fetchList = createAsyncThunk(
 
     // Create a lookup map of loan schema IDs to names
     const loanSchemaMap = new Map(
-      loanschema.submenuItems.map((item) => [
-        item.href.split("/").pop(),
-        item.name,
-      ])
+      loanschema.submenuItems.map((item) => {
+        const match = item.href.match(/loan\/project\/([0-9a-fA-F-]{36})/);
+        const projectId = match ? match[1] : null;
+        return [projectId, item.name];
+      })
     );
 
     // Update submenuItems with correct loanSchema names
@@ -241,6 +242,7 @@ const productInitialState = {
     disableRac: false,
     oneSettleLoan: false,
     advanceDiscount: false,
+    notApplyInsuranceLevyDeduction: false,
     eligibleCustomerType: "",
     fee: "",
     interestEligibleTenure: [],
@@ -262,6 +264,7 @@ const productInitialState = {
     interestMethod: "",
     insuranceFee: "",
     insuranceLevy: "",
+    notApplyInsuranceLevyDeduction:false,
   },
   loading: false,
   error: null,
@@ -344,6 +347,7 @@ const productSlice = createSlice({
           interestEligibleTenure: action.payload.interestEligibleTenure.map(
             (tenure) => ({
               ...tenure,
+              // interestRate: formatStringNumber(tenure.interestRate),
               dataIndex: nanoid(), // Assign nanoid() to dataIndex
             })
           ),

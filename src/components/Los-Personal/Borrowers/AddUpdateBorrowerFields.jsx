@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Accordion from "../../Common/Accordion/Accordion";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +10,6 @@ import {
 import {
   maritalStatus,
   workType,
-  ministriesOptions,
   title,
   gender,
   accountType,
@@ -21,54 +20,43 @@ import {
   setFields,
   clearValidationError,
 } from "../../../redux/Slices/validationSlice";
-import {
-  BankNameOptions,
-  BranchNameOptions,
-  bankBranches,
-} from "../../../data/BankData";
 import DynamicForm from "../../Common/DynamicForm/DynamicForm";
 import { isValidationFailed } from "../../../utils/isValidationFailed";
-
 import {
-  setEmployerData,
-  handleChangeEmployerData,
   fetchEmployerData,
   addEmployerData,
-  updateEmployerData,
-  deleteEmployerData,
 } from "../../../redux/Slices/employerSlice";
 import { useLocation } from "react-router-dom";
+import { fetchAllBank } from "../../../redux/Slices/bankSlice";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
+import { sectorOptions } from "../../../data/OptionsData";
 
 const AddUpdateBorrowerFields = ({
   BorrowerData,
   handleChangeReducer,
   handleFileReset,
   handleFileUpload,
+  sectionRefs,
 }) => {
   const dispatch = useDispatch();
-  const { employerData, allEmployerData, loading, error } = useSelector(
-    (state) => state.employer
-  );
-  const location = useLocation();
-
-  const isUpdateBorrower = location.pathname.includes("update-borrower");
-  const isDraftBorrower = location.pathname.includes("update-borrower/draft");
-
+  const { allEmployerData } = useSelector((state) => state.employer);
+  const { bankOptions, bankBranchOptions, sortCodeBranchCodeOptions } =
+    useSelector((state) => state.bank);
   const [filteredLocations1, setFilteredLocations1] = useState([]);
   const [filteredLocations2, setFilteredLocations2] = useState([]);
+  const [bankName, setBankName] = useState(null);
+  const [branchName, setBranchName] = useState(null);
   const [filteredDistrictLocations1, setFilteredDistrictLocations1] = useState(
     []
   );
   const [filteredDistrictLocations2, setFilteredDistrictLocations2] = useState(
     []
   );
-  const [filteredBranchNameOptions, setFilteredBranchNameOptions] = useState(
-    []
-  );
+
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   const [employerOptions, setEmployerOptions] = useState([]);
-  // console.log(BorrowerData);
+  const [ministriesOptions, setMinistriesOptions] = useState([]);
   const { menus } = useSelector((state) => state.sidebar);
   const [defaultAffordability, setDefaultAffordability] = useState([]);
 
@@ -84,14 +72,15 @@ const AddUpdateBorrowerFields = ({
       "nationality",
       "dateOfBirth",
       "placeOfBirth",
+
       "mobile1",
       "street",
       "residentialArea",
       "country",
       "email",
-      "employer",
 
       "workType",
+      "employer",
       "occupation",
       "employeeNo",
       "workStartDate",
@@ -99,26 +88,22 @@ const AddUpdateBorrowerFields = ({
 
       "bankName",
       "accountName",
+      "accountNo",
       "accountType",
       "branch",
       "branchCode",
       "sortCode",
-      "accountNo",
+
       "kinTitle",
       "kinSurname",
-      // "kinNrcNo",
       "kinGender",
-      // "kinRelationship",
       "kinMobile1",
-      // "kinEmail",
       "kinStreet",
       "kinResidentialArea",
       "kinCountry",
       "kinEmployer",
       "kinOccupation",
       "creditScore",
-      "freeCashInHand",
-      "grossSalary",
     ];
     dispatch(setFields(keysArray));
     dispatch(fetchEmployerData());
@@ -130,13 +115,44 @@ const AddUpdateBorrowerFields = ({
   useEffect(() => {
     //create employer dropdown
     if (allEmployerData?.length) {
-      const options = allEmployerData.map(({ employerId, employerName }) => ({
+      const options = allEmployerData.map(({ employerName }) => ({
         value: employerName,
         label: employerName,
       }));
       setEmployerOptions(options);
     }
   }, [allEmployerData]);
+
+  useEffect(() => {
+    if (
+      !BorrowerData?.employmentDetails?.employer ||
+      !allEmployerData?.length
+    ) {
+      setMinistriesOptions([]);
+      return;
+    }
+
+    const selectedEmployer = allEmployerData.find(
+      (emp) => emp.employerName === BorrowerData.employmentDetails.employer
+    );
+
+    const ministries = selectedEmployer?.ministries || [];
+
+    const formattedOptions = ministries.map((ministry) => ({
+      value: ministry,
+      label: convertToTitleCase(ministry),
+    }));
+
+    setMinistriesOptions(formattedOptions);
+
+    dispatch(
+      handleChangeReducer({
+        section: "employmentDetails",
+        field: "ministry",
+        value: "No Ministry Selected",
+      })
+    );
+  }, [BorrowerData?.employmentDetails?.employer, allEmployerData]);
 
   useEffect(() => {
     console.log(menus);
@@ -170,9 +186,6 @@ const AddUpdateBorrowerFields = ({
     setFilteredDistrictLocations2(
       districtOptions[BorrowerData.nextOfKinDetails.kinProvince] || []
     );
-    setFilteredBranchNameOptions(
-      BranchNameOptions[BorrowerData.bankDetails.bankName] || []
-    );
   }, [
     BorrowerData.contactDetails.country,
     BorrowerData.nextOfKinDetails.kinCountry,
@@ -181,11 +194,18 @@ const AddUpdateBorrowerFields = ({
     BorrowerData.bankDetails.bankName,
   ]);
 
-  const handleInputChange = (e, section) => {
-    const { name, value, type, checked } = e.target;
+  const handleInputChange = (e, section, index) => {
+    const { name, value, type, label, checked } = e.target;
+    console.log(e.target);
+    if (name === "bankName") {
+      setBankName(value);
+    } else if (name === "branch") {
+      setBranchName(value);
+    }
+
     // Use section to update the correct part of the state
     dispatch(
-      handleChangeReducer({ section, field: name, value, type, checked })
+      handleChangeReducer({ section, field: name, value, type, checked, index })
     );
   };
 
@@ -252,12 +272,83 @@ const AddUpdateBorrowerFields = ({
     }
   };
 
+  const location = useLocation();
+  const isUpdateBorrower = location.pathname.includes("update-borrower");
+  const isDraftBorrower = location.pathname.includes("draft");
+
+  // 1. Fetch all banks on mount
   useEffect(() => {
+    if (!bankOptions.length) {
+      dispatch(fetchAllBank());
+    }
+  }, []);
+
+  // 2. Set initial bankName if in update or draft mode
+  useEffect(() => {
+    if (
+      (isUpdateBorrower || isDraftBorrower) &&
+      BorrowerData?.bankDetails?.bankName
+    ) {
+      setBankName(BorrowerData.bankDetails.bankName);
+    }
+  }, [isUpdateBorrower, isDraftBorrower, BorrowerData?.bankDetails?.bankName]);
+
+  // 3. Set initial branch if in update or draft mode
+  useEffect(() => {
+    if (
+      (isUpdateBorrower || isDraftBorrower) &&
+      BorrowerData?.bankDetails?.branch
+    ) {
+      setBranchName(BorrowerData.bankDetails.branch);
+    }
+  }, [isUpdateBorrower, isDraftBorrower, BorrowerData?.bankDetails?.branch]);
+
+  // 4. Reset branch-related fields when bankName changes
+  const prevBankNameRef = useRef();
+
+  useEffect(() => {
+    if (!(isUpdateBorrower || isDraftBorrower)) return;
+
+    const prevBankName = prevBankNameRef.current;
+    const currentBankName = BorrowerData.bankDetails.bankName;
+
+    if (prevBankName !== undefined && prevBankName !== currentBankName) {
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "branch",
+          value: "",
+        })
+      );
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "branchCode",
+          value: "",
+        })
+      );
+      dispatch(
+        handleChangeReducer({
+          section: "bankDetails",
+          field: "sortCode",
+          value: "",
+        })
+      );
+    }
+
+    prevBankNameRef.current = currentBankName;
+  }, [BorrowerData.bankDetails.bankName, isUpdateBorrower, isDraftBorrower]);
+
+  // 5. Set sortCode and branchCode based on selected branch
+  useEffect(() => {
+    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
+      return;
+
     dispatch(
       handleChangeReducer({
         section: "bankDetails",
         field: "branchCode",
-        value: "",
+        value: sortCodeBranchCodeOptions[branchName]?.branchCode,
       })
     );
 
@@ -265,39 +356,10 @@ const AddUpdateBorrowerFields = ({
       handleChangeReducer({
         section: "bankDetails",
         field: "sortCode",
-        value: "",
+        value: sortCodeBranchCodeOptions[branchName]?.sortCode,
       })
     );
-  }, [BorrowerData.bankDetails.bankName]);
-
-  useEffect(() => {
-    if (!BorrowerData.bankDetails.bankName || !BorrowerData.bankDetails.branch)
-      return;
-
-    const branch = bankBranches.find(
-      (b) =>
-        b.bankName === BorrowerData.bankDetails.bankName &&
-        b.branchName === BorrowerData.bankDetails.branch
-    );
-
-    if (branch) {
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "branchCode",
-          value: branch.branchCode,
-        })
-      );
-
-      dispatch(
-        handleChangeReducer({
-          section: "bankDetails",
-          field: "sortCode",
-          value: branch.sortCode,
-        })
-      );
-    }
-  }, [BorrowerData.bankDetails.bankName, BorrowerData.bankDetails.branch]);
+  }, [BorrowerData.bankDetails.branch, branchName]);
 
   //   All Fields Configuration
   const personalDetailsConfig = [
@@ -380,14 +442,14 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Mobile 1",
       inputName: "mobile1",
-      type: "number",
+      type: "text",
       maxLength: 10,
       validation: true,
     },
     {
       labelName: "Mobile 2",
       inputName: "mobile2",
-      type: "number",
+      type: "text",
       maxLength: 10,
       validation: false,
     },
@@ -457,14 +519,6 @@ const AddUpdateBorrowerFields = ({
       validation: true,
     },
     {
-      labelName: "Ministry",
-      inputName: "ministry",
-      type: "select",
-      options: ministriesOptions,
-      validation: true,
-      searchable: true,
-    },
-    {
       labelName: "Employer",
       inputName: "employer",
       type: "InputSelectCreatable",
@@ -473,6 +527,23 @@ const AddUpdateBorrowerFields = ({
       searchable: true,
       onCreateOption: handleNewEmployer,
       setEmployerOptions: setEmployerOptions,
+      clearable: true,
+    },
+    {
+      labelName: "Ministry",
+      inputName: "ministry",
+      type: "select",
+      options: ministriesOptions,
+      validation: false,
+      searchable: true,
+      colSpan: 2,
+    },
+    {
+      labelName: "Sector",
+      inputName: "sector",
+      type: "select",
+      options: sectorOptions,
+      validation: false,
     },
     {
       labelName: "Occupation",
@@ -605,7 +676,7 @@ const AddUpdateBorrowerFields = ({
       labelName: "Name of Bank",
       inputName: "bankName",
       type: "select",
-      options: BankNameOptions,
+      options: bankOptions,
       validation: true,
       searchable: true,
     },
@@ -632,7 +703,7 @@ const AddUpdateBorrowerFields = ({
       labelName: "Branch",
       inputName: "branch",
       type: "select",
-      options: filteredBranchNameOptions,
+      options: bankBranchOptions[bankName],
       validation: true,
       searchable: true,
     },
@@ -688,14 +759,14 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Mobile 1",
       inputName: "kinMobile1",
-      type: "number",
+      type: "text",
       maxLength: 10,
       validation: true,
     },
     {
       labelName: "Mobile 2",
       inputName: "kinMobile2",
-      type: "number",
+      type: "text",
       maxLength: 10,
     },
     {
@@ -764,7 +835,7 @@ const AddUpdateBorrowerFields = ({
     {
       labelName: "Credit Score",
       inputName: "creditScore",
-      type: "number",
+      type: "text",
       validation: true,
     },
     {
@@ -794,45 +865,69 @@ const AddUpdateBorrowerFields = ({
 
   return (
     <>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["personalDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Personal Details"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={BorrowerData.personalDetails}
+              config={personalDetailsConfig}
+              sectionName={"personalDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          isOpen={true}
+          error={isValidationFailed(validationError, personalDetailsConfig)}
+        />
+      </div>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["contactDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Contact Preferences"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={BorrowerData.contactDetails}
+              config={contactDetailsConfig}
+              sectionName={"contactDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          error={isValidationFailed(validationError, contactDetailsConfig)}
+        />
+      </div>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["employmentDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Professional Status"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={BorrowerData.employmentDetails}
+              config={employmentDetailsConfig}
+              sectionName={"employmentDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          error={isValidationFailed(validationError, employmentDetailsConfig)}
+        />
+      </div>
       <Accordion
-        heading={"Personal Details"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={BorrowerData.personalDetails}
-            config={personalDetailsConfig}
-            sectionName={"personalDetails"}
-            handleInputChange={handleInputChange}
-          />
-        )}
-        isOpen={true}
-        error={isValidationFailed(validationError, personalDetailsConfig)}
-      />
-      <Accordion
-        heading={"Contact Details"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={BorrowerData.contactDetails}
-            config={contactDetailsConfig}
-            sectionName={"contactDetails"}
-            handleInputChange={handleInputChange}
-          />
-        )}
-        error={isValidationFailed(validationError, contactDetailsConfig)}
-      />
-      <Accordion
-        heading={"Employment Details"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={BorrowerData.employmentDetails}
-            config={employmentDetailsConfig}
-            sectionName={"employmentDetails"}
-            handleInputChange={handleInputChange}
-          />
-        )}
-        error={isValidationFailed(validationError, employmentDetailsConfig)}
-      />
-      <Accordion
-        heading={`Salary Details`}
+        heading={`Earnings Data`}
         renderExpandedContent={() => (
           <>
             <Accordion
@@ -865,45 +960,68 @@ const AddUpdateBorrowerFields = ({
           </>
         )}
       />
-
-      <Accordion
-        heading={"Bank Details"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={BorrowerData.bankDetails}
-            config={bankDetailsConfig}
-            sectionName={"bankDetails"}
-            handleInputChange={handleInputChange}
-          />
-        )}
-        error={isValidationFailed(validationError, bankDetailsConfig)}
-      />
-      <Accordion
-        heading={"Next of Kin Details"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={BorrowerData.nextOfKinDetails}
-            config={nextOfKinConfig}
-            sectionName={"nextOfKinDetails"}
-            handleInputChange={handleInputChange}
-          />
-        )}
-        error={isValidationFailed(validationError, nextOfKinConfig)}
-      />
-      <Accordion
-        heading={"Other Details"}
-        renderExpandedContent={() => (
-          <DynamicForm
-            details={BorrowerData.otherDetails}
-            config={otherDetailsConfig}
-            sectionName={"otherDetails"}
-            handleInputChange={handleInputChange}
-            handleFileUploads={handleFileUploads}
-            handleFileRemove={handleFileRemove}
-          />
-        )}
-        error={isValidationFailed(validationError, otherDetailsConfig)}
-      />
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["bankDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Financial Accounts"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={BorrowerData.bankDetails}
+              config={bankDetailsConfig}
+              sectionName={"bankDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          error={isValidationFailed(validationError, bankDetailsConfig)}
+        />
+      </div>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["nextOfKinDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Family Reference"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={BorrowerData.nextOfKinDetails}
+              config={nextOfKinConfig}
+              sectionName={"nextOfKinDetails"}
+              handleInputChange={handleInputChange}
+            />
+          )}
+          error={isValidationFailed(validationError, nextOfKinConfig)}
+        />
+      </div>
+      <div
+        ref={(el) => {
+          if (sectionRefs && sectionRefs.current) {
+            sectionRefs.current["otherDetails"] = el;
+          }
+        }}
+      >
+        <Accordion
+          heading={"Miscellaneous Information"}
+          renderExpandedContent={() => (
+            <DynamicForm
+              details={BorrowerData.otherDetails}
+              config={otherDetailsConfig}
+              sectionName={"otherDetails"}
+              handleInputChange={handleInputChange}
+              handleFileUploads={handleFileUploads}
+              handleFileRemove={handleFileRemove}
+            />
+          )}
+          error={isValidationFailed(validationError, otherDetailsConfig)}
+        />
+      </div>
     </>
   );
 };

@@ -222,7 +222,7 @@ const notificationSlice = createSlice({
           if(item.status === "REJECTED" || item.status === "APPROVED"){
           return item
         }})
-        state.notificationsHistory = filteredNotifications;
+        state.notificationsHistory = action.payload;
       })
       .addCase(fetchNotificationsHistory.rejected, (state, action) => {
         state.loading = false;

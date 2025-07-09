@@ -1,61 +1,55 @@
-import React, { useState } from "react";
-import { useParams, Outlet } from "react-router-dom";
+import React, { Suspense, useEffect, useState } from "react";
+import { useParams, Outlet, useLocation } from "react-router-dom";
 import Tab from "../Common/Tab/Tab";
 import { ActiveTabProvider } from "./ActiveTabContext";  // Import the context
+import LoadingState from "../LoadingState/LoadingState";
 
 const ProductTestingKSA = () => {
   const { userID } = useParams();
   const [activeTab, setActiveTab] = useState("create-account");
+  const location = useLocation();
+  const currentPath = location.pathname;
 
 
   const tabs = [
     {
       id: "create-account",
       label: "Create Your Account",
-      to: `/loan/product-testing-KSA/create-account`,
+      path: `/loan/product-testing-KSA/create-account`,
     },
     {
       id: "pre-eligibility-check",
       label: "Pre-Eligibility Check",
-      to: `/loan/product-testing-KSA/pre-eligibility-check`,
+      path: `/loan/product-testing-KSA/pre-eligibility-check`,
     },
     {
       id: "eligibility-verification",
       label: "Eligibility Verification",
-      to: `/loan/product-testing-KSA/eligibility-verification`,
+      path: `/loan/product-testing-KSA/eligibility-verification`,
     },
     {
       id: "loan-application",
       label: "Loan Application",
-      to: `/loan/product-testing-KSA/loan-application`,
+      path: `/loan/product-testing-KSA/loan-application`,
     },
   ];
 
-  return (
-    <ActiveTabProvider setActiveTab={setActiveTab} >   {/* Wrap with provider */}
-      <div className="mt-4">
-        {/* Tab Navigation */}
-        <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
-          <ul className="flex flex-wrap -mb-px">
-            {tabs.map((tab) => (
-              <Tab
-                key={tab.id}
-                id={tab.id}
-                label={tab.label}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                to={tab.to}
-              />
-            ))}
-          </ul>
-        </div>
+   useEffect(() => {
+      const active = tabs.find((tab) => currentPath.includes(tab.id)); // Check if path contains tab.id
+      if (active) {
+        setActiveTab(active.id);
+      }
+    }, [location, tabs]);
 
-        {/* Content Rendering */}
-        <div className="mt-4">
-          <Outlet /> {/* Child components will now have access to setActiveTab */}
-        </div>
-      </div>
-    </ActiveTabProvider>
+  return (
+    <>
+      <ActiveTabProvider setActiveTab={setActiveTab}>
+        <Tab tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Suspense fallback={<LoadingState />}>
+          <Outlet />
+        </Suspense>
+      </ActiveTabProvider>
+    </>
   );
 };
 

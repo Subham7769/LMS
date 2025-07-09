@@ -31,12 +31,14 @@ import calculateAging from "../../../utils/calculateAging";
 import { EditorRolesApproveRepayment } from "../../../data/RoleBasedAccessAndView";
 import { AccessChecker } from "../../../utils/AccessChecker";
 import exportToExcel from "../../../utils/exportToExcel";
+import convertToTitleCase from "../../../utils/convertToTitleCase";
 
 function transformData(inputArray) {
   return inputArray.map((item) => ({
     ...item,
     collectionDate: convertDate(item?.collectionDate),
     aging: calculateAging(item?.collectionDate),
+    method: convertToTitleCase(item?.method),
   }));
 }
 
@@ -58,6 +60,7 @@ const ApproveRepayment = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchBy, setSearchBy] = useState("");
   const [filteredRepayments, setFilteredRepayments] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const dispatcherFunction = (currentPage, pageSize) => {
     dispatch(getRepayments({ pageNumber: currentPage, pageSize: pageSize }));
@@ -109,102 +112,120 @@ const ApproveRepayment = () => {
   };
 
   const renderExpandedRow = (rowData) => (
-    <div className="text-sm text-gray-600 border-y-2 py-5">
+    <div className="text-sm border-y-2 dark:border-gray-600 py-5">
       <div className="grid grid-cols-3 gap-4">
         <CardInfo
           cardTitle="Payment Details"
-          className={"bg-white border-border-gray-primary border"}
+          className={
+            "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
+          }
           cardIcon={CurrencyDollarIcon}
-          colorText={"text-blue-primary"}
+          colorText={"text-sky-800 dark:text-sky-500"}
         >
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Loan Product</div>
-            <div className="font-semibold">{rowData?.description}</div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Transaction ID</div>
-            <div className="flex">
-              <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">
-                {rowData?.transactionId}
-              </div>
-              <ClipboardDocumentListIcon
-                onClick={() => copyToClipboard(rowData?.transactionId)}
-                className="-ml-0.5 h-5 w-5 cursor-pointer"
-              />
+          <div className="text-gray-800 dark:text-gray-100">
+            <div className="flex justify-between mb-2">
+              <div className="">Loan Product</div>
+              <div className="font-semibold">{rowData?.description}</div>
             </div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Original Loan Amount</div>
-            <div className="font-semibold">{rowData?.originalLoanAmount}</div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Outstanding Balance</div>
-            <div className="font-semibold">{rowData?.outstandingBalance?.toFixed(2)}</div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Due Date</div>
-            <div className="font-semibold">{convertDate(rowData?.dueDate)}</div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Status</div>
-            <div className="text-xs bg-black text-white py-1 px-2 rounded">
-              {rowData?.status}
+            <div className="flex justify-between mb-2">
+              <div className="">Transaction ID</div>
+              <div className="flex">
+                <div className="font-semibold whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">
+                  {rowData?.transactionId}
+                </div>
+                <ClipboardDocumentListIcon
+                  onClick={() => copyToClipboard(rowData?.transactionId)}
+                  className="-ml-0.5 h-5 w-5 cursor-pointer"
+                />
+              </div>
+            </div>
+            <div className="flex justify-between mb-2">
+              <div className="">Original Loan Amount</div>
+              <div className="font-semibold">{rowData?.originalLoanAmount}</div>
+            </div>
+            <div className="flex justify-between mb-2">
+              <div className="">Outstanding Balance</div>
+              <div className="font-semibold">
+                {rowData?.outstandingBalance?.toFixed(2)}
+              </div>
+            </div>
+            <div className="flex justify-between mb-2">
+              <div className="">Due Date</div>
+              <div className="font-semibold">
+                {convertDate(rowData?.dueDate)}
+              </div>
+            </div>
+            <div className="flex justify-between mb-2">
+              <div className="">Status</div>
+              <div className="text-xs bg-gray-900 dark:bg-gray-500 text-white py-1 px-2 rounded">
+                {rowData?.status}
+              </div>
             </div>
           </div>
         </CardInfo>
         <CardInfo
           cardTitle="Borrower Profile"
-          className={"bg-white border-border-gray-primary border"}
+          className={
+            "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
+          }
           cardIcon={UserIcon}
-          colorText={"text-blue-primary"}
+          colorText={"text-sky-800 dark:text-sky-500"}
         >
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Name</div>
-            <div className="text-gray-700">
-              {rowData?.borrowerProfile?.name}
+          <div className="text-gray-800 dark:text-gray-100">
+            <div className="flex justify-between mb-2">
+              <div className="">Name</div>
+              <div className="font-semibold">
+                {rowData?.borrowerProfile?.name}
+              </div>
             </div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">User ID</div>
-            <div className="text-gray-700">{rowData?.userId}</div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Email</div>
-            <div className="text-gray-700">
-              {rowData?.borrowerProfile?.email}
+            <div className="flex justify-between mb-2">
+              <div className="">User ID</div>
+              <div className="font-semibold">{rowData?.userId}</div>
             </div>
-          </div>
-          <div className="flex justify-between mb-2">
-            <div className="text-gray-500">Phone</div>
-            <div className="text-gray-700">
-              {rowData?.borrowerProfile?.phone}
+            <div className="flex justify-between mb-2">
+              <div className="">Email</div>
+              <div className="font-semibold">
+                {rowData?.borrowerProfile?.email}
+              </div>
+            </div>
+            <div className="flex justify-between mb-2">
+              <div className="">Phone</div>
+              <div className="font-semibold">
+                {rowData?.borrowerProfile?.phone}
+              </div>
             </div>
           </div>
         </CardInfo>
         <CardInfo
           cardTitle="Recent Payments"
-          className={"bg-white border-border-gray-primary border"}
+          className={
+            "bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700/60"
+          }
           cardIcon={ClockIcon}
-          colorText={"text-blue-primary"}
+          colorText={"text-sky-800 dark:text-sky-500"}
         >
-          {rowData.paymentsData.slice(-3).map((payment) => (
-            <div className="flex justify-between mb-2 border-b border-border-gray-primary pb-3">
-              <div>
-                <div className="text-black font-semibold">
-                  {convertDate(payment.paymentDate)}
+          {rowData?.paymentsData?.length > 0 ? (
+            rowData?.paymentsData.slice(-3).map((payment) => (
+              <div className="flex justify-between mb-2 border-b border-gray-300 pb-3 text-gray-800 dark:text-gray-100">
+                <div>
+                  <div className="font-semibold">
+                    {convertDate(payment.paymentDate)}
+                  </div>
+                  <div className="font-light">{payment.paymentType}</div>
                 </div>
-                <div className="font-light">{payment.paymentType}</div>
+                <div className="text-right">
+                  <div className="font-semibold">{payment.paymentAmount}</div>
+                  <div className="border border-gray-200 rounded shadow py-1 px-2 text-xs">
+                    {payment.paymentStatus}
+                  </div>
+                </div>
               </div>
-              <div className="text-right">
-                <div className="text-black font-semibold">
-                  {payment.paymentAmount}
-                </div>
-                <div className="border border-gray-200 rounded shadow py-1 px-2 text-xs text-black">
-                  {payment.paymentStatus}
-                </div>
-              </div>
+            ))
+          ) : (
+            <div className="text-gray-800 dark:text-gray-100">
+              No recent payments available
             </div>
-          ))}
+          )}
         </CardInfo>
       </div>
       <div className="w-full flex justify-end gap-2 px-5 mt-5">
@@ -216,73 +237,30 @@ const ApproveRepayment = () => {
           buttonType="tertiary"
         />
 
-        {
-
-          AccessChecker(EditorRolesApproveRepayment, roleName) && (
-            <>
-              <Button
-                buttonName={"Reject"}
-                onClick={() => handleReject(rowData.transactionId)}
-                rectangle={true}
-                buttonIcon={FiXCircle}
-                buttonType="destructive"
-              />
-              <Button
-                buttonName={"Approve"}
-                onClick={() => handleApprove(rowData.transactionId)}
-                rectangle={true}
-                buttonIcon={FiCheckCircle}
-              />
-            </>
-          )
-        }
-
+        {AccessChecker(EditorRolesApproveRepayment, roleName) && (
+          <>
+            <Button
+              buttonName={"Reject"}
+              onClick={() => handleReject(rowData.transactionId)}
+              buttonIcon={FiXCircle}
+              buttonType="destructive"
+            />
+            <Button
+              buttonName={"Approve"}
+              onClick={() => handleApprove(rowData.transactionId)}
+              buttonIcon={FiCheckCircle}
+              buttonType="success"
+            />
+          </>
+        )}
       </div>
     </div>
   );
 
-  const applyFilters = () => {
-    const filtered = approveRepaymentData.filter((repayment) => {
-      let matchesSearchValue = "";
-      if (searchBy) {
-        matchesSearchValue = searchValue
-          ? repayment[searchBy]
-            ?.toLowerCase()
-            .includes(searchValue.toLowerCase())
-          : true;
-      } else {
-        matchesSearchValue = searchValue
-          ? [
-            repayment.userId,
-            repayment.loan,
-            repayment.collectionBy,
-            repayment.accounting,
-            repayment.method,
-            repayment.transactionId,
-            repayment.installmentId,
-            repayment.requestId,
-          ].some((field) =>
-            field?.toLowerCase().includes(searchValue.toLowerCase())
-          )
-          : true;
-      }
-
-      return matchesSearchValue;
-    });
-
-    setFilteredRepayments(filtered);
-  };
-
-  // Trigger Filtering on Search Value Change
-  useEffect(() => {
-    applyFilters();
-  }, [searchValue]);
-
-  const handleSearchFilter = (term) => {
-    setSearchValue(term);
-  };
-
   const handleResetSearchBy = () => {
+    setSearchBy("");
+    setSearchValue("");
+    setCurrentPage(0);
     dispatch(getRepayments({ pageNumber: 0, pageSize: 20 }));
   };
 
@@ -297,10 +275,10 @@ const ApproveRepayment = () => {
 
   const searchOptions = [
     { label: "User Id", value: "userId" },
-    { label: "Loan Id", value: "loan" },
-    { label: "Collection By", value: "collectionBy" },
+    { label: "Loan Id", value: "loanId" },
+    { label: "Collection By", value: "reconciliationMethod" },
     { label: "Accounting", value: "accounting" },
-    { label: "Method", value: "method" },
+    { label: "Method", value: "repaymentOriginator" },
     { label: "Transaction Id", value: "transactionId" },
     { label: "Installment Id", value: "installmentId" },
     { label: "Request Id", value: "requestId" },
@@ -308,25 +286,27 @@ const ApproveRepayment = () => {
 
   const SearchRepaymentByFieldSearch = () => {
     dispatch(fetchRepaymentByField({ field: searchBy, value: searchValue }));
-    setSearchBy("");
-    setSearchValue("");
+    // setSearchBy("");
+    // setSearchValue("");
   };
 
-    // Define the mapping for repayment data excel file fields
-    const repaymentMapping = {
-      amount: "Amount",
-      collectionDate: "Collection Date",
-      "borrowerProfile.userId": "User ID",
-      loan: "Loan Id",
-      collectionBy: "Collected By",
-      method: "Method",
-      accounting: "Accounting",
-    };
+  // Define the mapping for repayment data excel file fields
+  const repaymentMapping = {
+    amount: "Amount",
+    collectionDate: "Collection Date",
+    "borrowerProfile.userId": "User ID",
+    loan: "Loan Id",
+    collectionBy: "Collected By",
+    method: "Method",
+    accounting: "Accounting",
+  };
 
   return (
     <div className={`flex flex-col gap-3`}>
-      <ContainerTile className={`flex justify-between gap-5 align-middle`}>
-        <div className="w-[45%]">
+      <ContainerTile
+        className={`p-5 md:flex justify-between gap-5 align-middle`}
+      >
+        <div className="w-full md:w-[45%] mb-2">
           <InputSelect
             labelName="Search By"
             inputName="searchBy"
@@ -336,18 +316,18 @@ const ApproveRepayment = () => {
             disabled={false}
           />
         </div>
-        <div className="w-[45%]">
+        <div className="w-full md:w-[45%]">
           <InputText
             labelName="Enter Value"
             inputName="searchValue"
             inputValue={searchValue}
-            onChange={(e) => handleSearchFilter(e.target.value)}
+            onChange={(e) => setSearchValue(e.target.value)}
             required
             disabled={false}
           />
         </div>
 
-        <div className="flex align-middle gap-5">
+        <div className="flex align-middle gap-5 justify-end">
           <Button
             buttonName={"Search"}
             onClick={SearchRepaymentByFieldSearch}
@@ -364,27 +344,38 @@ const ApproveRepayment = () => {
           />
         </div>
       </ContainerTile>
-      {approveRepaymentData.length > 0 && <div className="flex justify-end">
-        <Button
-          buttonName={"Export Excel"}
-          onClick={() => exportToExcel(approveRepaymentData, repaymentMapping, "Repayment_Data.xlsx")}
-          rectangle={true}
-          buttonIcon={DocumentArrowDownIcon}
-        // buttonType="tertiary"
-        />
-      </div>}
+      {approveRepaymentData.length > 0 && (
+        <div className="flex justify-end">
+          <Button
+            buttonName={"Export Excel"}
+            onClick={() =>
+              exportToExcel(
+                approveRepaymentData,
+                repaymentMapping,
+                "Repayment_Data.xlsx"
+              )
+            }
+            rectangle={true}
+            buttonIcon={DocumentArrowDownIcon}
+            // buttonType="tertiary"
+          />
+        </div>
+      )}
 
       <ExpandableTable
         columns={ApproveRepaymentColumns}
         data={transformedRepaymentData}
         renderExpandedRow={renderExpandedRow}
         loading={loading}
-        error={error}
+        ListName="List of pending repayments"
+        ListNameLength={approveRepaymentTotalElements}
       />
       <Pagination
         totalElements={approveRepaymentTotalElements}
         dispatcherFunction={dispatcherFunction}
         pageSize={pageSize}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
       />
       <FullLoanDetailModal
         isOpen={showLoanModal}
